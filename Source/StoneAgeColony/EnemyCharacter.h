@@ -15,6 +15,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// AI Senses
+	UFUNCTION()
+	void OnSeePlayer(APawn* Pawn);
+
+	UFUNCTION()
+	void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
+
 public:	
 	// Sets default values for this character's properties
 	AEnemyCharacter();
@@ -31,4 +38,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Identification")
 	int ExternalID;
 
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	class UPawnSensingComponent* PawnSensingComp;
 };

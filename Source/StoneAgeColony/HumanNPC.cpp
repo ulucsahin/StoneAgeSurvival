@@ -59,20 +59,23 @@ void AHumanNPC::Act() {
 	//0: Idle, 1:Waiting, 2:Paused, 3:Moving
 	if (ai->GetMoveStatus() == 0) {
 		FVector CurrentLoc = GetActorLocation();
-		GLog->Log("Idle");
+		//GLog->Log("Idle");
 		//GetActorRotation
 		FRotator rotation = GetActorRotation();
 		ai->MoveToLocation(FVector(132970.0f, 67990.0f, -8110.0f), 10.0f, true, true, true);
 		//ai->MoveToLoc(this, FVector(132970.0f, 67990.0f, -8110.0f), 10.0f, true, true, true);
 	}
 	else if (ai->GetMoveStatus() == 1) {
-		GLog->Log("Waiting");
+		FVector CurrentLoc = GetActorLocation(); // dummy code
+		// GLog->Log("Waiting");
 	}
 	else if (ai->GetMoveStatus() == 2) {
-		GLog->Log("Paused");
+		FVector CurrentLoc = GetActorLocation(); // dummy code
+		// GLog->Log("Paused");
 	}
 	else if (ai->GetMoveStatus() == 3) {
-		GLog->Log("Moving");
+		FVector CurrentLoc = GetActorLocation(); // dummy code
+		// GLog->Log("Moving");
 	}
 }
 

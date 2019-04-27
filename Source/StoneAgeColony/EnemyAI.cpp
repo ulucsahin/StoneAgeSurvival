@@ -10,9 +10,10 @@
 
 
 AEnemyAI::AEnemyAI() {
-
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComp"));
 	BehaviorComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorComp"));
+
+	TargetEnemyKeyName = "TargetEnemy";
 }
 
 void AEnemyAI::Possess(APawn *InPawn) {
@@ -27,4 +28,12 @@ void AEnemyAI::Possess(APawn *InPawn) {
 		BehaviorComp->StartTree(*Char->BotBehavior);
 	}
 
+}
+
+void AEnemyAI::SetTargetEnemy(APawn* NewTarget)
+{
+	if (BlackboardComp)
+	{
+		BlackboardComp->SetValueAsObject(TargetEnemyKeyName, NewTarget);
+	}
 }

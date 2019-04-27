@@ -20,11 +20,16 @@ class STONEAGECOLONY_API AEnemyAI : public AAIController
 	UPROPERTY(transient)
 	class UBehaviorTreeComponent *BehaviorComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName TargetEnemyKeyName;
+
 public:
 
 	AEnemyAI();
 
 	virtual void Possess(APawn *InPawn) override;
+
+	void SetTargetEnemy(APawn* NewTarget);
 
 	uint8 EnemyKeyID;
 };
