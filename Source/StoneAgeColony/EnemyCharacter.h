@@ -40,4 +40,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	class UPawnSensingComponent* PawnSensingComp;
+
+private:
+	float FollowRadius;
 };

@@ -17,6 +17,7 @@ AEnemyCharacter::AEnemyCharacter()
 	PawnSensingComp->SightRadius = 2000;
 	PawnSensingComp->HearingThreshold = 600;
 	PawnSensingComp->LOSHearingThreshold = 1200;
+	FollowRadius = 1500.f;
 }
 
 // Called when the game starts or when spawned
@@ -38,14 +39,15 @@ void AEnemyCharacter::BeginPlay()
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	//AEnemyAI* AIController = Cast<AEnemyAI>(GetController());
+	//AIController->SetTargetInRange(NULL);
 }
 
 // Called to bind functionality to input
 void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	
 }
 
 void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
@@ -55,6 +57,10 @@ void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
 
 	AEnemyAI* AIController = Cast<AEnemyAI>(GetController());
 	ACharacter* SensedPawn = Cast<ACharacter>(Pawn);
+
+	// Allows AI to stop chasing target when target is out of range
+	AIController->SetTargetInRange(true);
+
 	if (AIController /*&& SensedPawn->IsAlive()*/ )
 	{	
 		GLog->Log("Controller is ok.");
@@ -63,6 +69,17 @@ void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
 		}
 
 		AIController->SetTargetEnemy(SensedPawn);
+	}
+
+	FVector SensedPawnLocation = SensedPawn->GetActorLocation();
+	FVector SelfLocation = GetActorLocation();
+	float Distance = FVector::Dist(SelfLocation, SensedPawnLocation);
+	UE_LOG(LogTemp, Warning, TEXT("Distance to player:, %f"), Distance);
+
+	// Stop following once target is out of follow radius.
+	// TODO: Line of sight.
+	if (Distance > FollowRadius) {
+		AIController->SetTargetInRange(false);
 	}
 }
 

@@ -30,10 +30,14 @@ void AEnemyAI::Possess(APawn *InPawn) {
 
 }
 
-void AEnemyAI::SetTargetEnemy(APawn* NewTarget)
-{
-	if (BlackboardComp)
-	{
+void AEnemyAI::SetTargetEnemy(APawn* NewTarget){
+	if (BlackboardComp){
 		BlackboardComp->SetValueAsObject(TargetEnemyKeyName, NewTarget);
+	}
+}
+
+void AEnemyAI::SetTargetInRange(bool InRange) {
+	if (BlackboardComp) {
+		BlackboardComp->SetValueAsBool("TargetInRange", InRange);
 	}
 }
