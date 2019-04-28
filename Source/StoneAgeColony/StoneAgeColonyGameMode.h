@@ -12,7 +12,7 @@ class AStoneAgeColonyGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	AStoneAgeColonyGameMode();
+	AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer);
 };
 
 

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h" // this is the originally included header
-
 //#include "Runtime/Engine/Public/EngineGlobals.h"
 
 

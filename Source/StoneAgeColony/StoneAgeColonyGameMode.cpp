@@ -5,8 +5,8 @@
 #include "StoneAgeColonyCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
-AStoneAgeColonyGameMode::AStoneAgeColonyGameMode()
-	: Super()
+AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
