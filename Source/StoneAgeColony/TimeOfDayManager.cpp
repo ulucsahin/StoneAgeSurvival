@@ -31,10 +31,12 @@ void ATimeOfDayManager::BeginPlay()
 
 	if (PrimarySunLight)
 	{
+		GLog->Log("ATimeOfDayManager::BeginPlay PrimarySunLight");
 		OriginalSunBrightness = PrimarySunLight->GetBrightness();
 		TargetSunBrightness = OriginalSunBrightness;
 	}
 
+	// NOT YET IMPLEMENTED
 	PlayAmbientLoop();
 }
 
@@ -48,8 +50,8 @@ void ATimeOfDayManager::Tick(float DeltaTime)
 	{
 		/* Update the position of the sun. */
 		if (PrimarySunLight)
-		{
-			GLog->Log("OGLOG CXDXDXDXDXD");
+		{	
+
 			if (LastTimeOfDay == MyGameState->ElapsedGameMinutes)
 			{
 				TimeSinceLastIncrement += DeltaTime;
@@ -73,8 +75,10 @@ void ATimeOfDayManager::Tick(float DeltaTime)
 
 			LastTimeOfDay = MyGameState->ElapsedGameMinutes;
 		}
-
+		 
 		bool CurrentNightState = MyGameState->GetIsNight();
+
+		//UE_LOG(LogTemp, Warning, TEXT("CurrentNightState :, %s, LastNightState :, %s"), (CurrentNightState ? TEXT("True") : TEXT("False")), (LastNightState ? TEXT("True") : TEXT("False")));
 		if (CurrentNightState != LastNightState)
 		{
 			if (CurrentNightState)
@@ -110,14 +114,11 @@ void ATimeOfDayManager::Tick(float DeltaTime)
 
 
 void ATimeOfDayManager::UpdateSkylight() {
-	GLog->Log("updateskylight");
 	if (SkyLightActor)
 	{
-		GLog->Log("SkyLightActor");
 		ASurvivalGameState* MyGameState = Cast<ASurvivalGameState>(GetWorld()->GetGameState());
 		if (MyGameState)
 		{
-			GLog->Log("MyGameState");
 			const float MinutesInDay = 24 * 60;
 			/* Map the intensity from 0 - 12 - 24 hours into 0 - 1 - 0 alpha */
 			const float Alpha = FMath::Sin((MyGameState->GetElapsedMinutesCurrentDay() / MinutesInDay) * 3.14);
