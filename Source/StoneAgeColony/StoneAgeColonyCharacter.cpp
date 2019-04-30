@@ -11,6 +11,8 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "DrawDebugHelpers.h"
+#include "GameSaver.h"
+#include "SurvivalGameInstance.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -384,4 +386,13 @@ void AStoneAgeColonyCharacter::Use() {
 	if (Usable){
 		Usable->OnUsed(this);
 	}
+}
+
+void AStoneAgeColonyCharacter::RegisterSaveData() {
+	//UGameSaver* SaveGameInstance = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
+	//SaveGameInstance->PlayerName = "UlucTestPlayerName";
+	//SaveGameInstance->PlayerLocation = GetActorLocation();
+
+	USurvivalGameInstance* GameInstance = Cast<USurvivalGameInstance>(GetGameInstance());
+	GameInstance->PlayerLocation = GetActorLocation();
 }

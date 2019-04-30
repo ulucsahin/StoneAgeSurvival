@@ -37,7 +37,7 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 void AStoneAgeColonyGameMode::InitGameState()
 {
 	Super::InitGameState();
-	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyGameMode::InitGameState()"));
+	//UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyGameMode::InitGameState()"));
 	ASurvivalGameState* MyGameState = Cast<ASurvivalGameState>(GameState);
 	if (MyGameState)
 	{

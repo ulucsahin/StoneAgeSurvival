@@ -15,7 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	AUsableActor(const FObjectInitializer& ObjectInitializer);
 
-	void OnUsed(APawn* InstigatorPawn);
+	virtual void OnUsed(APawn* InstigatorPawn);
 
 	/* Player is looking at */
 	virtual void OnBeginFocus();

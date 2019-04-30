@@ -10,7 +10,6 @@ AEnemyCharacter::AEnemyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	/* Our sensing component to detect players by visibility and noise checks. */
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->SetPeripheralVisionAngle(60.0f);
@@ -24,11 +23,9 @@ AEnemyCharacter::AEnemyCharacter()
 void AEnemyCharacter::BeginPlay()
 {	
 	Super::BeginPlay();
-	GLog->Log("NPC started.");
 
 	/* This is the earliest moment we can bind our delegates to the component */
 	if (PawnSensingComp){
-		GLog->Log("I sense some tingling.");
 		PawnSensingComp->OnSeePawn.AddDynamic(this, &AEnemyCharacter::OnSeePlayer);
 		PawnSensingComp->OnHearNoise.AddDynamic(this, &AEnemyCharacter::OnHearNoise);
 	}
@@ -47,14 +44,9 @@ void AEnemyCharacter::Tick(float DeltaTime)
 void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
 }
 
 void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
-	GLog->Log("I saw the sun");
-
-	//bSensedTarget = true;
-
 	AEnemyAI* AIController = Cast<AEnemyAI>(GetController());
 	ACharacter* SensedPawn = Cast<ACharacter>(Pawn);
 
@@ -74,7 +66,6 @@ void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
 	FVector SensedPawnLocation = SensedPawn->GetActorLocation();
 	FVector SelfLocation = GetActorLocation();
 	float Distance = FVector::Dist(SelfLocation, SensedPawnLocation);
-	UE_LOG(LogTemp, Warning, TEXT("Distance to player:, %f"), Distance);
 
 	// Stop following once target is out of follow radius.
 	// TODO: Line of sight.

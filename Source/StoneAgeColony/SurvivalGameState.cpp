@@ -8,7 +8,7 @@ ASurvivalGameState::ASurvivalGameState(const class FObjectInitializer& ObjectIni
 	: Super(ObjectInitializer)
 {
 	/* 1 SECOND real time is 1*TimeScale MINUTES game time */
-	TimeScale = 80.0f;
+	TimeScale = 8.0f;
 	bIsNight = false;
 
 	SunriseTimeMark = 6.0f;

@@ -53,9 +53,10 @@ public:
 	AUsableActor* GetUsableInView();
 	class AUsableActor* FocusedUsableActor;
 	virtual void Use();
+	void RegisterSaveData();
 
 	/*Max distance to use/focus on actors. */
-	UPROPERTY(EditDefaultsOnly, Category = "ObjectInte	raction")
+	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
 	float MaxUseDistance;
 
 protected:
