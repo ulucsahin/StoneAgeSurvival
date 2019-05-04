@@ -35,14 +35,16 @@ void APeopleSpawner::SpawnCharacter(bool bShouldRegister)
 	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter spawned. SpawnCount: %d"), SpawnCount);
 
 	// Register spawned actor to Communicator.
-	if (bShouldRegister)
+
+	// Registers are now handled by saver.
+	/*if (bShouldRegister)
 	{	
 		if (SpawnedActor) 
 		{
 			RegisterActorDetailsToSave(SpawnedActor);
 			UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter is registered to Communicator."), SpawnCount);
 		}
-	}
+	}*/
 }
 
 void APeopleSpawner::RegisterActorDetailsToSave(AEnemyCharacter* EnemyCharacter) 

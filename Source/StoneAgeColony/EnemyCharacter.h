@@ -53,5 +53,5 @@ struct FEnemyCharacterDetails
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
-	FVector CharacterLocation;
+	FTransform CharacterTransform;
 };

@@ -33,11 +33,14 @@ void GameLoader::LoadGame()
 	if (GameLoader) {
 
 		// Teleport player to saved location.
-		// not implemented
+		// 
 
 		// Set varibles to communicator.
 		Communicator::GetInstance().test = GameLoader->test;
 		Communicator::GetInstance().SpawnedCharacterDetails = GameLoader->SpawnedCharacterDetails;
+
+		// Destroy existing characters.
+		DestroyActors<AEnemyCharacter>();
 
 		// Spawn saved characters.
 		SpawnCharacters();
@@ -59,9 +62,29 @@ void GameLoader::SpawnCharacters()
 	// Iterate over array and saved spawn actors.
 	for (FEnemyCharacterDetails Details : ActorDetailsToSpawn)
 	{
-		FTransform CurrentTransform;
-		CurrentTransform.SetLocation(Details.CharacterLocation);
-		AEnemyCharacter* SpawnedActor = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, CurrentTransform, SpawnParams);
+		FTransform ActorTransform = Details.CharacterTransform;
+		AEnemyCharacter* SpawnedActor = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
 	}
 
+}
+
+template <typename T>
+void GameLoader::DestroyActors() {
+	// We will reset spawned character details and update it with current details.
+	UWorld* YourGameWorld = Communicator::GetInstance().World;
+
+	for (TObjectIterator<T> Itr; Itr; ++Itr)
+	{
+		// Filter out objects not contained in the target world.
+		if (Itr->GetWorld() != YourGameWorld)
+		{
+			continue;
+		}
+		if (std::is_same_v<T, AEnemyCharacter>)
+		{
+			// Register details to communicator.
+			Itr->Destroy();
+		}
+
+	}
 }

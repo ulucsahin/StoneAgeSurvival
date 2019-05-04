@@ -16,4 +16,7 @@ public:
 
 	void LoadGame();
 	void SpawnCharacters();
+
+	template<typename T> 
+	void DestroyActors();
 };

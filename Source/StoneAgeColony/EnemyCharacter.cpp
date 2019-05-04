@@ -83,12 +83,8 @@ void AEnemyCharacter::RegisterActorDetailsToSave() {
 	FEnemyCharacterDetails CharDetails;
 	
 	// Assign details to struct.
-	CharDetails.CharacterLocation = GetActorLocation();
+	CharDetails.CharacterTransform = GetActorTransform();
 
 	// Save details as struct to communicator. Which will be used during saving.
 	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
-
-	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::RegisterActorDetailsToSave, Registered Location: %f, %f, %f"), CharDetails.CharacterLocation.X, CharDetails.CharacterLocation.Y, CharDetails.CharacterLocation.Z);
-	
-	
 }
