@@ -2,6 +2,7 @@
 
 #include "EnemyCharacter.h"
 #include "EnemyAI.h"
+#include "Communicator.h"
 /* AI Include */
 #include "Perception/PawnSensingComponent.h"
 
@@ -9,7 +10,7 @@
 AEnemyCharacter::AEnemyCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	/* Our sensing component to detect players by visibility and noise checks. */
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->SetPeripheralVisionAngle(60.0f);
@@ -17,6 +18,8 @@ AEnemyCharacter::AEnemyCharacter()
 	PawnSensingComp->HearingThreshold = 600;
 	PawnSensingComp->LOSHearingThreshold = 1200;
 	FollowRadius = 1500.f;
+
+
 }
 
 // Called when the game starts or when spawned
@@ -35,7 +38,7 @@ void AEnemyCharacter::BeginPlay()
 // Called every frame
 void AEnemyCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+	//Super::Tick(DeltaTime);
 	//AEnemyAI* AIController = Cast<AEnemyAI>(GetController());
 	//AIController->SetTargetInRange(NULL);
 }
@@ -55,12 +58,9 @@ void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
 
 	if (AIController /*&& SensedPawn->IsAlive()*/ )
 	{	
-		GLog->Log("Controller is ok.");
 		if (SensedPawn) {
-			GLog->Log("SensedPawn");
+			AIController->SetTargetEnemy(SensedPawn);
 		}
-
-		AIController->SetTargetEnemy(SensedPawn);
 	}
 
 	FVector SensedPawnLocation = SensedPawn->GetActorLocation();
@@ -76,4 +76,19 @@ void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
 
 void AEnemyCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume) {
 
+}
+
+
+void AEnemyCharacter::RegisterActorDetailsToSave() {
+	FEnemyCharacterDetails CharDetails;
+	
+	// Assign details to struct.
+	CharDetails.CharacterLocation = GetActorLocation();
+
+	// Save details as struct to communicator. Which will be used during saving.
+	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
+
+	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::RegisterActorDetailsToSave, Registered Location: %f, %f, %f"), CharDetails.CharacterLocation.X, CharDetails.CharacterLocation.Y, CharDetails.CharacterLocation.Z);
+	
+	
 }

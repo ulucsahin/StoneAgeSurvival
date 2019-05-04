@@ -2,22 +2,29 @@
 
 #include "TestGameLoader.h"
 #include "GameSaver.h"
+#include "GameLoader.h"
+#include "PeopleSpawner.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Communicator.h"
+#include "EnemyCharacter.h"
 
-void ATestGameLoader::OnUsed(APawn* InstigatorPawn) {
-	UE_LOG(LogTemp, Warning, TEXT("TestGameLoader::OnUsed --- works"));
 
-
+void ATestGameLoader::OnUsed(APawn* InstigatorPawn)
+{
 	// LOAD SYSTEM
-	UGameSaver* GameLoader = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
-	GameLoader = Cast<UGameSaver>(UGameplayStatics::LoadGameFromSlot(GameLoader->SaveSlotName, GameLoader->UserIndex));
-	//USurvivalGameInstance* GameInstance = GameLoader->GameInstance;
+	// We will retrieve saved variables from GameSaver object.
+	UGameSaver* GameSaver = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
+	GameSaver = Cast<UGameSaver>(UGameplayStatics::LoadGameFromSlot(GameSaver->SaveSlotName, GameSaver->UserIndex));
 
-	/*if (GameInstance) {
-		UE_LOG(LogTemp, Warning, TEXT("ObjectBed::OnUsed --- Loaded GameInstance available"));
-	}*/
-
-	if (GameLoader) {
-		InstigatorPawn->SetActorLocation(GameLoader->PlayerLocation);
+	GameLoader* GameLoaderInstance = new GameLoader();
+	if (GameSaver) 
+	{
+		// Teleport player to saved location.
+		InstigatorPawn->SetActorLocation(GameSaver->PlayerLocation);
+		GameLoaderInstance->LoadGame();
 	}
+
+	//static ConstructorHelpers::FObjectFinder<AEnemyCharacter> BPClassToSpawnTest(TEXT("/Game/TEST"));
+
+	UE_LOG(LogTemp, Warning, TEXT("Game loaded."));
 }

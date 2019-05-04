@@ -9,11 +9,14 @@
 /**
  * 
  */
+
+// THIS CLASS IS FOR TEST ONLY, WILL BE DELETED LATER
 UCLASS()
 class STONEAGECOLONY_API ATestGameLoader : public AUsableActor
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
+	
 };

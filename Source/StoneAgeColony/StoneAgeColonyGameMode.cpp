@@ -1,14 +1,32 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
+
 #include "StoneAgeColonyGameMode.h"
+#include "StoneAgeColony.h"
 #include "StoneAgeColonyHUD.h"
 #include "StoneAgeColonyCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "SurvivalGameState.h"
+#include "SurvivalGameInstance.h"
+#include "Communicator.h"
+#include "GameSaver.h"
+
+#include "EngineUtils.h"
+#include "GameFramework/PlayerStart.h"
+//#include "TestGameLoader.h"
 
 AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+
+	// Set world for communicator
+	Communicator::GetInstance().World = GetWorld();
+
+	// Set communicator blueprints
+	static ConstructorHelpers::FClassFinder<AEnemyCharacter> BPClass(TEXT("'/Game/Uluc/ActiveAssets/BP_FollowerEnemyCharacter'"));
+	Communicator::GetInstance().EnemyCharacterToSpawn = BPClass.Class;
+
+	
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
@@ -37,6 +55,15 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 void AStoneAgeColonyGameMode::InitGameState()
 {
 	Super::InitGameState();
+
+	// Resets communicator variables.
+	Communicator::GetInstance().Reset();
+	UE_LOG(LogTemp, Warning, TEXT("Communicator variables are reset."));
+	// Loads game and updates Communicator values as well.
+	//ATestGameLoader GameLoader;
+	//GameLoader.LoadGame();
+	
+
 	//UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyGameMode::InitGameState()"));
 	ASurvivalGameState* MyGameState = Cast<ASurvivalGameState>(GameState);
 	if (MyGameState)
@@ -84,3 +111,46 @@ void AStoneAgeColonyGameMode::DefaultTimer() {
 void AStoneAgeColonyGameMode::OnNightEnded() {
 
 }
+
+// Sets APlayerStart of our pawn on BeginPlay, using Game Instance variables
+// https://youtu.be/2aUYBzmefpM?t=355
+//AActor* AStoneAgeColonyGameMode::ChoosePlayerStart_Implementation(AController* Player) 
+//{
+//
+//	class AActor* retVal = nullptr;
+//
+//	if (Player)
+//	{
+//		class UWorld* const world = GetWorld();
+//
+//		if (world != nullptr)
+//		{
+//			class USurvivalGameInstance* gInstance = Cast<USurvivalGameInstance>(GetGameInstance());
+//
+//			if (gInstance)
+//			{
+//				TArray<class AActor*> PlayerStarts;
+//				UGameplayStatics::GetAllActorsOfClass(world, APlayerStart::StaticClass(), PlayerStarts);
+//				TArray<class AActor*> PreferredStarts;
+//
+//				for (TActorIterator<APlayerStart> Itr(world); Itr; ++Itr) 
+//				{
+//					// NOT IMPLEMENTED
+//					// add *Itr to PreferredStarts array according to some condition
+//
+//				}
+//
+//				return PreferredStarts[FMath::RandRange(0, PreferredStarts.Num() - 1)];
+//			}
+//
+//		}
+//
+//	}
+//
+//	return retVal;
+//}
+//
+//bool AStoneAgeColonyGameMode::ShouldSpawnAtStartSpot(AController* Player)
+//{
+//	return false;
+//}

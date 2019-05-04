@@ -17,12 +17,18 @@ class STONEAGECOLONY_API APeopleSpawner : public AUsableActor
 
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
-	TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
+	//APeopleSpawner();
+
+	//UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
+	//TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
+
 	int SpawnCount = 0;
+	void SpawnCharacter(bool bShouldRegister);
+	void RegisterActorDetailsToSave(AEnemyCharacter*);
 
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
+	virtual void BeginPlay() override;
 
 };
 

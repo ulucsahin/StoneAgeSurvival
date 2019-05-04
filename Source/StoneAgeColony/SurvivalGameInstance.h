@@ -16,4 +16,6 @@ class STONEAGECOLONY_API USurvivalGameInstance : public UGameInstance
 	
 public:
 	FVector PlayerLocation;
+
+
 };

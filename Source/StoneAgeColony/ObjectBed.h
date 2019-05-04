@@ -24,6 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	template <typename T>
+	void IterateActors();
+
 protected:
 	virtual void BeginPlay() override;
 

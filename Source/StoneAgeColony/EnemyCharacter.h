@@ -35,6 +35,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void RegisterActorDetailsToSave();
+
 	UPROPERTY(EditAnywhere, Category = "Identification")
 	int ExternalID;
 
@@ -43,4 +45,13 @@ public:
 
 private:
 	float FollowRadius;
+};
+
+USTRUCT(BlueprintType)
+struct FEnemyCharacterDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FVector CharacterLocation;
 };

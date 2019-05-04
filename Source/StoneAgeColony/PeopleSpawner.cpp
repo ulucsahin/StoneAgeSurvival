@@ -2,13 +2,24 @@
 
 #include "PeopleSpawner.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
-//#include 
+#include "Communicator.h"
+#include "Spawner.h"
+ 
+void APeopleSpawner::BeginPlay()
+{
+	Super::BeginPlay();
+}
 
-
-
-void APeopleSpawner::OnUsed(APawn* InstigatorPawn) {
+void APeopleSpawner::OnUsed(APawn* InstigatorPawn) 
+{
+	// This method is used for spawning actors.
 	UE_LOG(LogTemp, Warning, TEXT("APeopleSpawner::OnUsed hehee"));
-	SpawnCount += 1;
+	SpawnCharacter(true);
+}
+
+void APeopleSpawner::SpawnCharacter(bool bShouldRegister)
+{
+	//ASpawner* Spawner = NewObject<ASpawner>();
 	FActorSpawnParameters SpawnParams;
 	FTransform Transform = GetTransform();
 	FVector Location = Transform.GetLocation();
@@ -16,9 +27,26 @@ void APeopleSpawner::OnUsed(APawn* InstigatorPawn) {
 	Location.Y += 100.f;
 	Location.Z += 0.f;
 	Transform.SetLocation(Location);
-	
-	//AEnemyCharacter* SpawnedCharacter = (AEnemyCharacter*)GetWorld()->SpawnActor(AEnemyCharacter::StaticClass(), NAME_None, Location);
-	//AEnemyCharacter* SpawnedCharacter = GetWorld()->SpawnActor(EnemyCharacterToSpawn, NAME_None, Location);
 
-	AEnemyCharacter* ActorRef = GetWorld()->SpawnActor<AEnemyCharacter>(EnemyCharacterToSpawn, Transform, SpawnParams);
+	auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterToSpawn;
+	AEnemyCharacter* SpawnedActor = GetWorld()->SpawnActor<AEnemyCharacter>(ActorToSpawn, Transform, SpawnParams);
+
+	SpawnCount += 1;
+	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter spawned. SpawnCount: %d"), SpawnCount);
+
+	// Register spawned actor to Communicator.
+	if (bShouldRegister)
+	{	
+		if (SpawnedActor) 
+		{
+			RegisterActorDetailsToSave(SpawnedActor);
+			UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter is registered to Communicator."), SpawnCount);
+		}
+	}
 }
+
+void APeopleSpawner::RegisterActorDetailsToSave(AEnemyCharacter* EnemyCharacter) 
+{
+	EnemyCharacter->RegisterActorDetailsToSave();
+}
+

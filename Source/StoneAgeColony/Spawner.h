@@ -4,32 +4,28 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "UsableActor.generated.h"
+#include "EnemyCharacter.h"
+#include "Spawner.generated.h"
 
 UCLASS()
-class STONEAGECOLONY_API AUsableActor : public AActor
+class STONEAGECOLONY_API ASpawner : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	//AUsableActor();
-	AUsableActor(const FObjectInitializer& ObjectInitializer);
+	ASpawner();
 
-	virtual void OnUsed(APawn* InstigatorPawn);
+	UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
+	TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
 
-	/* Player is looking at */
-	virtual void OnBeginFocus();
-
-	/* Player is no longer looking at */
-	virtual void OnEndFocus();
+	int SpawnCount = 0;
+	void SpawnCharacter(bool bShouldRegister, FTransform);
+	void RegisterActorDetailsToSave(AEnemyCharacter*);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, Category = "Mesh")
-	UStaticMeshComponent* MeshComp;
 
 public:	
 	// Called every frame
