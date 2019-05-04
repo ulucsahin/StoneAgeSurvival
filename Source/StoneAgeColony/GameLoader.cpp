@@ -34,19 +34,19 @@ void GameLoader::LoadGame()
 
 		// Teleport player to saved location.
 		// 
+		
+		// Destroy existing characters.
+		DestroyActors<AEnemyCharacter>();
 
 		// Set varibles to communicator.
 		Communicator::GetInstance().test = GameLoader->test;
 		Communicator::GetInstance().SpawnedCharacterDetails = GameLoader->SpawnedCharacterDetails;
 
-		// Destroy existing characters.
-		DestroyActors<AEnemyCharacter>();
-
 		// Spawn saved characters.
 		SpawnCharacters();
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Game loaded."));
+	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));
 }
 
 void GameLoader::SpawnCharacters() 
@@ -87,4 +87,7 @@ void GameLoader::DestroyActors() {
 		}
 
 	}
+
+	// Empty communicator since we deleted all characters.
+	Communicator::GetInstance().SpawnedCharacterDetails.Empty();
 }

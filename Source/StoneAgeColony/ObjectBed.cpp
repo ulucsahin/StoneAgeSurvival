@@ -39,13 +39,10 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	// Iterate over actors in world to get details of spawned actors.
 	IterateActors<AEnemyCharacter>();
 
-
-
 	// Assign variables to save file (from communicator).
 	GameSaver->PlayerLocation = Communicator::GetInstance().PlayerLocation;
 	GameSaver->test = Communicator::GetInstance().test;
 	GameSaver->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
-
 
 	//UE_LOG(LogTemp, Warning, TEXT("First location in communicator: %f"), GameSaver->SpawnedCharacterDetails[0].CharacterLocation.X);
 	// Save save-file to disk.
@@ -68,8 +65,12 @@ void AObjectBed::IterateActors()
 		}
 		if (std::is_same_v<T, AEnemyCharacter>) 
 		{
-			// Register details to communicator.
-			Itr->RegisterActorDetailsToSave();
+			// Only do this if Destroy() on this object is not called.
+			if (!Itr->IsPendingKill()) 
+			{
+				// Register details to communicator.
+				Itr->RegisterActorDetailsToSave();
+			}
 		}
 		
 	}

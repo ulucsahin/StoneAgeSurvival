@@ -26,5 +26,5 @@ void ATestGameLoader::OnUsed(APawn* InstigatorPawn)
 
 	//static ConstructorHelpers::FObjectFinder<AEnemyCharacter> BPClassToSpawnTest(TEXT("/Game/TEST"));
 
-	UE_LOG(LogTemp, Warning, TEXT("Game loaded."));
+	UE_LOG(LogTemp, Warning, TEXT("TestGameLoader: Game loaded."));
 }
