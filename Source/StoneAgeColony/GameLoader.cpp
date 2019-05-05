@@ -13,19 +13,18 @@
 
 GameLoader::GameLoader()
 {
-	//static ConstructorHelpers::FClassFinder<AEnemyCharacter> BPClassToSpawn(TEXT("Blueprint'/Game/Uluc/ActiveAssets/BP_FollowerEnemyCharacter_C'"));
-	//static ConstructorHelpers::FClassFinder<APawn> BPClass(TEXT("'/Game/BP_MyPawn'"));
-	//static ConstructorHelpers::FClassFinder<UBlueprint> BP_FollowerEnemyCharacter(TEXT("Blueprint'/Game/Uluc/ActiveAssets/BP_FollowerEnemyCharacter_C'"));
-	UE_LOG(LogTemp, Warning, TEXT("ffs..."));
 }
 
 GameLoader::~GameLoader()
 {
 }
 
-
-void GameLoader::LoadGame() 
+void GameLoader::LoadGame(APawn* InstigatorPawn)
 {
+	/*
+		This method handles everything about loading game from a savefile.
+	*/
+
 	// LOAD SYSTEM
 	UGameSaver* GameLoader = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
 	GameLoader = Cast<UGameSaver>(UGameplayStatics::LoadGameFromSlot(GameLoader->SaveSlotName, GameLoader->UserIndex));
@@ -33,7 +32,7 @@ void GameLoader::LoadGame()
 	if (GameLoader) {
 
 		// Teleport player to saved location.
-		// 
+		InstigatorPawn->SetActorTransform(GameLoader->PlayerTransform);
 		
 		// Destroy existing characters.
 		DestroyActors<AEnemyCharacter>();
@@ -51,6 +50,10 @@ void GameLoader::LoadGame()
 
 void GameLoader::SpawnCharacters() 
 {
+	/*
+	Spawn previously saved characters from savefile.
+	*/
+
 	FActorSpawnParameters SpawnParams;
 	//SpawnParams.Owner = this;
 
@@ -69,7 +72,13 @@ void GameLoader::SpawnCharacters()
 }
 
 template <typename T>
-void GameLoader::DestroyActors() {
+void GameLoader::DestroyActors() 
+{
+	/*
+	Actors are needed to be destroyed first otherwise we would have duplicates.
+	This method fixes this problem.
+	*/
+
 	// We will reset spawned character details and update it with current details.
 	UWorld* YourGameWorld = Communicator::GetInstance().World;
 

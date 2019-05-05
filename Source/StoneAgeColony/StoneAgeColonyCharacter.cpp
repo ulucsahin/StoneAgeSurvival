@@ -3,8 +3,11 @@
 #include "StoneAgeColonyProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
+
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/TimelineComponent.h"
+
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,9 +18,6 @@
 #include "SurvivalGameInstance.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
-
-//////////////////////////////////////////////////////////////////////////
-// AStoneAgeColonyCharacter
 
 AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 {	
@@ -112,7 +112,11 @@ void AStoneAgeColonyCharacter::BeginPlay()
 
 void AStoneAgeColonyCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-	if (Controller && Controller->IsLocalController()){
+	HandleFocus();
+}
+
+void AStoneAgeColonyCharacter::HandleFocus() {
+	if (Controller && Controller->IsLocalController()) {
 
 		// Get currently usable item we are looking at
 		AUsableActor* Usable = GetUsableInView();
@@ -176,9 +180,6 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AStoneAgeColonyCharacter::OnResetVR);
 
-	
-
-	
 }
 
 void AStoneAgeColonyCharacter::OnFire()

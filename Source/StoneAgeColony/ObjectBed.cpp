@@ -33,14 +33,14 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 
 	// Save System
 	UGameSaver* GameSaver = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
-	Communicator::GetInstance().PlayerLocation = InstigatorPawn->GetActorLocation();
+	Communicator::GetInstance().PlayerTransform = InstigatorPawn->GetActorTransform();
 
 
 	// Iterate over actors in world to get details of spawned actors.
 	IterateActors<AEnemyCharacter>();
 
 	// Assign variables to save file (from communicator).
-	GameSaver->PlayerLocation = Communicator::GetInstance().PlayerLocation;
+	GameSaver->PlayerTransform = Communicator::GetInstance().PlayerTransform;
 	GameSaver->test = Communicator::GetInstance().test;
 	GameSaver->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
 

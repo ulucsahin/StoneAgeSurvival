@@ -48,7 +48,7 @@ public:
 
 	// Variables that will be saved.
 	int test;
-	FVector PlayerLocation;
+	FTransform PlayerTransform;
 	TArray<FEnemyCharacterDetails> SpawnedCharacterDetails;
 	
 

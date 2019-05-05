@@ -11,20 +11,9 @@
 
 void ATestGameLoader::OnUsed(APawn* InstigatorPawn)
 {
-	// LOAD SYSTEM
-	// We will retrieve saved variables from GameSaver object.
-	UGameSaver* GameSaver = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
-	GameSaver = Cast<UGameSaver>(UGameplayStatics::LoadGameFromSlot(GameSaver->SaveSlotName, GameSaver->UserIndex));
-
+	/*
+	This method calls GameLoader class to handle loading system.
+	*/
 	GameLoader* GameLoaderInstance = new GameLoader();
-	if (GameSaver) 
-	{
-		// Teleport player to saved location.
-		InstigatorPawn->SetActorLocation(GameSaver->PlayerLocation);
-		GameLoaderInstance->LoadGame();
-	}
-
-	//static ConstructorHelpers::FObjectFinder<AEnemyCharacter> BPClassToSpawnTest(TEXT("/Game/TEST"));
-
-	UE_LOG(LogTemp, Warning, TEXT("TestGameLoader: Game loaded."));
+	GameLoaderInstance->LoadGame(InstigatorPawn);
 }

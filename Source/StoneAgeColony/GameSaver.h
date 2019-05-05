@@ -28,7 +28,7 @@ public:
 	FString PlayerName;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
-	FVector PlayerLocation;
+	FTransform PlayerTransform;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	int32 TimeOfDay;

@@ -6,7 +6,7 @@
 void Communicator::Reset() {
 	// Reset all variables.
 	test = 0;
-	PlayerLocation = FVector();
+	PlayerTransform = FTransform();
 	SpawnedCharacterDetails.Empty();
 
 	// Log to console.
@@ -14,12 +14,15 @@ void Communicator::Reset() {
 }
 
 void Communicator::Increment() {
-	// This is just a test function for debugging.
+	/* 
+		This is just a test function for debugging.
+	*/
+
 	test += 1;
 	UE_LOG(LogTemp, Warning, TEXT("current number is %d"), test);
 }
 
 void Communicator::SetPlayerLocation(APawn* Player) {
 	// Sets player location in communicator class. Does not actually change players location.
-	PlayerLocation = Player->GetActorLocation();
+	PlayerTransform = Player->GetActorTransform();
 }
