@@ -9,7 +9,8 @@
 #include "PeopleSpawner.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
-#include "MyPawn.h"
+#include "StoneAgeColonyCharacter.h"
+#include "SurvivalGameState.h"
 
 GameLoader::GameLoader()
 {
@@ -31,15 +32,24 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 
 	if (GameLoader) {
 
-		// Teleport player to saved location.
-		InstigatorPawn->SetActorTransform(GameLoader->PlayerTransform);
+		// Load player variables.
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(GameLoader->PlayerTransform);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(GameLoader->PlayerRotation);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Health = Communicator::GetInstance().PlayerHealth;
 		
 		// Destroy existing characters.
 		DestroyActors<AEnemyCharacter>();
 
-		// Set varibles to communicator.
+		// Set varibles to communicator (update with loaded variables).
 		Communicator::GetInstance().test = GameLoader->test;
 		Communicator::GetInstance().SpawnedCharacterDetails = GameLoader->SpawnedCharacterDetails;
+		Communicator::GetInstance().PlayerTransform = GameLoader->PlayerTransform;
+		Communicator::GetInstance().PlayerRotation = GameLoader->PlayerRotation;
+		Communicator::GetInstance().PlayerHealth = GameLoader->PlayerHealth;
+		Communicator::GetInstance().ElapsedGameMinutes = GameLoader->ElapsedGameMinutes;
+
+		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());
+		CurrentGameState->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 
 		// Spawn saved characters.
 		SpawnCharacters();

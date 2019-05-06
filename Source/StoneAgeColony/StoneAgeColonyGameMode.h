@@ -11,6 +11,13 @@ class AStoneAgeColonyGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HudWidget", Meta = (BlueprintProtected = "True"))
+	TSubclassOf<class UUserWidget> HUDWidgetClass;
+
+	UPROPERTY()
+	UUserWidget* WidgetInstance;
+
 public:
 	AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer);
 
@@ -29,11 +36,11 @@ public:
 
 	/* Can we deal damage to players in the same team */
 	UPROPERTY(EditDefaultsOnly, Category = "Rules")
-		bool bAllowFriendlyFireDamage;
+	bool bAllowFriendlyFireDamage;
 
 	/* Allow zombie spawns to be disabled (for debugging) */
 	UPROPERTY(EditDefaultsOnly, Category = "Debug")
-		bool bSpawnZombiesAtNight;
+	bool bSpawnZombiesAtNight;
 
 	float BotSpawnInterval;
 

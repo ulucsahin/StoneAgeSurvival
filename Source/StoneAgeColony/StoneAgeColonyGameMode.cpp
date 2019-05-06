@@ -10,10 +10,12 @@
 #include "SurvivalGameInstance.h"
 #include "Communicator.h"
 #include "GameSaver.h"
-
 #include "EngineUtils.h"
 #include "GameFramework/PlayerStart.h"
-//#include "TestGameLoader.h"
+
+// HUD
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+
 
 AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -43,8 +45,8 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 	bAllowFriendlyFireDamage = false;
 	bSpawnZombiesAtNight = true;
 
-	/* Start the game at 16:00 */
-	TimeOfDayStart = 16 * 60;
+	/* Start the game at 06:00 */
+	TimeOfDayStart = 6 * 60;
 	BotSpawnInterval = 5.0f;
 
 	/* Default team is 1 for players and 0 for enemies */
@@ -58,13 +60,7 @@ void AStoneAgeColonyGameMode::InitGameState()
 
 	// Resets communicator variables.
 	Communicator::GetInstance().Reset();
-	UE_LOG(LogTemp, Warning, TEXT("Communicator variables are reset."));
-	// Loads game and updates Communicator values as well.
-	//ATestGameLoader GameLoader;
-	//GameLoader.LoadGame();
-	
 
-	//UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyGameMode::InitGameState()"));
 	ASurvivalGameState* MyGameState = Cast<ASurvivalGameState>(GameState);
 	if (MyGameState)
 	{
@@ -91,6 +87,9 @@ void AStoneAgeColonyGameMode::DefaultTimer() {
 	{
 		/* Increment our time of day */
 		MyGameState->ElapsedGameMinutes += MyGameState->GetTimeOfDayIncrement();
+
+		/* Register time passed */
+		Communicator::GetInstance().ElapsedGameMinutes = MyGameState->ElapsedGameMinutes;
 
 		/* Determine our state */
 		MyGameState->GetAndUpdateIsNight();

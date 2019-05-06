@@ -31,18 +31,23 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	// Test
 	Communicator::GetInstance().Increment();
 
-	// Save System
+	// Some variables are only assigned to communicator before saving. Those variables are assigned here.
 	UGameSaver* GameSaver = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
 	Communicator::GetInstance().PlayerTransform = InstigatorPawn->GetActorTransform();
-
+	Communicator::GetInstance().PlayerRotation  = InstigatorPawn->GetActorRotation();
+	Communicator::GetInstance().PlayerHealth = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Health;
 
 	// Iterate over actors in world to get details of spawned actors.
+	// Saves actors to communicator.
 	IterateActors<AEnemyCharacter>();
 
 	// Assign variables to save file (from communicator).
 	GameSaver->PlayerTransform = Communicator::GetInstance().PlayerTransform;
+	GameSaver->PlayerRotation = Communicator::GetInstance().PlayerRotation;
+	GameSaver->PlayerHealth = Communicator::GetInstance().PlayerHealth;
 	GameSaver->test = Communicator::GetInstance().test;
 	GameSaver->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
+	GameSaver->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 
 	//UE_LOG(LogTemp, Warning, TEXT("First location in communicator: %f"), GameSaver->SpawnedCharacterDetails[0].CharacterLocation.X);
 	// Save save-file to disk.

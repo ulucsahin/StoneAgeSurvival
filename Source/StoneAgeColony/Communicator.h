@@ -49,9 +49,11 @@ public:
 	// Variables that will be saved.
 	int test;
 	FTransform PlayerTransform;
+	FRotator PlayerRotation;
+	float PlayerHealth;
 	TArray<FEnemyCharacterDetails> SpawnedCharacterDetails;
+	float ElapsedGameMinutes;
 	
-
 	// Blueprints
 	TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
 };

@@ -31,6 +31,12 @@ public:
 	FTransform PlayerTransform;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
+	FRotator PlayerRotation;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	float PlayerHealth;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
 	int32 TimeOfDay;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
@@ -41,6 +47,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	TArray<struct FEnemyCharacterDetails> SpawnedCharacterDetails;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	float ElapsedGameMinutes;
 
 	// Will be deleted, saving pointers is useless.
 	UPROPERTY(VisibleAnywhere, Category = Basic)

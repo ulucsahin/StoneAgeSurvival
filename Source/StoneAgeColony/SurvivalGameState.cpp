@@ -64,3 +64,8 @@ void ASurvivalGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME(ASurvivalGameState, bIsNight);
 	DOREPLIFETIME(ASurvivalGameState, TotalScore);
 }
+
+float ASurvivalGameState::GetTimeOfDay() 
+{
+	return ElapsedGameMinutes % (24*60);
+}

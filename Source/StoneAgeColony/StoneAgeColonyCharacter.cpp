@@ -87,6 +87,9 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	// Set Health
+	Health = 100.f;
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -228,6 +231,14 @@ void AStoneAgeColonyCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+
+	// For debug
+	if (Health > 0.f) 
+	{
+		Health -= 1.f;
+		UE_LOG(LogTemp, Warning, TEXT("Health: %f"), Health);
+	}
+		
 }
 
 void AStoneAgeColonyCharacter::OnResetVR()
@@ -396,4 +407,9 @@ void AStoneAgeColonyCharacter::RegisterSaveData() {
 
 	USurvivalGameInstance* GameInstance = Cast<USurvivalGameInstance>(GetGameInstance());
 	GameInstance->PlayerLocation = GetActorLocation();
+}
+
+float AStoneAgeColonyCharacter::GetHealth()
+{
+	return Health;
 }

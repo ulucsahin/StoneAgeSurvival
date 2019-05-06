@@ -53,4 +53,7 @@ public:
 	/* Returns whole days elapsed, represented in minutes */
 	UFUNCTION(BlueprintCallable, Category = "TimeOfDay")
 	int32 GetElapsedFullDaysInMinutes();
+
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	float GetTimeOfDay();
 };

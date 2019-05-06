@@ -7,7 +7,10 @@ void Communicator::Reset() {
 	// Reset all variables.
 	test = 0;
 	PlayerTransform = FTransform();
+	PlayerRotation = FRotator();
+	PlayerHealth = 100.f;
 	SpawnedCharacterDetails.Empty();
+	ElapsedGameMinutes = 0.f;
 
 	// Log to console.
 	UE_LOG(LogTemp, Warning, TEXT("Communicator variables are reset."));

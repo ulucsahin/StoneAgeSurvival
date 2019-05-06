@@ -59,6 +59,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
 	float MaxUseDistance;
 
+	float Health;
+
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	float GetHealth();
+
 protected:
 	bool bHasNewFocus;
 
