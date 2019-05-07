@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UsableActor.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -38,8 +39,10 @@ void AUsableActor::OnEndFocus() {
 	MeshComp->SetRenderCustomDepth(false);
 }
 
+
 void AUsableActor::OnUsed(APawn* InstigatorPawn) {
 	GLog->Log("im used");
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Uluc/Maps/OpenWorld"));
 }
 
 

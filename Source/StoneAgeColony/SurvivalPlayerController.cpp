@@ -16,13 +16,13 @@ void ASurvivalPlayerController::BeginPlayingState()
 	//UserInterface->AddToViewport(9999); // Z-order, this just makes it render on the very top.
 
 	// Add HUD to screen.
-	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/BP_Widget.BP_Widget_C"));
-	if (UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>())
-	{
-		UUserWidget* MyWidget = CreateWidget<UUserWidget>(this, MyWidgetClass);
-		// Do stuff with MyWidget
-		MyWidget->AddToViewport(9999);
-	}
+	//FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/BP_Widget.BP_Widget_C"));
+	//if (UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>())
+	//{
+	//	UUserWidget* MyWidget = CreateWidget<UUserWidget>(this, MyWidgetClass);
+	//	// Do stuff with MyWidget
+	//	MyWidget->AddToViewport(9999);
+	//}
 
 
 }

@@ -31,12 +31,6 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 	GameLoader = Cast<UGameSaver>(UGameplayStatics::LoadGameFromSlot(GameLoader->SaveSlotName, GameLoader->UserIndex));
 
 	if (GameLoader) {
-
-		// Load player variables.
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(GameLoader->PlayerTransform);
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(GameLoader->PlayerRotation);
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->Health = Communicator::GetInstance().PlayerHealth;
-		
 		// Destroy existing characters.
 		DestroyActors<AEnemyCharacter>();
 
@@ -47,6 +41,11 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		Communicator::GetInstance().PlayerRotation = GameLoader->PlayerRotation;
 		Communicator::GetInstance().PlayerHealth = GameLoader->PlayerHealth;
 		Communicator::GetInstance().ElapsedGameMinutes = GameLoader->ElapsedGameMinutes;
+
+		// Load player variables.
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(GameLoader->PlayerTransform);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(GameLoader->PlayerRotation);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Health = Communicator::GetInstance().PlayerHealth;
 
 		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());
 		CurrentGameState->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
