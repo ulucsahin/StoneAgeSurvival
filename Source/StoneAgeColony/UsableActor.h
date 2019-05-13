@@ -16,6 +16,8 @@ public:
 	//AUsableActor();
 	AUsableActor(const FObjectInitializer& ObjectInitializer);
 
+	const static int ID = 0;
+
 	virtual void OnUsed(APawn* InstigatorPawn);
 
 	/* Player is looking at */
@@ -23,6 +25,8 @@ public:
 
 	/* Player is no longer looking at */
 	virtual void OnEndFocus();
+	
+	virtual void PrintName();
 
 protected:
 	// Called when the game starts or when spawned
@@ -34,5 +38,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void PreInitializeComponents() override;
 
 };

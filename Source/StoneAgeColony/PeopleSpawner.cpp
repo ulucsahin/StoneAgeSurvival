@@ -3,6 +3,7 @@
 #include "PeopleSpawner.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Communicator.h"
+#include "StoneAgeColonyCharacter.h"
 #include "Spawner.h"
  
 void APeopleSpawner::BeginPlay()
@@ -14,6 +15,8 @@ void APeopleSpawner::OnUsed(APawn* InstigatorPawn)
 {
 	// This method is used for spawning actors.
 	UE_LOG(LogTemp, Warning, TEXT("APeopleSpawner::OnUsed hehee"));
+	((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID);
+	((AStoneAgeColonyCharacter*)InstigatorPawn)->PrintInventory();
 	SpawnCharacter(true);
 }
 

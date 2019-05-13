@@ -46,6 +46,7 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(GameLoader->PlayerTransform);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(GameLoader->PlayerRotation);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Health = Communicator::GetInstance().PlayerHealth;
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory = GameLoader->PlayerInventory;
 
 		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());
 		CurrentGameState->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;

@@ -51,6 +51,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	float ElapsedGameMinutes;
 
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	TArray<int> PlayerInventory;
+
 	// Will be deleted, saving pointers is useless.
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	USurvivalGameInstance* GameInstance;

@@ -26,12 +26,13 @@ public:
 	virtual void DefaultTimer();
 	virtual void StartMatch();
 	virtual void OnNightEnded();
+	void RegisterItemIDs();
 
 
 	/*Player start override*/
 	// https://youtu.be/2aUYBzmefpM?t=355
-	/*virtual class AActor* ChoosePlayerStart_Implementation(AController* Player) override;
-	bool ShouldSpawnAtStartSpot(AController* Player) override;*/
+	// virtual class AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+	// bool ShouldSpawnAtStartSpot(AController* Player) override;
 
 
 	/* Can we deal damage to players in the same team */

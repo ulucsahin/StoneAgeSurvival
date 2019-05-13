@@ -54,7 +54,9 @@ public:
 	class AUsableActor* FocusedUsableActor;
 	virtual void Use();
 	void RegisterSaveData();
-
+	void AddToInventory(int);
+	void PrintInventory();
+	TArray<int> Inventory;
 	/*Max distance to use/focus on actors. */
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
 	float MaxUseDistance;

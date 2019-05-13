@@ -36,6 +36,7 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	Communicator::GetInstance().PlayerTransform = InstigatorPawn->GetActorTransform();
 	Communicator::GetInstance().PlayerRotation  = InstigatorPawn->GetActorRotation();
 	Communicator::GetInstance().PlayerHealth = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Health;
+	Communicator::GetInstance().PlayerInventory = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory;
 
 	// Iterate over actors in world to get details of spawned actors.
 	// Saves actors to communicator.
@@ -48,6 +49,7 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	GameSaver->test = Communicator::GetInstance().test;
 	GameSaver->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
 	GameSaver->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
+	GameSaver->PlayerInventory = Communicator::GetInstance().PlayerInventory;
 
 	//UE_LOG(LogTemp, Warning, TEXT("First location in communicator: %f"), GameSaver->SpawnedCharacterDetails[0].CharacterLocation.X);
 	// Save save-file to disk.

@@ -16,6 +16,9 @@ class STONEAGECOLONY_API ATestGameLoader : public AUsableActor
 {
 	GENERATED_BODY()
 
+public:
+	const static int ID = 1;
+
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	

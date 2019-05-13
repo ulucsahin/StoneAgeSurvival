@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyCharacter.h"
+#include "UsableActor.h"
 
 
 /**
@@ -48,10 +49,20 @@ public:
 
 	// Variables that will be saved.
 	int test;
+
+	// IDs of usable items in game
+	TMap<unsigned short, AUsableActor*> UsableItemIDMap; // how?
+	
+	// TArray of ints holding ids of items in player inventory
+	TArray<int> PlayerInventory;
+
 	FTransform PlayerTransform;
 	FRotator PlayerRotation;
 	float PlayerHealth;
 	TArray<FEnemyCharacterDetails> SpawnedCharacterDetails;
+
+
+	
 	float ElapsedGameMinutes;
 	
 	// Blueprints

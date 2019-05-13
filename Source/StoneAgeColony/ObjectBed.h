@@ -21,6 +21,8 @@ class STONEAGECOLONY_API AObjectBed : public AUsableActor
 public:
 	AObjectBed(const FObjectInitializer& ObjectInitializer);
 
+	const static int ID = 3;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

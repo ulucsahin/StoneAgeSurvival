@@ -16,6 +16,8 @@
 #include "DrawDebugHelpers.h"
 #include "GameSaver.h"
 #include "SurvivalGameInstance.h"
+#include "UsableActor.h"
+#include "Communicator.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -177,6 +179,9 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	// Bind use event
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &AStoneAgeColonyCharacter::Use);
+
+	// Debug event
+	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::PrintInventory);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -412,4 +417,23 @@ void AStoneAgeColonyCharacter::RegisterSaveData() {
 float AStoneAgeColonyCharacter::GetHealth()
 {
 	return Health;
+}
+
+void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd)
+{
+	Inventory.Add(ItemToAdd);
+}
+
+void AStoneAgeColonyCharacter::PrintInventory()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::PrintInventory"));
+	for (int itemID : Inventory) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ITEM IN INVENTORY: %d"), itemID);
+		//item->PrintName();
+		AUsableActor* CurrentItem = Communicator::GetInstance().UsableItemIDMap[itemID];
+		
+		//CurrentItem->PrintName();
+		//UE_LOG(LogTemp, Warning, TEXT("CurrentItem ID: %d"), CurrentItem->ID);
+	}
 }

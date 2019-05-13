@@ -12,6 +12,13 @@
 #include "GameSaver.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerStart.h"
+#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
+
+// Usable Actors
+#include "UsableActor.h"
+#include "TestGameLoader.h"
+#include "ObjectBed.h"
+#include "PeopleSpawner.h"
 
 // HUD
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
@@ -20,7 +27,6 @@
 AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
 	// Set world for communicator
 	Communicator::GetInstance().World = GetWorld();
 
@@ -28,7 +34,9 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 	static ConstructorHelpers::FClassFinder<AEnemyCharacter> BPClass(TEXT("'/Game/Uluc/ActiveAssets/BP_FollowerEnemyCharacter'"));
 	Communicator::GetInstance().EnemyCharacterToSpawn = BPClass.Class;
 
-	
+	// Set usable item IDs
+	RegisterItemIDs();
+
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
@@ -117,39 +125,67 @@ void AStoneAgeColonyGameMode::OnNightEnded() {
 //{
 //
 //	class AActor* retVal = nullptr;
+//	//Player->SetActorLocation(FVector(23030.f, -180.f, 90.f));
+//	//if (Player)
+//	//{
+//	//	class UWorld* const world = GetWorld();
 //
-//	if (Player)
-//	{
-//		class UWorld* const world = GetWorld();
+//	//	if (world != nullptr)
+//	//	{
+//	//		class USurvivalGameInstance* gInstance = Cast<USurvivalGameInstance>(GetGameInstance());
 //
-//		if (world != nullptr)
-//		{
-//			class USurvivalGameInstance* gInstance = Cast<USurvivalGameInstance>(GetGameInstance());
+//	//		if (gInstance)
+//	//		{
+//	//			TArray<class AActor*> PlayerStarts;
+//	//			UGameplayStatics::GetAllActorsOfClass(world, APlayerStart::StaticClass(), PlayerStarts);
+//	//			TArray<class AActor*> PreferredStarts;
 //
-//			if (gInstance)
-//			{
-//				TArray<class AActor*> PlayerStarts;
-//				UGameplayStatics::GetAllActorsOfClass(world, APlayerStart::StaticClass(), PlayerStarts);
-//				TArray<class AActor*> PreferredStarts;
+//	//			for (TActorIterator<APlayerStart> Itr(world); Itr; ++Itr) 
+//	//			{
+//	//				// NOT IMPLEMENTED
+//	//				// add *Itr to PreferredStarts array according to some condition
 //
-//				for (TActorIterator<APlayerStart> Itr(world); Itr; ++Itr) 
-//				{
-//					// NOT IMPLEMENTED
-//					// add *Itr to PreferredStarts array according to some condition
+//	//			}
 //
-//				}
+//	//			return PreferredStarts[FMath::RandRange(0, PreferredStarts.Num() - 1)];
+//	//		}
 //
-//				return PreferredStarts[FMath::RandRange(0, PreferredStarts.Num() - 1)];
-//			}
+//	//	}
 //
-//		}
-//
-//	}
+//	//}
 //
 //	return retVal;
 //}
 //
 //bool AStoneAgeColonyGameMode::ShouldSpawnAtStartSpot(AController* Player)
 //{
-//	return false;
+//	return true;
 //}
+
+void AStoneAgeColonyGameMode::RegisterItemIDs() 
+{
+	/*for (TObjectIterator<UClass> It; It; ++It)
+	{
+		if (It->IsChildOf(AUsableActor::StaticClass()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("XDDDDDD=================:"));
+			Communicator::GetInstance().UsableItemIDMap.Add(It->GetDefaultObject<AUsableActor>()->ID, *It);
+		}
+	}*/
+
+	// Register Classes
+	Communicator::GetInstance().UsableItemIDMap.Add(AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID, (AUsableActor*)AUsableActor::StaticClass());
+	Communicator::GetInstance().UsableItemIDMap.Add(APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID, (APeopleSpawner*)APeopleSpawner::StaticClass());
+	Communicator::GetInstance().UsableItemIDMap.Add(AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID, (AObjectBed*)AObjectBed::StaticClass());
+	Communicator::GetInstance().UsableItemIDMap.Add(ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID, (ATestGameLoader*)ATestGameLoader::StaticClass());
+	
+	int a = 0;
+	for (auto& item : Communicator::GetInstance().UsableItemIDMap)
+	{
+		a++;
+		UE_LOG(LogTemp, Warning, TEXT("Class ID: %d,"), item.Key);
+	}
+	
+
+
+}

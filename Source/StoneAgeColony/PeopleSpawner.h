@@ -21,6 +21,7 @@ public:
 
 	//UPROPERTY(EditDefaultsOnly, Category = "ActorSpawning")
 	//TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
+	const static int ID = 2;
 
 	int SpawnCount = 0;
 	void SpawnCharacter(bool bShouldRegister);
