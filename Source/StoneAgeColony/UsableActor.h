@@ -15,8 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	//AUsableActor();
 	AUsableActor(const FObjectInitializer& ObjectInitializer);
-
+	
 	const static int ID = 0;
+	UTexture2D* InventoryTexture;
 
 	virtual void OnUsed(APawn* InstigatorPawn);
 
@@ -27,7 +28,8 @@ public:
 	virtual void OnEndFocus();
 	
 	virtual void PrintName();
-
+	
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

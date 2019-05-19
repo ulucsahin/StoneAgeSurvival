@@ -52,19 +52,32 @@ public:
 	AStoneAgeColonyCharacter();
 	AUsableActor* GetUsableInView();
 	class AUsableActor* FocusedUsableActor;
-	virtual void Use();
 	void RegisterSaveData();
+	void InitializeWidgets();
 	void AddToInventory(int);
 	void PrintInventory();
+	
+	UPROPERTY(VisibleAnywhere)
 	TArray<int> Inventory;
+
+	bool InventoryOn = false;
+	bool Init = false;
+
 	/*Max distance to use/focus on actors. */
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
 	float MaxUseDistance;
 
 	float Health;
 
+	// UI Functions
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	float GetHealth();
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	TArray<int> GetInventory();
+
+	// UI Variables
+	UUserWidget* InventoryWidget;
 
 protected:
 	bool bHasNewFocus;
@@ -106,6 +119,12 @@ private:
 	void HandleFocus();
 
 protected:
+
+	// Uses looked item
+	void Use();
+
+	// Opens inventory ui
+	void OpenInventory();
 	
 	/** Fires a projectile. */
 	void OnFire();

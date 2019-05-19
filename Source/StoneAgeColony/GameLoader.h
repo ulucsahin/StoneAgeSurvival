@@ -19,4 +19,6 @@ public:
 
 	template<typename T> 
 	void DestroyActors();
+
+	void UpdateInventoryUI();
 };

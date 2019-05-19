@@ -18,6 +18,9 @@
 #include "SurvivalGameInstance.h"
 #include "UsableActor.h"
 #include "Communicator.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+
+//DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -92,6 +95,9 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 
 	// Set Health
 	Health = 100.f;
+
+	InventoryOn = false;
+	InitializeWidgets();
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -113,6 +119,8 @@ void AStoneAgeColonyCharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
+
+
 }
 
 void AStoneAgeColonyCharacter::Tick(float DeltaTime) {
@@ -179,6 +187,9 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	// Bind use event
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &AStoneAgeColonyCharacter::Use);
+
+	// Bind open inventory event
+	PlayerInputComponent->BindAction("OpenInventory", IE_Pressed, this, &AStoneAgeColonyCharacter::OpenInventory);
 
 	// Debug event
 	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::PrintInventory);
@@ -363,7 +374,20 @@ bool AStoneAgeColonyCharacter::EnableTouchscreenMovement(class UInputComponent* 
 	Performs ray-trace to find closest looked-at UsableActor.
 */
 
-AUsableActor* AStoneAgeColonyCharacter::GetUsableInView(){
+void AStoneAgeColonyCharacter::InitializeWidgets()
+{
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	// Initialize Inventory Widget
+	//FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/PlayerInventory.PlayerInventory_C"));
+	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/PlayerInventory.PlayerInventory_C"));
+	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
+	InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
+
+}
+
+AUsableActor* AStoneAgeColonyCharacter::GetUsableInView()
+{
 	bool debug = false;
 	FVector CamLoc;
 	FRotator CamRot;
@@ -378,7 +402,8 @@ AUsableActor* AStoneAgeColonyCharacter::GetUsableInView(){
 	const FVector TraceEnd = TraceStart + (Direction * 250.f);
 
 	// log
-	if (debug) {
+	if (debug) 
+	{
 		UE_LOG(LogTemp, Warning, TEXT("Camera:, %f, %f, %f"), CamLoc.X, CamLoc.Y, CamLoc.Z);
 		UE_LOG(LogTemp, Warning, TEXT("TraceEnd:, %f, %f, %f"), TraceEnd.X, TraceEnd.Y, TraceEnd.Z);
 	}
@@ -398,11 +423,40 @@ AUsableActor* AStoneAgeColonyCharacter::GetUsableInView(){
 	return Cast<AUsableActor>(Hit.GetActor());
 }
 
-void AStoneAgeColonyCharacter::Use() {
+void AStoneAgeColonyCharacter::Use() 
+{
 	AUsableActor* Usable = GetUsableInView();
-	if (Usable){
+	if (Usable)
+	{
 		Usable->OnUsed(this);
 	}
+}
+
+void AStoneAgeColonyCharacter::OpenInventory()
+{	
+	// BE CAREFUL:
+	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if (!InventoryOn)
+	{
+		FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/PlayerInventory.PlayerInventory_C"));
+		UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
+		InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
+		InventoryWidget->AddToViewport();
+		PlayerController->SetInputMode(FInputModeGameAndUI());
+		PlayerController->bShowMouseCursor = true;
+	}
+	
+	else
+	{
+		InventoryWidget->RemoveFromParent();
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+	}
+	
+
+	InventoryOn = !InventoryOn;
 }
 
 void AStoneAgeColonyCharacter::RegisterSaveData() {
@@ -417,6 +471,11 @@ void AStoneAgeColonyCharacter::RegisterSaveData() {
 float AStoneAgeColonyCharacter::GetHealth()
 {
 	return Health;
+}
+
+TArray<int> AStoneAgeColonyCharacter::GetInventory() 
+{
+	return Inventory;
 }
 
 void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd)

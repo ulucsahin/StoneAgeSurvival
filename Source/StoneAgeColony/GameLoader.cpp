@@ -51,6 +51,9 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());
 		CurrentGameState->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 
+		// Update UI Inventory Elements
+		UpdateInventoryUI();
+
 		// Spawn saved characters.
 		SpawnCharacters();
 	}
@@ -109,4 +112,27 @@ void GameLoader::DestroyActors()
 
 	// Empty communicator since we deleted all characters.
 	Communicator::GetInstance().SpawnedCharacterDetails.Empty();
+}
+
+void GameLoader::UpdateInventoryUI()
+{
+	//FStringClassReference HUDRef(TEXT("/Game/Uluc/HUD/BP_Widget.BP_Widget_C"));
+	//if (UClass* HUD = MyWidgetClassRef.TryLoadClass<UUserWidget>())
+	//{
+	//	UUserWidget* MyWidget = CreateWidget<UUserWidget>(this, HUD);
+	//	// Do stuff with MyWidget
+	//	HUD->AddToViewport(9999);
+	//}
+
+	//UFloatProperty* FloatProp = FindField(Object->GetClass(), PropertyName);
+	//if (FloatProp != NULL)
+	//{
+	//	float* FloatPtr = FloatProp->GetPropertyValue_InContainer(Object);
+	//	if (FloatPtr != NULL)
+	//	{
+	//		float MyFloat = *FloatPtr;
+	//	}
+	//}
+
+
 }
