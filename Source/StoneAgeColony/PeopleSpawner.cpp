@@ -11,13 +11,19 @@ void APeopleSpawner::BeginPlay()
 	Super::BeginPlay();
 }
 
-void APeopleSpawner::OnUsed(APawn* InstigatorPawn) 
+void APeopleSpawner::OnUsed(APawn* InstigatorPawn)
 {
 	// This method is used for spawning actors.
-	UE_LOG(LogTemp, Warning, TEXT("APeopleSpawner::OnUsed hehee"));
-	((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID);
-	((AStoneAgeColonyCharacter*)InstigatorPawn)->PrintInventory();
-	SpawnCharacter(true);
+
+	// If player has enough gold
+	if (((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold >= 10)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("APeopleSpawner::OnUsed hehee"));
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->PrintInventory();
+		SpawnCharacter(true);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold -= 10;
+	}
 }
 
 void APeopleSpawner::SpawnCharacter(bool bShouldRegister)

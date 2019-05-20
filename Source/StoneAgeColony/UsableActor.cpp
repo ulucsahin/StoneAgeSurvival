@@ -15,8 +15,8 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 	RootComponent = MeshComp;
 
 	// Set InventoryTexture
-	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/Inventory/lol.lol'"));
-	InventoryTexture = InventoryTexObj.Object;
+	//static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/Inventory/lol.lol'"));
+	//InventoryTexture = InventoryTexObj.Object;
 }
 
 void AUsableActor::PreInitializeComponents() {

@@ -9,6 +9,10 @@ void Communicator::Reset() {
 	PlayerTransform = FTransform();
 	PlayerRotation = FRotator();
 	PlayerHealth = 100.f;
+	float PlayerStamina = 100.f;
+	int PlayerLevel = 1;
+	int PlayerExperience = 0;
+	int PlayerGold = 50;
 	SpawnedCharacterDetails.Empty();
 	ElapsedGameMinutes = 0.f;
 

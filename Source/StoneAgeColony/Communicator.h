@@ -59,6 +59,10 @@ public:
 	FTransform PlayerTransform;
 	FRotator PlayerRotation;
 	float PlayerHealth;
+	float PlayerStamina;
+	int PlayerLevel;
+	int PlayerExperience;
+	int PlayerGold;
 	TArray<FEnemyCharacterDetails> SpawnedCharacterDetails;
 
 

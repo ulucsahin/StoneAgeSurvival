@@ -68,10 +68,26 @@ public:
 	float MaxUseDistance;
 
 	float Health;
+	float Stamina;
+	int Gold;
+	int Experience;
+	int Level;
 
 	// UI Functions
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	float GetHealth();
+
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	float GetStamina();
+
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	int GetGold();
+
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	int GetExperience();
+
+	UFUNCTION(BlueprintPure, Category = "Stats")
+	int GetLevel();
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	TArray<int> GetInventory();

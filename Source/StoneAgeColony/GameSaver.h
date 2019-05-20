@@ -37,6 +37,19 @@ public:
 	float PlayerHealth;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
+	float PlayerStamina;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	int PlayerLevel;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	int PlayerExperience;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	int PlayerGold;
+
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
 	int32 TimeOfDay;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)

@@ -40,12 +40,18 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		Communicator::GetInstance().PlayerTransform = GameLoader->PlayerTransform;
 		Communicator::GetInstance().PlayerRotation = GameLoader->PlayerRotation;
 		Communicator::GetInstance().PlayerHealth = GameLoader->PlayerHealth;
+		Communicator::GetInstance().PlayerLevel = GameLoader->PlayerLevel;
+		Communicator::GetInstance().PlayerExperience = GameLoader->PlayerExperience;
+		Communicator::GetInstance().PlayerGold = GameLoader->PlayerGold;
 		Communicator::GetInstance().ElapsedGameMinutes = GameLoader->ElapsedGameMinutes;
 
 		// Load player variables.
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(GameLoader->PlayerTransform);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(GameLoader->PlayerRotation);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Health = Communicator::GetInstance().PlayerHealth;
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Level = Communicator::GetInstance().PlayerLevel;
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Experience = Communicator::GetInstance().PlayerExperience;
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold = Communicator::GetInstance().PlayerGold;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory = GameLoader->PlayerInventory;
 
 		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());

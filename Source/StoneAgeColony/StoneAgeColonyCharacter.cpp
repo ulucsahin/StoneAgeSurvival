@@ -93,8 +93,12 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
 
-	// Set Health
+	// Init Stats
 	Health = 100.f;
+	Stamina = 100.f;
+	Gold = 50;
+	Experience = 0;
+	Level = 1;
 
 	InventoryOn = false;
 	InitializeWidgets();
@@ -380,7 +384,7 @@ void AStoneAgeColonyCharacter::InitializeWidgets()
 
 	// Initialize Inventory Widget
 	//FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/PlayerInventory.PlayerInventory_C"));
-	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/PlayerInventory.PlayerInventory_C"));
+	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
 	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
 	InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
 
@@ -440,7 +444,7 @@ void AStoneAgeColonyCharacter::OpenInventory()
 
 	if (!InventoryOn)
 	{
-		FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/PlayerInventory.PlayerInventory_C"));
+		FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
 		UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
 		InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
 		InventoryWidget->AddToViewport();
@@ -471,6 +475,26 @@ void AStoneAgeColonyCharacter::RegisterSaveData() {
 float AStoneAgeColonyCharacter::GetHealth()
 {
 	return Health;
+}
+
+float AStoneAgeColonyCharacter::GetStamina()
+{
+	return Stamina;
+}
+
+int AStoneAgeColonyCharacter::GetGold()
+{
+	return Gold;
+}
+
+int AStoneAgeColonyCharacter::GetExperience()
+{
+	return Experience;
+}
+
+int AStoneAgeColonyCharacter::GetLevel()
+{
+	return Level;
 }
 
 TArray<int> AStoneAgeColonyCharacter::GetInventory() 

@@ -31,11 +31,15 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	// Test
 	Communicator::GetInstance().Increment();
 
+	// TODO: Make a stats struct for characters.
 	// Some variables are only assigned to communicator before saving. Those variables are assigned here.
 	UGameSaver* GameSaver = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
 	Communicator::GetInstance().PlayerTransform = InstigatorPawn->GetActorTransform();
 	Communicator::GetInstance().PlayerRotation  = InstigatorPawn->GetActorRotation();
 	Communicator::GetInstance().PlayerHealth = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Health;
+	Communicator::GetInstance().PlayerLevel = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Level;
+	Communicator::GetInstance().PlayerExperience = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Experience;
+	Communicator::GetInstance().PlayerGold = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold;
 	Communicator::GetInstance().PlayerInventory = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory;
 
 	// Iterate over actors in world to get details of spawned actors.
@@ -46,6 +50,9 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	GameSaver->PlayerTransform = Communicator::GetInstance().PlayerTransform;
 	GameSaver->PlayerRotation = Communicator::GetInstance().PlayerRotation;
 	GameSaver->PlayerHealth = Communicator::GetInstance().PlayerHealth;
+	GameSaver->PlayerLevel = Communicator::GetInstance().PlayerLevel;
+	GameSaver->PlayerExperience = Communicator::GetInstance().PlayerExperience;
+	GameSaver->PlayerGold = Communicator::GetInstance().PlayerGold;
 	GameSaver->test = Communicator::GetInstance().test;
 	GameSaver->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
 	GameSaver->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
