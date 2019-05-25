@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ObjectBed.h"
-#include "GameSaver.h"
+#include "SaveGameEntity.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "StoneAgeColonyCharacter.h"
 #include "SurvivalGameInstance.h"
@@ -33,7 +33,7 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 
 	// TODO: Make a stats struct for characters.
 	// Some variables are only assigned to communicator before saving. Those variables are assigned here.
-	UGameSaver* GameSaver = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
+	USaveGameEntity* SaveGameEntity = Cast<USaveGameEntity>(UGameplayStatics::CreateSaveGameObject(USaveGameEntity::StaticClass()));
 	Communicator::GetInstance().PlayerTransform = InstigatorPawn->GetActorTransform();
 	Communicator::GetInstance().PlayerRotation  = InstigatorPawn->GetActorRotation();
 	Communicator::GetInstance().PlayerHealth = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Health;
@@ -47,20 +47,20 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	IterateActors<AEnemyCharacter>();
 
 	// Assign variables to save file (from communicator).
-	GameSaver->PlayerTransform = Communicator::GetInstance().PlayerTransform;
-	GameSaver->PlayerRotation = Communicator::GetInstance().PlayerRotation;
-	GameSaver->PlayerHealth = Communicator::GetInstance().PlayerHealth;
-	GameSaver->PlayerLevel = Communicator::GetInstance().PlayerLevel;
-	GameSaver->PlayerExperience = Communicator::GetInstance().PlayerExperience;
-	GameSaver->PlayerGold = Communicator::GetInstance().PlayerGold;
-	GameSaver->test = Communicator::GetInstance().test;
-	GameSaver->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
-	GameSaver->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
-	GameSaver->PlayerInventory = Communicator::GetInstance().PlayerInventory;
+	SaveGameEntity->PlayerTransform = Communicator::GetInstance().PlayerTransform;
+	SaveGameEntity->PlayerRotation = Communicator::GetInstance().PlayerRotation;
+	SaveGameEntity->PlayerHealth = Communicator::GetInstance().PlayerHealth;
+	SaveGameEntity->PlayerLevel = Communicator::GetInstance().PlayerLevel;
+	SaveGameEntity->PlayerExperience = Communicator::GetInstance().PlayerExperience;
+	SaveGameEntity->PlayerGold = Communicator::GetInstance().PlayerGold;
+	SaveGameEntity->test = Communicator::GetInstance().test;
+	SaveGameEntity->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
+	SaveGameEntity->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
+	SaveGameEntity->PlayerInventory = Communicator::GetInstance().PlayerInventory;
 
 	//UE_LOG(LogTemp, Warning, TEXT("First location in communicator: %f"), GameSaver->SpawnedCharacterDetails[0].CharacterLocation.X);
 	// Save save-file to disk.
-	UGameplayStatics::SaveGameToSlot(GameSaver, GameSaver->SaveSlotName, GameSaver->UserIndex);
+	UGameplayStatics::SaveGameToSlot(SaveGameEntity, SaveGameEntity->SaveSlotName, SaveGameEntity->UserIndex);
 }
 
 template <typename T>

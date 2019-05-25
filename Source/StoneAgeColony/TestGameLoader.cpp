@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TestGameLoader.h"
-#include "GameSaver.h"
 #include "GameLoader.h"
 #include "PeopleSpawner.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"

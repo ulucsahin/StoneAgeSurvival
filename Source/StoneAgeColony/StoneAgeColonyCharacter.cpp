@@ -14,7 +14,6 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "DrawDebugHelpers.h"
-#include "GameSaver.h"
 #include "SurvivalGameInstance.h"
 #include "UsableActor.h"
 #include "Communicator.h"
@@ -43,13 +42,13 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	/*Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);*/
 
 	// Create a gun mesh component
 	FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
@@ -110,19 +109,19 @@ void AStoneAgeColonyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
-	// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	if (bUsingMotionControllers)
-	{
-		VR_Gun->SetHiddenInGame(false, true);
-		Mesh1P->SetHiddenInGame(true, true);
-	}
-	else
-	{
-		VR_Gun->SetHiddenInGame(true, true);
-		Mesh1P->SetHiddenInGame(false, true);
-	}
+	//// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
+	//if (bUsingMotionControllers)
+	//{
+	//	VR_Gun->SetHiddenInGame(false, true);
+	//	Mesh1P->SetHiddenInGame(true, true);
+	//}
+	//else
+	//{
+	//	VR_Gun->SetHiddenInGame(true, true);
+	//	Mesh1P->SetHiddenInGame(false, true);
+	//}
 
 
 }
@@ -195,6 +194,9 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	// Bind open inventory event
 	PlayerInputComponent->BindAction("OpenInventory", IE_Pressed, this, &AStoneAgeColonyCharacter::OpenInventory);
 
+	// Bind open character menu event
+	PlayerInputComponent->BindAction("OpenCharacterMenu", IE_Pressed, this, &AStoneAgeColonyCharacter::OpenCharacterMenu);
+
 	// Debug event
 	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::PrintInventory);
 
@@ -242,15 +244,15 @@ void AStoneAgeColonyCharacter::OnFire()
 	}
 
 	// try and play a firing animation if specified
-	if (FireAnimation != NULL)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
-	}
+	//if (FireAnimation != NULL)
+	//{
+	//	// Get the animation object for the arms mesh
+	//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+	//	if (AnimInstance != NULL)
+	//	{
+	//		AnimInstance->Montage_Play(FireAnimation, 1.f);
+	//	}
+	//}
 
 	// For debug
 	if (Health > 0.f) 
@@ -388,6 +390,9 @@ void AStoneAgeColonyCharacter::InitializeWidgets()
 	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
 	InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
 
+	FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
+	UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<UUserWidget>();
+	CharacterMenuWidget = CreateWidget<UUserWidget>(PlayerController, CharacterMenuWidgtClass);
 }
 
 AUsableActor* AStoneAgeColonyCharacter::GetUsableInView()
@@ -444,32 +449,56 @@ void AStoneAgeColonyCharacter::OpenInventory()
 
 	if (!InventoryOn)
 	{
+		// Open Inventory
 		FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
 		UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
 		InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
 		InventoryWidget->AddToViewport();
 		PlayerController->SetInputMode(FInputModeGameAndUI());
 		PlayerController->bShowMouseCursor = true;
+		InventoryOn = true;
 	}
 	
 	else
 	{
+		// Close Inventory
 		InventoryWidget->RemoveFromParent();
 		PlayerController->SetInputMode(FInputModeGameOnly());
 		PlayerController->bShowMouseCursor = false;
+		InventoryOn = false;
 	}
-	
+}
 
-	InventoryOn = !InventoryOn;
+void AStoneAgeColonyCharacter::OpenCharacterMenu()
+{
+	// BE CAREFUL:
+	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if (!CharacterMenuOn)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Character menu opened."));
+		FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
+		UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<UUserWidget>();
+		CharacterMenuWidget = CreateWidget<UUserWidget>(PlayerController, CharacterMenuWidgtClass);
+		CharacterMenuWidget->AddToViewport();
+		PlayerController->SetInputMode(FInputModeGameAndUI());
+		PlayerController->bShowMouseCursor = true;
+		CharacterMenuOn = true;
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Character menu closed."));
+		CharacterMenuWidget->RemoveFromParent();
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+		CharacterMenuOn = false;
+	}
+	//'/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C'
 }
 
 void AStoneAgeColonyCharacter::RegisterSaveData() {
-	//UGameSaver* SaveGameInstance = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
-	//SaveGameInstance->PlayerName = "UlucTestPlayerName";
-	//SaveGameInstance->PlayerLocation = GetActorLocation();
-
-	USurvivalGameInstance* GameInstance = Cast<USurvivalGameInstance>(GetGameInstance());
-	GameInstance->PlayerLocation = GetActorLocation();
+	// Handled in ObjectBed and GameLoader
 }
 
 float AStoneAgeColonyCharacter::GetHealth()

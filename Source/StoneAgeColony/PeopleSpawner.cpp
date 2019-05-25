@@ -21,8 +21,8 @@ void APeopleSpawner::OnUsed(APawn* InstigatorPawn)
 		UE_LOG(LogTemp, Warning, TEXT("APeopleSpawner::OnUsed hehee"));
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->PrintInventory();
-		SpawnCharacter(true);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold -= 10;
+		SpawnCharacter(true);
 	}
 }
 

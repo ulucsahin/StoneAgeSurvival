@@ -61,6 +61,7 @@ public:
 	TArray<int> Inventory;
 
 	bool InventoryOn = false;
+	bool CharacterMenuOn = false;
 	bool Init = false;
 
 	/*Max distance to use/focus on actors. */
@@ -94,6 +95,7 @@ public:
 
 	// UI Variables
 	UUserWidget* InventoryWidget;
+	UUserWidget* CharacterMenuWidget;
 
 protected:
 	bool bHasNewFocus;
@@ -141,6 +143,9 @@ protected:
 
 	// Opens inventory ui
 	void OpenInventory();
+
+	// Opens Character Menu ui
+	void OpenCharacterMenu();
 	
 	/** Fires a projectile. */
 	void OnFire();

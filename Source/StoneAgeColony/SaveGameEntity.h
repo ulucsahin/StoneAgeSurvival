@@ -6,20 +6,18 @@
 #include "GameFramework/SaveGame.h"
 #include "SurvivalGameInstance.h"
 #include "EnemyCharacter.h"
-#include "GameSaver.generated.h"
-
-
+#include "SaveGameEntity.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class STONEAGECOLONY_API UGameSaver : public USaveGame
+class STONEAGECOLONY_API USaveGameEntity : public USaveGame
 {
 	GENERATED_BODY()
 	
 public:
-	UGameSaver();
+	USaveGameEntity();
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	int test;
@@ -48,7 +46,6 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	int PlayerGold;
 
-
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	int32 TimeOfDay;
 
@@ -70,6 +67,4 @@ public:
 	// Will be deleted, saving pointers is useless.
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	USurvivalGameInstance* GameInstance;
-
 };
-

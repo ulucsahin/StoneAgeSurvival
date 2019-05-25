@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameLoader.h"
-#include "GameSaver.h"
+#include "SaveGameEntity.h"
 #include "PeopleSpawner.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Communicator.h"
@@ -27,32 +27,32 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 	*/
 
 	// LOAD SYSTEM
-	UGameSaver* GameLoader = Cast<UGameSaver>(UGameplayStatics::CreateSaveGameObject(UGameSaver::StaticClass()));
-	GameLoader = Cast<UGameSaver>(UGameplayStatics::LoadGameFromSlot(GameLoader->SaveSlotName, GameLoader->UserIndex));
+	USaveGameEntity* SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::CreateSaveGameObject(USaveGameEntity::StaticClass()));
+	SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::LoadGameFromSlot(SaveGameEntityLoad->SaveSlotName, SaveGameEntityLoad->UserIndex));
 
-	if (GameLoader) {
+	if (SaveGameEntityLoad) {
 		// Destroy existing characters.
 		DestroyActors<AEnemyCharacter>();
 
 		// Set varibles to communicator (update with loaded variables).
-		Communicator::GetInstance().test = GameLoader->test;
-		Communicator::GetInstance().SpawnedCharacterDetails = GameLoader->SpawnedCharacterDetails;
-		Communicator::GetInstance().PlayerTransform = GameLoader->PlayerTransform;
-		Communicator::GetInstance().PlayerRotation = GameLoader->PlayerRotation;
-		Communicator::GetInstance().PlayerHealth = GameLoader->PlayerHealth;
-		Communicator::GetInstance().PlayerLevel = GameLoader->PlayerLevel;
-		Communicator::GetInstance().PlayerExperience = GameLoader->PlayerExperience;
-		Communicator::GetInstance().PlayerGold = GameLoader->PlayerGold;
-		Communicator::GetInstance().ElapsedGameMinutes = GameLoader->ElapsedGameMinutes;
+		Communicator::GetInstance().test = SaveGameEntityLoad->test;
+		Communicator::GetInstance().SpawnedCharacterDetails = SaveGameEntityLoad->SpawnedCharacterDetails;
+		Communicator::GetInstance().PlayerTransform = SaveGameEntityLoad->PlayerTransform;
+		Communicator::GetInstance().PlayerRotation = SaveGameEntityLoad->PlayerRotation;
+		Communicator::GetInstance().PlayerHealth = SaveGameEntityLoad->PlayerHealth;
+		Communicator::GetInstance().PlayerLevel = SaveGameEntityLoad->PlayerLevel;
+		Communicator::GetInstance().PlayerExperience = SaveGameEntityLoad->PlayerExperience;
+		Communicator::GetInstance().PlayerGold = SaveGameEntityLoad->PlayerGold;
+		Communicator::GetInstance().ElapsedGameMinutes = SaveGameEntityLoad->ElapsedGameMinutes;
 
 		// Load player variables.
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(GameLoader->PlayerTransform);
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(GameLoader->PlayerRotation);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(SaveGameEntityLoad->PlayerTransform);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(SaveGameEntityLoad->PlayerRotation);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Health = Communicator::GetInstance().PlayerHealth;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Level = Communicator::GetInstance().PlayerLevel;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Experience = Communicator::GetInstance().PlayerExperience;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold = Communicator::GetInstance().PlayerGold;
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory = GameLoader->PlayerInventory;
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory = SaveGameEntityLoad->PlayerInventory;
 
 		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());
 		CurrentGameState->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
@@ -62,6 +62,7 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 
 		// Spawn saved characters.
 		SpawnCharacters();
+		UE_LOG(LogTemp, Warning, TEXT("XDXDXDXD."));
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));

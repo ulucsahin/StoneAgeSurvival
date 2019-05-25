@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h" // this is the originally included header
-#include "GameSaver.h"
+#include "SaveGameEntity.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameLoader.h"
 

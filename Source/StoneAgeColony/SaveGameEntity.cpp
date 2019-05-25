@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GameSaver.h"
-#include "StoneAgeColony.h"
+#include "SaveGameEntity.h"
 
-
-UGameSaver::UGameSaver() {
-	// For testing
+USaveGameEntity::USaveGameEntity()
+{
+	// TODO: Users should be able to save into different slots.
 	SaveSlotName = TEXT("TestSaveSlot");
 	UserIndex = 0;
 }
