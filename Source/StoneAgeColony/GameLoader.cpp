@@ -62,7 +62,6 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 
 		// Spawn saved characters.
 		SpawnCharacters();
-		UE_LOG(LogTemp, Warning, TEXT("XDXDXDXD."));
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));
