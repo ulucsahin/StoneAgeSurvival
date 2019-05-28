@@ -4,45 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "UsableActor.generated.h"
+#include "GatherableObject.generated.h"
 
 UCLASS()
-class STONEAGECOLONY_API AUsableActor : public AActor
+class STONEAGECOLONY_API AGatherableObject : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	//AUsableActor();
-	AUsableActor(const FObjectInitializer& ObjectInitializer);
-
-	const static int ID = 0;
-
-	UTexture2D* InventoryTexture;
-
-	virtual void OnUsed(APawn* InstigatorPawn);
+	AGatherableObject();
 
 	/* Player is looking at */
 	virtual void OnBeginFocus();
 
 	/* Player is no longer looking at */
 	virtual void OnEndFocus();
-	
-	virtual void PrintName();
-	
-	
+
+	virtual void OnClicked();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, Category = "Mesh")
-	UStaticMeshComponent* MeshComp;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void PreInitializeComponents() override;
-
-	virtual int GetID() { return ID; };
 };

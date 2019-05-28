@@ -61,3 +61,7 @@ void APeopleSpawner::RegisterActorDetailsToSave(AEnemyCharacter* EnemyCharacter)
 	EnemyCharacter->RegisterActorDetailsToSave();
 }
 
+int APeopleSpawner::GetID()
+{
+	return ID;
+}

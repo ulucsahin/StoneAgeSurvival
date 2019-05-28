@@ -10,7 +10,6 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
-
 	MeshComp = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("Mesh"));
 	RootComponent = MeshComp;
 
@@ -23,6 +22,12 @@ void AUsableActor::PreInitializeComponents() {
 	Super::PreInitializeComponents();
 	//UE_LOG(LogTemp, Warning, TEXT("AUsableActor::PreInitializeComponents"));
 }
+
+//int AUsableActor::GetID()
+//{
+//	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::GetID"));
+//	return 69;
+//}
 
 // Called when the game starts or when spawned
 void AUsableActor::BeginPlay()
@@ -52,11 +57,19 @@ void AUsableActor::OnEndFocus() {
 void AUsableActor::OnUsed(APawn* InstigatorPawn) {
 	GLog->Log("im used");
 	//AUsableActor* temp = NewObject<AUsableActor>();
-	((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID);
-	((AStoneAgeColonyCharacter*)InstigatorPawn)->PrintInventory();
+	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->AddToInventory(this->ID);
+		PlayerCharacter->PrintInventory();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PLAYER CHARACTER IS NULL IN AUsableActor::OnUsed"));
+	}
+	
 }
 
 void AUsableActor::PrintName() {
 	UE_LOG(LogTemp, Warning, TEXT("IM USABLE ACTOR XD"));
 }
-

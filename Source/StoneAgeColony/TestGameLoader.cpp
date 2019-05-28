@@ -15,4 +15,10 @@ void ATestGameLoader::OnUsed(APawn* InstigatorPawn)
 	*/
 	GameLoader* GameLoaderInstance = new GameLoader();
 	GameLoaderInstance->LoadGame(InstigatorPawn);
+
+}
+
+int ATestGameLoader::GetID()
+{
+	return ID;
 }

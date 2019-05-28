@@ -28,6 +28,7 @@ public:
 
 	template <typename T>
 	void IterateActors();
+	virtual int GetID() override;
 
 protected:
 	virtual void BeginPlay() override;

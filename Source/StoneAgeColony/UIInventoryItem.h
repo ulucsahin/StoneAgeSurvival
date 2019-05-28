@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Runtime/UMG/Public/Components/TextBlock.h"
 #include "UIInventoryItem.generated.h"
 
 /**
@@ -16,6 +17,17 @@ class STONEAGECOLONY_API UUIInventoryItem : public UUserWidget
 	
 
 public:
+	UUIInventoryItem(const FObjectInitializer& ObjectInitializer);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
-	int ItemID;
+	int IndexInInventory = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
+	int ItemID = 123;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
+	UTextBlock* ItemIDTextBlock;
+
+	UFUNCTION(BlueprintCallable, Category = "Lol")
+	void SetupInventoryItemCell(UPARAM(ref) const int& index);
 };

@@ -454,8 +454,12 @@ void AStoneAgeColonyCharacter::OpenInventory()
 		UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
 		InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
 		InventoryWidget->AddToViewport();
-		PlayerController->SetInputMode(FInputModeGameAndUI());
-		PlayerController->bShowMouseCursor = true;
+		if (PlayerController)
+		{
+			PlayerController->SetInputMode(FInputModeGameAndUI());
+			PlayerController->bShowMouseCursor = true;
+		}
+		
 		InventoryOn = true;
 	}
 	
@@ -463,8 +467,12 @@ void AStoneAgeColonyCharacter::OpenInventory()
 	{
 		// Close Inventory
 		InventoryWidget->RemoveFromParent();
-		PlayerController->SetInputMode(FInputModeGameOnly());
-		PlayerController->bShowMouseCursor = false;
+		if (PlayerController)
+		{
+			PlayerController->SetInputMode(FInputModeGameOnly());
+			PlayerController->bShowMouseCursor = false;
+		}
+		
 		InventoryOn = false;
 	}
 }
@@ -531,6 +539,12 @@ TArray<int> AStoneAgeColonyCharacter::GetInventory()
 	return Inventory;
 }
 
+AUsableActor* AStoneAgeColonyCharacter::GetInventoryItem(int InventoryItemIndex)
+{
+	int ItemIDatIndex = Inventory[InventoryItemIndex];
+	return Communicator::GetInstance().UsableItemIDMap[ItemIDatIndex];
+}
+
 void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd)
 {
 	Inventory.Add(ItemToAdd);
@@ -539,13 +553,14 @@ void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd)
 void AStoneAgeColonyCharacter::PrintInventory()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::PrintInventory"));
-	for (int itemID : Inventory) 
+
+	for (int itemID : Inventory)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ITEM IN INVENTORY: %d"), itemID);
-		//item->PrintName();
 		AUsableActor* CurrentItem = Communicator::GetInstance().UsableItemIDMap[itemID];
-		
-		//CurrentItem->PrintName();
-		//UE_LOG(LogTemp, Warning, TEXT("CurrentItem ID: %d"), CurrentItem->ID);
+		UE_LOG(LogTemp, Warning, TEXT("ITEM IN INVENTORY: %d"), CurrentItem->GetID());
+
 	}
+		
+	
+	
 }

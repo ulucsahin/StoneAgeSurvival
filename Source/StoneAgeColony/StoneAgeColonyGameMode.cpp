@@ -12,12 +12,16 @@
 #include "EngineUtils.h"
 #include "GameFramework/PlayerStart.h"
 #include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
+#include "Runtime/CoreUObject/Public/UObject/UObjectBaseUtility.h"
 
 // Usable Actors
 #include "UsableActor.h"
 #include "TestGameLoader.h"
 #include "ObjectBed.h"
 #include "PeopleSpawner.h"
+
+// Gatherable Actors
+#include "GatherableTree.h"
 
 // HUD
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
@@ -163,28 +167,19 @@ void AStoneAgeColonyGameMode::OnNightEnded() {
 
 void AStoneAgeColonyGameMode::RegisterItemIDs() 
 {
-	/*for (TObjectIterator<UClass> It; It; ++It)
-	{
-		if (It->IsChildOf(AUsableActor::StaticClass()))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("XDDDDDD=================:"));
-			Communicator::GetInstance().UsableItemIDMap.Add(It->GetDefaultObject<AUsableActor>()->ID, *It);
-		}
-	}*/
+	AUsableActor* test = NewObject<AUsableActor>();
+	Communicator::GetInstance().UsableItemIDMap.Add(  AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID,		   NewObject<AUsableActor>());
+	Communicator::GetInstance().UsableItemIDMap.Add(  ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID,     NewObject<ATestGameLoader>());
+	Communicator::GetInstance().UsableItemIDMap.Add(  APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID,	   NewObject<APeopleSpawner>());
+	Communicator::GetInstance().UsableItemIDMap.Add(  AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID,			   NewObject<AObjectBed>());
+	Communicator::GetInstance().UsableItemIDMap.Add(  AGatherableTree::StaticClass()->GetDefaultObject<AGatherableTree>()->ID,     NewObject<AGatherableTree>());
 
-	// Register Classes
-	Communicator::GetInstance().UsableItemIDMap.Add(AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID, (AUsableActor*)AUsableActor::StaticClass());
-	Communicator::GetInstance().UsableItemIDMap.Add(APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID, (APeopleSpawner*)APeopleSpawner::StaticClass());
-	Communicator::GetInstance().UsableItemIDMap.Add(AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID, (AObjectBed*)AObjectBed::StaticClass());
-	Communicator::GetInstance().UsableItemIDMap.Add(ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID, (ATestGameLoader*)ATestGameLoader::StaticClass());
-	
-	int a = 0;
 	for (auto& item : Communicator::GetInstance().UsableItemIDMap)
 	{
-		a++;
-		UE_LOG(LogTemp, Warning, TEXT("Class ID: %d,"), item.Key);
-	}
-	
+		UE_LOG(LogTemp, Warning, TEXT("Class ID: %d,"), item.Value->GetID());
 
+		// Add objects in UsableItemIDMap to RootSet so they will not be garbage collected during gameplay.
+		item.Value->AddToRoot();
+	}
 
 }

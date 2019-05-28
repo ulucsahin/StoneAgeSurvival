@@ -26,6 +26,7 @@ public:
 	int SpawnCount = 0;
 	void SpawnCharacter(bool bShouldRegister);
 	void RegisterActorDetailsToSave(AEnemyCharacter*);
+	virtual int GetID() override;
 
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;

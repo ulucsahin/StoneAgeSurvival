@@ -93,6 +93,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	TArray<int> GetInventory();
 
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	AUsableActor* GetInventoryItem(int InventoryItemIndex);
+
+
 	// UI Variables
 	UUserWidget* InventoryWidget;
 	UUserWidget* CharacterMenuWidget;

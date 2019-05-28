@@ -31,6 +31,11 @@ void AObjectBed::OnUsed(APawn* InstigatorPawn)
 	GameSaverInstance.SaveGame(InstigatorPawn);
 }
 
+int AObjectBed::GetID()
+{
+	return ID;
+}
+
 template <typename T>
 void AObjectBed::IterateActors()
 {	
