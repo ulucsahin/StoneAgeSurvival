@@ -16,8 +16,8 @@ void UUIInventoryItem::SetupInventoryItemCell(const int &index)
 {
 	// Initialize CDO properties here.
 	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-
-	if (PlayerCharacter && index != NULL)
+	UE_LOG(LogTemp, Warning, TEXT("==================="));
+	if (PlayerCharacter)
 	{
 		int CurrentItemId = 0;
 		IndexInInventory = index;

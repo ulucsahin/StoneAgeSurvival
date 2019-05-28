@@ -560,7 +560,5 @@ void AStoneAgeColonyCharacter::PrintInventory()
 		UE_LOG(LogTemp, Warning, TEXT("ITEM IN INVENTORY: %d"), CurrentItem->GetID());
 
 	}
-		
-	
-	
+
 }
