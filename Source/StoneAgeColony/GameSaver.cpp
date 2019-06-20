@@ -59,16 +59,9 @@ template <typename T>
 void GameSaver::RegisterActors()
 {
 	// We will reset spawned character details and update it with current details.
-	// this is stupid
-	if (std::is_same_v<T, AEnemyCharacter>)
-	{
-		Communicator::GetInstance().SpawnedCharacterDetails.Empty();
-	}
-	else if (std::is_same_v<T, AGatherableTree>)
-	{
-		Communicator::GetInstance().SpawnedGatherableTreeDetails.Empty();
-	}
 	
+	T::EmptyCommunicatorDetailsArray();
+
 	UWorld* YourGameWorld = Communicator::GetInstance().World;
 
 	for (TObjectIterator<T> Itr; Itr; ++Itr)

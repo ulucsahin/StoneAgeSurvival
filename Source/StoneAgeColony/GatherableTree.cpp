@@ -55,3 +55,18 @@ void AGatherableTree::RegisterActorDetailsToSave() {
 
 	UE_LOG(LogTemp, Warning, TEXT("GatherableTree added to communicator."));
 }
+
+void AGatherableTree::EmptyCommunicatorDetailsArray()
+{
+	Communicator::GetInstance().SpawnedGatherableTreeDetails.Empty();
+}
+
+TArray<FGatherableTreeDetails> AGatherableTree::GetCommunicatorDetailsArray()
+{
+	return Communicator::GetInstance().SpawnedGatherableTreeDetails;
+}
+
+TSubclassOf<AGatherableTree> AGatherableTree::GetActorToSpawn()
+{
+	return Communicator::GetInstance().GatherableTreeToSpawn;
+}

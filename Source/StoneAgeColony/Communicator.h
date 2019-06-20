@@ -64,11 +64,13 @@ public:
 	int PlayerLevel;
 	int PlayerExperience;
 	int PlayerGold;
+
+	float ElapsedGameMinutes;
+
+	// Details of objects that should be saved-loaded
 	TArray<FEnemyCharacterDetails> SpawnedCharacterDetails;
 	TArray<FGatherableTreeDetails> SpawnedGatherableTreeDetails;
-	
-	float ElapsedGameMinutes;
-	
+
 	// Blueprints
 	TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
 	TSubclassOf<AGatherableTree> GatherableTreeToSpawn;

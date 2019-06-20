@@ -6,6 +6,15 @@
 #include "GameFramework/Character.h"
 #include "EnemyCharacter.generated.h"
 
+USTRUCT(BlueprintType)
+struct FEnemyCharacterDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+		FTransform Transform;
+};
+
 UCLASS()
 class STONEAGECOLONY_API AEnemyCharacter : public ACharacter
 {
@@ -35,7 +44,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Save-Load Methods
 	void RegisterActorDetailsToSave();
+	static void EmptyCommunicatorDetailsArray();
+	static TArray<FEnemyCharacterDetails> GetCommunicatorDetailsArray();
+	static TSubclassOf<AEnemyCharacter> GetActorToSpawn();
 
 	UPROPERTY(EditAnywhere, Category = "Identification")
 	int ExternalID;
@@ -47,11 +60,3 @@ private:
 	float FollowRadius;
 };
 
-USTRUCT(BlueprintType)
-struct FEnemyCharacterDetails
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
-	FTransform CharacterTransform;
-};

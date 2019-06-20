@@ -4,16 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UsableActor.h"
 #include "GatherableObject.generated.h"
 
 UCLASS()
-class STONEAGECOLONY_API AGatherableObject : public AActor
+class STONEAGECOLONY_API AGatherableObject : public AUsableActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	AGatherableObject();
 
 	/* Player is looking at */
 	virtual void OnBeginFocus();

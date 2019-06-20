@@ -79,42 +79,20 @@ void GameLoader::SpawnCharacters()
 	*/
 
 	FActorSpawnParameters SpawnParams;
-	//SpawnParams.Owner = this;
-	//THIS IS RETARDED
+
 	// Get actor details to spawn from communicator.
-	if (std::is_same_v<T, AEnemyCharacter>)
+	auto ActorDetailsToSpawn = T::GetCommunicatorDetailsArray(); //Communicator::GetInstance().SpawnedCharacterDetails;
+	auto ActorToSpawn = T::GetActorToSpawn(); //Communicator::GetInstance().EnemyCharacterToSpawn;
+
+	// Iterate over array and saved spawn actors.
+	for (auto Details : ActorDetailsToSpawn)
 	{
-		TArray<FEnemyCharacterDetails> ActorDetailsToSpawn = Communicator::GetInstance().SpawnedCharacterDetails;
-		auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterToSpawn;
-
-		// Iterate over array and saved spawn actors.
-		for (FEnemyCharacterDetails Details : ActorDetailsToSpawn)
-		{
-			FTransform ActorTransform = Details.CharacterTransform;
-			AEnemyCharacter* SpawnedActor = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
-			UE_LOG(LogTemp, Warning, TEXT("Spawned"));
-		}
-
-	}
-	else if (std::is_same_v<T, AGatherableTree>)
-	{
-		TArray<FGatherableTreeDetails> ActorDetailsToSpawn = Communicator::GetInstance().SpawnedGatherableTreeDetails;
-		auto ActorToSpawn = Communicator::GetInstance().GatherableTreeToSpawn;
-
-		// Iterate over array and saved spawn actors.
-		for (FGatherableTreeDetails Details : ActorDetailsToSpawn)
-		{
-			FTransform ActorTransform = Details.Transform;
-			AGatherableTree* SpawnedActor = Communicator::GetInstance().World->SpawnActor<AGatherableTree>(ActorToSpawn, ActorTransform, SpawnParams);
-			UE_LOG(LogTemp, Warning, TEXT("Spawned"));
-		}
-
+		FTransform ActorTransform = Details.Transform;
+		Communicator::GetInstance().World->SpawnActor<T>(ActorToSpawn, ActorTransform, SpawnParams);
 	}
 
 }
 
-
-// TODO: fix; this class only works for AEnemyCharacter, template is useless in current form
 template <typename T>
 void GameLoader::DestroyActors() 
 {

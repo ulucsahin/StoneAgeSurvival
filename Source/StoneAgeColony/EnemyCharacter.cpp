@@ -71,18 +71,35 @@ void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
 	}
 }
 
-void AEnemyCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume) {
+void AEnemyCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume) 
+{
 
 }
 
-void AEnemyCharacter::RegisterActorDetailsToSave() {
+void AEnemyCharacter::RegisterActorDetailsToSave() 
+{
 	FEnemyCharacterDetails CharDetails;
 	
 	// Assign details to struct.
-	CharDetails.CharacterTransform = GetActorTransform();
+	CharDetails.Transform = GetActorTransform();
 
 	// Save details as struct to communicator. Which will be used during saving.
 	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
 
 	UE_LOG(LogTemp, Warning, TEXT("EnemyCharacter added to communicator."));
+}
+
+void AEnemyCharacter::EmptyCommunicatorDetailsArray()
+{
+	Communicator::GetInstance().SpawnedCharacterDetails.Empty();
+}
+
+TArray<FEnemyCharacterDetails> AEnemyCharacter::GetCommunicatorDetailsArray()
+{
+	return Communicator::GetInstance().SpawnedCharacterDetails;
+}
+
+TSubclassOf<AEnemyCharacter> AEnemyCharacter::GetActorToSpawn()
+{
+	return Communicator::GetInstance().EnemyCharacterToSpawn;
 }
