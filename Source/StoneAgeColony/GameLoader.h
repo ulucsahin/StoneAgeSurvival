@@ -15,6 +15,8 @@ public:
 	~GameLoader();
 
 	void LoadGame(APawn* InstigatorPawn);
+
+	template <typename T>
 	void SpawnCharacters();
 
 	template<typename T> 

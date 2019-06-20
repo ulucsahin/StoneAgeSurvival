@@ -410,12 +410,7 @@ AUsableActor* AStoneAgeColonyCharacter::GetUsableInView()
 	const FVector Direction = CamRot.Vector();
 	const FVector TraceEnd = TraceStart + (Direction * 250.f);
 
-	// log
-	if (debug) 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Camera:, %f, %f, %f"), CamLoc.X, CamLoc.Y, CamLoc.Z);
-		UE_LOG(LogTemp, Warning, TEXT("TraceEnd:, %f, %f, %f"), TraceEnd.X, TraceEnd.Y, TraceEnd.Z);
-	}
+
 
 	FCollisionQueryParams TraceParams(FName(TEXT("TraceUsableActor")), true, this);
 	TraceParams.bTraceAsyncScene = true;
@@ -425,6 +420,16 @@ AUsableActor* AStoneAgeColonyCharacter::GetUsableInView()
 	/* FHitResults is passed in with the trace function and holds the result of the trace. */
 	FHitResult Hit(ForceInit);
 	GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, TraceParams);
+
+	// log
+	if (debug)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Camera:, %f, %f, %f"), CamLoc.X, CamLoc.Y, CamLoc.Z);
+		UE_LOG(LogTemp, Warning, TEXT("TraceEnd:, %f, %f, %f"), TraceEnd.X, TraceEnd.Y, TraceEnd.Z);
+
+		bool isHit = ActorLineTraceSingle(Hit, TraceStart, TraceEnd, ECC_WorldStatic, TraceParams);
+		UE_LOG(LogTemp, Warning, TEXT("HitResult:, %s"), isHit ? TEXT("true") : TEXT("False"));
+	}
 
 	/* Uncomment this to visualize your line during gameplay. */
 	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 1.0f);

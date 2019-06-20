@@ -45,4 +45,6 @@ public:
 	virtual void PreInitializeComponents() override;
 
 	virtual int GetID() { return ID; };
+
+	virtual UTexture2D* GetInventoryTexture() { return InventoryTexture; };
 };

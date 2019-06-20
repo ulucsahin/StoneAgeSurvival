@@ -14,6 +14,7 @@ void Communicator::Reset() {
 	int PlayerExperience = 0;
 	int PlayerGold = 50;
 	SpawnedCharacterDetails.Empty();
+	SpawnedGatherableTreeDetails.Empty();
 	ElapsedGameMinutes = 0.f;
 
 	// Log to console.

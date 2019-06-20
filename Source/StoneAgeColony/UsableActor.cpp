@@ -4,6 +4,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Communicator.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Sets default values
 AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -13,9 +14,10 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 	MeshComp = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("Mesh"));
 	RootComponent = MeshComp;
 
+	
 	// Set InventoryTexture
-	//static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/Inventory/lol.lol'"));
-	//InventoryTexture = InventoryTexObj.Object;
+	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/ItemIcons/danCry.danCry'"));
+	InventoryTexture = InventoryTexObj.Object;
 }
 
 void AUsableActor::PreInitializeComponents() {

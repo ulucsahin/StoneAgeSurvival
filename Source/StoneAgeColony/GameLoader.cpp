@@ -6,6 +6,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Communicator.h"
 #include "EnemyCharacter.h"
+#include "GatherableTree.h"
 #include "PeopleSpawner.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
@@ -31,12 +32,14 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 	SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::LoadGameFromSlot(SaveGameEntityLoad->SaveSlotName, SaveGameEntityLoad->UserIndex));
 
 	if (SaveGameEntityLoad) {
-		// Destroy existing characters.
+		// Destroy existing characters that should be deleted before loading.
 		DestroyActors<AEnemyCharacter>();
+		DestroyActors<AGatherableTree>();
 
 		// Set varibles to communicator (update with loaded variables).
 		Communicator::GetInstance().test = SaveGameEntityLoad->test;
 		Communicator::GetInstance().SpawnedCharacterDetails = SaveGameEntityLoad->SpawnedCharacterDetails;
+		Communicator::GetInstance().SpawnedGatherableTreeDetails = SaveGameEntityLoad->SpawnedGatherableTreeDetails;
 		Communicator::GetInstance().PlayerTransform = SaveGameEntityLoad->PlayerTransform;
 		Communicator::GetInstance().PlayerRotation = SaveGameEntityLoad->PlayerRotation;
 		Communicator::GetInstance().PlayerHealth = SaveGameEntityLoad->PlayerHealth;
@@ -61,12 +64,14 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		UpdateInventoryUI();
 
 		// Spawn saved characters.
-		SpawnCharacters();
+		SpawnCharacters<AEnemyCharacter>();
+		SpawnCharacters<AGatherableTree>();
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));
 }
 
+template <typename T>
 void GameLoader::SpawnCharacters() 
 {
 	/*
@@ -75,21 +80,41 @@ void GameLoader::SpawnCharacters()
 
 	FActorSpawnParameters SpawnParams;
 	//SpawnParams.Owner = this;
-
+	//THIS IS RETARDED
 	// Get actor details to spawn from communicator.
-	TArray<FEnemyCharacterDetails> ActorDetailsToSpawn = Communicator::GetInstance().SpawnedCharacterDetails;
-	auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterToSpawn;
-
-	UE_LOG(LogTemp, Warning, TEXT("ActorDetailsToSpawn lenght: %d"), ActorDetailsToSpawn.Num());
-	// Iterate over array and saved spawn actors.
-	for (FEnemyCharacterDetails Details : ActorDetailsToSpawn)
+	if (std::is_same_v<T, AEnemyCharacter>)
 	{
-		FTransform ActorTransform = Details.CharacterTransform;
-		AEnemyCharacter* SpawnedActor = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
+		TArray<FEnemyCharacterDetails> ActorDetailsToSpawn = Communicator::GetInstance().SpawnedCharacterDetails;
+		auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterToSpawn;
+
+		// Iterate over array and saved spawn actors.
+		for (FEnemyCharacterDetails Details : ActorDetailsToSpawn)
+		{
+			FTransform ActorTransform = Details.CharacterTransform;
+			AEnemyCharacter* SpawnedActor = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
+			UE_LOG(LogTemp, Warning, TEXT("Spawned"));
+		}
+
+	}
+	else if (std::is_same_v<T, AGatherableTree>)
+	{
+		TArray<FGatherableTreeDetails> ActorDetailsToSpawn = Communicator::GetInstance().SpawnedGatherableTreeDetails;
+		auto ActorToSpawn = Communicator::GetInstance().GatherableTreeToSpawn;
+
+		// Iterate over array and saved spawn actors.
+		for (FGatherableTreeDetails Details : ActorDetailsToSpawn)
+		{
+			FTransform ActorTransform = Details.Transform;
+			AGatherableTree* SpawnedActor = Communicator::GetInstance().World->SpawnActor<AGatherableTree>(ActorToSpawn, ActorTransform, SpawnParams);
+			UE_LOG(LogTemp, Warning, TEXT("Spawned"));
+		}
+
 	}
 
 }
 
+
+// TODO: fix; this class only works for AEnemyCharacter, template is useless in current form
 template <typename T>
 void GameLoader::DestroyActors() 
 {
@@ -108,12 +133,11 @@ void GameLoader::DestroyActors()
 		{
 			continue;
 		}
-		if (std::is_same_v<T, AEnemyCharacter>)
+		else
 		{
-			// Register details to communicator.
 			Itr->Destroy();
 		}
-
+		
 	}
 
 	// Empty communicator since we deleted all characters.

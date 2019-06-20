@@ -19,7 +19,6 @@ AEnemyCharacter::AEnemyCharacter()
 	PawnSensingComp->LOSHearingThreshold = 1200;
 	FollowRadius = 1500.f;
 
-
 }
 
 // Called when the game starts or when spawned
@@ -39,8 +38,6 @@ void AEnemyCharacter::BeginPlay()
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	//Super::Tick(DeltaTime);
-	//AEnemyAI* AIController = Cast<AEnemyAI>(GetController());
-	//AIController->SetTargetInRange(NULL);
 }
 
 // Called to bind functionality to input
@@ -78,7 +75,6 @@ void AEnemyCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location
 
 }
 
-
 void AEnemyCharacter::RegisterActorDetailsToSave() {
 	FEnemyCharacterDetails CharDetails;
 	
@@ -89,5 +85,4 @@ void AEnemyCharacter::RegisterActorDetailsToSave() {
 	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
 
 	UE_LOG(LogTemp, Warning, TEXT("EnemyCharacter added to communicator."));
-
 }

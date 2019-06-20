@@ -56,8 +56,10 @@ void APeopleSpawner::SpawnCharacter(bool bShouldRegister)
 	}*/
 }
 
+// not used
 void APeopleSpawner::RegisterActorDetailsToSave(AEnemyCharacter* EnemyCharacter) 
 {
+	UE_LOG(LogTemp, Warning, TEXT("IS THIS USED? SHOULD NOT BE USED"));
 	EnemyCharacter->RegisterActorDetailsToSave();
 }
 

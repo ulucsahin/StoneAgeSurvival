@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "UsableActor.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 #include "StoneAgeColonyCharacter.generated.h"
 

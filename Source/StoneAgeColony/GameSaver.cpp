@@ -35,6 +35,7 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	// Iterate over actors in world to get details of spawned actors.
 	// Saves actors to communicator.
 	RegisterActors<AEnemyCharacter>();
+	RegisterActors<AGatherableTree>();
 
 	// Assign variables to save file (from communicator).
 	SaveGameEntity->PlayerTransform = Communicator::GetInstance().PlayerTransform;
@@ -45,6 +46,7 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	SaveGameEntity->PlayerGold = Communicator::GetInstance().PlayerGold;
 	SaveGameEntity->test = Communicator::GetInstance().test;
 	SaveGameEntity->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
+	SaveGameEntity->SpawnedGatherableTreeDetails = Communicator::GetInstance().SpawnedGatherableTreeDetails;
 	SaveGameEntity->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 	SaveGameEntity->PlayerInventory = Communicator::GetInstance().PlayerInventory;
 
@@ -57,7 +59,16 @@ template <typename T>
 void GameSaver::RegisterActors()
 {
 	// We will reset spawned character details and update it with current details.
-	Communicator::GetInstance().SpawnedCharacterDetails.Empty();
+	// this is stupid
+	if (std::is_same_v<T, AEnemyCharacter>)
+	{
+		Communicator::GetInstance().SpawnedCharacterDetails.Empty();
+	}
+	else if (std::is_same_v<T, AGatherableTree>)
+	{
+		Communicator::GetInstance().SpawnedGatherableTreeDetails.Empty();
+	}
+	
 	UWorld* YourGameWorld = Communicator::GetInstance().World;
 
 	for (TObjectIterator<T> Itr; Itr; ++Itr)
@@ -67,7 +78,7 @@ void GameSaver::RegisterActors()
 		{
 			continue;
 		}
-		if (std::is_same_v<T, AEnemyCharacter>)
+		else
 		{
 			// Only do this if Destroy() on this object is not called.
 			if (!Itr->IsPendingKill())

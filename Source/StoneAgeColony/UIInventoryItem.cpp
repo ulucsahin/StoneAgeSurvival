@@ -37,5 +37,7 @@ void UUIInventoryItem::SetupInventoryItemCell(const int &index)
 		// Get ID of that item (this is redundant since we already store items by ID, this is only for clarity purposes)
 		ItemID = Communicator::GetInstance().UsableItemIDMap[CurrentItemId]->GetID();
 		UE_LOG(LogTemp, Warning, TEXT("ItemID: %d"), ItemID);
+
+		InventoryTexture = Communicator::GetInstance().UsableItemIDMap[CurrentItemId]->InventoryTexture;
 	}
 }

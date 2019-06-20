@@ -4,6 +4,15 @@
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Communicator.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+
+
+AGatherableTree::AGatherableTree(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	// im not sure if this calls super's constructor
+	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/ItemIcons/TreeIcon.TreeIcon'"));
+	InventoryTexture = InventoryTexObj.Object;
+}
 
 void AGatherableTree::BeginPlay()
 {
@@ -33,4 +42,16 @@ void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 int AGatherableTree::GetID()
 {
 	return ID;
+}
+
+void AGatherableTree::RegisterActorDetailsToSave() {
+	FGatherableTreeDetails TreeDetails;
+
+	// Assign details to struct.
+	TreeDetails.Transform = GetActorTransform();
+
+	// Save details as struct to communicator. Which will be used during saving.
+	Communicator::GetInstance().SpawnedGatherableTreeDetails.Add(TreeDetails);
+
+	UE_LOG(LogTemp, Warning, TEXT("GatherableTree added to communicator."));
 }

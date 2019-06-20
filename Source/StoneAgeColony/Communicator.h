@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "EnemyCharacter.h"
+#include "GatherableTree.h"
 #include "UsableActor.h"
 
 
@@ -64,11 +65,11 @@ public:
 	int PlayerExperience;
 	int PlayerGold;
 	TArray<FEnemyCharacterDetails> SpawnedCharacterDetails;
-
-
+	TArray<FGatherableTreeDetails> SpawnedGatherableTreeDetails;
 	
 	float ElapsedGameMinutes;
 	
 	// Blueprints
 	TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
+	TSubclassOf<AGatherableTree> GatherableTreeToSpawn;
 };
