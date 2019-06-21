@@ -11,8 +11,10 @@ struct FGatherableTreeDetails
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
-		FTransform Transform;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+
+	int WoodAmount;
 };
 
 

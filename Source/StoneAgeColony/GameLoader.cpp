@@ -119,7 +119,7 @@ void GameLoader::DestroyActors()
 	}
 
 	// Empty communicator since we deleted all characters.
-	Communicator::GetInstance().SpawnedCharacterDetails.Empty();
+	T::EmptyCommunicatorDetailsArray();
 }
 
 void GameLoader::UpdateInventoryUI()
