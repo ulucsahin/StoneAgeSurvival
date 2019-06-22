@@ -55,11 +55,10 @@ public:
 	class AUsableActor* FocusedUsableActor;
 	void RegisterSaveData();
 	void InitializeWidgets();
-	void AddToInventory(int);
+	void AddToInventory(int, int);
 	void PrintInventory();
-	
-	UPROPERTY(VisibleAnywhere)
-	TArray<int> Inventory;
+
+	TMap<int, int> Inventory;
 
 	bool InventoryOn = false;
 	bool CharacterMenuOn = false;
@@ -91,12 +90,14 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	int GetLevel();
 
-	UFUNCTION(BlueprintPure, Category = "Inventory")
-	TArray<int> GetInventory();
+	//UFUNCTION(BlueprintPure, Category = "Inventory")
+	//TArray<int> GetInventory();
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
-	AUsableActor* GetInventoryItem(int InventoryItemIndex);
+	TMap<int, int> GetInventory();
 
+	//UFUNCTION(BlueprintPure, Category = "Inventory")
+	//AUsableActor* GetInventoryItem(int InventoryItemIndex);
 
 	// UI Variables
 	UUserWidget* InventoryWidget;

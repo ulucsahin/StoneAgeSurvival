@@ -54,8 +54,8 @@ public:
 	// IDs of usable items in game
 	TMap<int, AUsableActor*> UsableItemIDMap; // how?
 	
-	// TArray of ints holding ids of items in player inventory
-	TArray<int> PlayerInventory;
+	// TMap of ID-Amount pairs for items.
+	TMap<int, int> PlayerInventory;
 
 	FTransform PlayerTransform;
 	FRotator PlayerRotation;

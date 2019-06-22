@@ -62,7 +62,7 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn) {
 	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (PlayerCharacter)
 	{
-		PlayerCharacter->AddToInventory(this->ID);
+		PlayerCharacter->AddToInventory(this->ID, 1);
 		PlayerCharacter->PrintInventory();
 	}
 	else

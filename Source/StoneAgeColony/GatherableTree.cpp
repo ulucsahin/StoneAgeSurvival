@@ -33,7 +33,8 @@ void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 		WoodAmount -= 10;
 		UE_LOG(LogTemp, Warning, TEXT("Tree Harvested at %f , remaining wood: %d"), GatherTime, WoodAmount);
 		LastGatherTime = GatherTime;
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID);
+		int AmountToAdd = 10;
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID, AmountToAdd);
 	}
 
 

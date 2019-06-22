@@ -123,6 +123,7 @@ void AStoneAgeColonyCharacter::BeginPlay()
 	//	Mesh1P->SetHiddenInGame(false, true);
 	//}
 
+	UE_LOG(LogTemp, Warning, TEXT("PLAYER GOLD: %d"), GetGold());
 
 }
 
@@ -292,44 +293,6 @@ void AStoneAgeColonyCharacter::EndTouch(const ETouchIndex::Type FingerIndex, con
 	}
 	TouchItem.bIsPressed = false;
 }
-
-//Commenting this section out to be consistent with FPS BP template.
-//This allows the user to turn without using the right virtual joystick
-
-//void AStoneAgeColonyCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
-//{
-//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
-//	{
-//		if (TouchItem.bIsPressed)
-//		{
-//			if (GetWorld() != nullptr)
-//			{
-//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-//				if (ViewportClient != nullptr)
-//				{
-//					FVector MoveDelta = Location - TouchItem.Location;
-//					FVector2D ScreenSize;
-//					ViewportClient->GetViewportSize(ScreenSize);
-//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
-//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.X * BaseTurnRate;
-//						AddControllerYawInput(Value);
-//					}
-//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.Y * BaseTurnRate;
-//						AddControllerPitchInput(Value);
-//					}
-//					TouchItem.Location = Location;
-//				}
-//				TouchItem.Location = Location;
-//			}
-//		}
-//	}
-//}
 
 void AStoneAgeColonyCharacter::MoveForward(float Value)
 {
@@ -539,31 +502,56 @@ int AStoneAgeColonyCharacter::GetLevel()
 	return Level;
 }
 
-TArray<int> AStoneAgeColonyCharacter::GetInventory() 
+//TArray<int> AStoneAgeColonyCharacter::GetInventory() 
+//{
+//	return Inventory;
+//}
+
+//AUsableActor* AStoneAgeColonyCharacter::GetInventoryItem(int InventoryItemIndex)
+//{
+//	int ItemIDatIndex = Inventory[InventoryItemIndex];
+//	return Communicator::GetInstance().UsableItemIDMap[ItemIDatIndex];
+//}
+
+TMap<int, int> AStoneAgeColonyCharacter::GetInventory()
 {
 	return Inventory;
 }
 
-AUsableActor* AStoneAgeColonyCharacter::GetInventoryItem(int InventoryItemIndex)
+void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 {
-	int ItemIDatIndex = Inventory[InventoryItemIndex];
-	return Communicator::GetInstance().UsableItemIDMap[ItemIDatIndex];
-}
+	/*ItemToAdd is ID of item that we want to add to inventory.*/
 
-void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd)
-{
-	Inventory.Add(ItemToAdd);
+	//Inventory.Add(ItemToAdd);
+
+	// if we have atleast one instance of ItemToAdd in inventory
+	if (!Inventory.Contains(ItemToAdd))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item not in inventory"));
+		Inventory.Add(ItemToAdd, AmountToAdd);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item already in inventory"));
+		Inventory.Emplace(ItemToAdd, Inventory[ItemToAdd] + AmountToAdd);
+	}
+
+	for (auto item : Inventory)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InventoryVersion3 item: %d, amount: %d"), item.Key, item.Value);
+	}
+	
 }
 
 void AStoneAgeColonyCharacter::PrintInventory()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::PrintInventory"));
+	//UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::PrintInventory"));
 
-	for (int itemID : Inventory)
-	{
-		AUsableActor* CurrentItem = Communicator::GetInstance().UsableItemIDMap[itemID];
-		UE_LOG(LogTemp, Warning, TEXT("ITEM IN INVENTORY: %d"), CurrentItem->GetID());
+	//for (int itemID : Inventory)
+	//{
+	//	AUsableActor* CurrentItem = Communicator::GetInstance().UsableItemIDMap[itemID];
+	//	UE_LOG(LogTemp, Warning, TEXT("ITEM IN INVENTORY: %d"), CurrentItem->GetID());
 
-	}
+	//}
 
 }

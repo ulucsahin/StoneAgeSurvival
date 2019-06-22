@@ -26,11 +26,15 @@ public:
 	int ItemID = 123;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
+	int ItemAmount = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
 	UTextBlock* ItemIDTextBlock;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
 	UTexture2D* InventoryTexture;
 
 	UFUNCTION(BlueprintCallable, Category = "Lol")
-	void SetupInventoryItemCell(UPARAM(ref) const int& index);
+	void SetupInventoryItemCell(); 	//void SetupInventoryItemCell(UPARAM(ref) const int& id);
+
 };

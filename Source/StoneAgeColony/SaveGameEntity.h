@@ -66,7 +66,7 @@ public:
 	float ElapsedGameMinutes;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
-	TArray<int> PlayerInventory;
+	TMap<int, int> PlayerInventory;
 
 	// Will be deleted, saving pointers is useless.
 	UPROPERTY(VisibleAnywhere, Category = Basic)

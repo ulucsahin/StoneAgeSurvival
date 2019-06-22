@@ -9,6 +9,7 @@ void Communicator::Reset() {
 	PlayerTransform = FTransform();
 	PlayerRotation = FRotator();
 	PlayerHealth = 100.f;
+	// TODO : reset player inventory?
 	float PlayerStamina = 100.f;
 	int PlayerLevel = 1;
 	int PlayerExperience = 0;

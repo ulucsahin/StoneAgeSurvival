@@ -19,7 +19,7 @@ void APeopleSpawner::OnUsed(APawn* InstigatorPawn)
 	if (((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold >= 10)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("APeopleSpawner::OnUsed hehee"));
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID, 1);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->PrintInventory();
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold -= 10;
 		SpawnCharacter(true);
