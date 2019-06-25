@@ -63,7 +63,6 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn) {
 	if (PlayerCharacter)
 	{
 		PlayerCharacter->AddToInventory(this->ID, 1);
-		PlayerCharacter->PrintInventory();
 	}
 	else
 	{

@@ -17,6 +17,8 @@
 #include "SurvivalGameInstance.h"
 #include "UsableActor.h"
 #include "Communicator.h"
+#include "Building.h"
+#include "BuildingManager.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
@@ -99,8 +101,17 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	Experience = 0;
 	Level = 1;
 
+	// Set default player state
+	PlayerStates = EPlayerStates::VE_Combat;
+
+	// Initialize BuildingManager
+	BuildingManager = NewObject<UBuildingManager>();
+	BuildingManager->SetWorld(GetWorld());
+	BuildingManager->Player = this;
+
 	InventoryOn = false;
 	InitializeWidgets();
+
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -187,7 +198,7 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AStoneAgeColonyCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AStoneAgeColonyCharacter::OnClick);
 
 	// Bind use event
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &AStoneAgeColonyCharacter::Use);
@@ -198,100 +209,32 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	// Bind open character menu event
 	PlayerInputComponent->BindAction("OpenCharacterMenu", IE_Pressed, this, &AStoneAgeColonyCharacter::OpenCharacterMenu);
 
+	// Switch between building state and normal state
+	PlayerInputComponent->BindAction("ChangeState", IE_Pressed, this, &AStoneAgeColonyCharacter::ChangeState);
+
 	// Debug event
-	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::PrintInventory);
-
-	// Enable touchscreen input
-	EnableTouchscreenMovement(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AStoneAgeColonyCharacter::OnResetVR);
-
+	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::Debug);
 }
 
-void AStoneAgeColonyCharacter::OnFire()
+void AStoneAgeColonyCharacter::OnClick()
 {
-	// try and fire a projectile
-	if (ProjectileClass != NULL)
+
+	if (PlayerStates == EPlayerStates::VE_Combat)
 	{
-		UWorld* const World = GetWorld();
-		if (World != NULL)
+		// For debug
+		if (Health > 0.f)
 		{
-			if (bUsingMotionControllers)
-			{
-				const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-				const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-				World->SpawnActor<AStoneAgeColonyProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-			}
-			else
-			{
-				const FRotator SpawnRotation = GetControlRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
-
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-				// spawn the projectile at the muzzle
-				World->SpawnActor<AStoneAgeColonyProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-			}
+			Health -= 1.f;
+			UE_LOG(LogTemp, Warning, TEXT("Health: %f"), Health);
 		}
 	}
-
-	// try and play the sound if specified
-	if (FireSound != NULL)
+	else if (PlayerStates == EPlayerStates::VE_Building)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		BuildingManager->CompleteBuilding();
+		BuildingManager->StartBuilding();
 	}
-
-	// try and play a firing animation if specified
-	//if (FireAnimation != NULL)
-	//{
-	//	// Get the animation object for the arms mesh
-	//	UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-	//	if (AnimInstance != NULL)
-	//	{
-	//		AnimInstance->Montage_Play(FireAnimation, 1.f);
-	//	}
-	//}
-
-	// For debug
-	if (Health > 0.f) 
-	{
-		Health -= 1.f;
-		UE_LOG(LogTemp, Warning, TEXT("Health: %f"), Health);
-	}
+	
 		
-}
-
-void AStoneAgeColonyCharacter::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
-
-void AStoneAgeColonyCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == true)
-	{
-		return;
-	}
-	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
-	{
-		OnFire();
-	}
-	TouchItem.bIsPressed = true;
-	TouchItem.FingerIndex = FingerIndex;
-	TouchItem.Location = Location;
-	TouchItem.bMoved = false;
-}
-
-void AStoneAgeColonyCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == false)
-	{
-		return;
-	}
-	TouchItem.bIsPressed = false;
 }
 
 void AStoneAgeColonyCharacter::MoveForward(float Value)
@@ -322,21 +265,6 @@ void AStoneAgeColonyCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
-
-bool AStoneAgeColonyCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
-{
-	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
-	{
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AStoneAgeColonyCharacter::BeginTouch);
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &AStoneAgeColonyCharacter::EndTouch);
-
-		//Commenting this out to be more consistent with FPS BP template.
-		//PlayerInputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AStoneAgeColonyCharacter::TouchUpdate);
-		return true;
-	}
-	
-	return false;
 }
 
 /*
@@ -543,15 +471,61 @@ void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 	
 }
 
-void AStoneAgeColonyCharacter::PrintInventory()
+// Called on key press
+void AStoneAgeColonyCharacter::ChangeState()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::PrintInventory"));
+	UE_LOG(LogTemp, Warning, TEXT("Change State"));
 
-	//for (int itemID : Inventory)
-	//{
-	//	AUsableActor* CurrentItem = Communicator::GetInstance().UsableItemIDMap[itemID];
-	//	UE_LOG(LogTemp, Warning, TEXT("ITEM IN INVENTORY: %d"), CurrentItem->GetID());
-
-	//}
+	if (PlayerStates == EPlayerStates::VE_Building)
+	{
+		ChangeState(EPlayerStates::VE_Combat);
+		UE_LOG(LogTemp, Warning, TEXT("New State: %s"), TEXT("Combat"));
+	}
+	else if (PlayerStates == EPlayerStates::VE_Combat)
+	{
+		ChangeState(EPlayerStates::VE_Building);
+		UE_LOG(LogTemp, Warning, TEXT("New State: %s"), TEXT("Building"));
+	}
+	
 
 }
+
+void AStoneAgeColonyCharacter::ChangeState(EPlayerStates NewState)
+{
+	if (NewState != PlayerStates)
+	{
+		PlayerStates = NewState;
+		UpdateStateDisplay();
+	}
+
+}
+
+void AStoneAgeColonyCharacter::UpdateStateDisplay()
+{
+	// Update display such as UI in here
+	if (PlayerStates == EPlayerStates::VE_Building)
+	{
+		BuildingManager->StartBuilding();
+	}
+	else if (PlayerStates == EPlayerStates::VE_Combat)
+	{
+		BuildingManager->CancelBuilding();
+	}
+}
+
+void AStoneAgeColonyCharacter::StartBuilding()
+{
+	//ABuilding* test = BuildingManager->StartBuilding();
+}
+
+void AStoneAgeColonyCharacter::Debug()
+{
+	UE_LOG(LogTemp, Warning, TEXT("hehe debug"));
+
+	// Debug Line Trace
+
+	auto TraceStart = GetActorLocation();
+	auto TraceEnd = BuildingManager->BuildingSnapLocation();
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 10.0f);
+}
+

@@ -6,11 +6,17 @@
 #include "GameFramework/Character.h"
 #include "UsableActor.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
-
 #include "StoneAgeColonyCharacter.generated.h"
 
-
 class UInputComponent;
+class UBuildingManager; // forward declare to prevent circular dependency
+
+enum class EPlayerStates : uint8
+{
+	VE_Combat 	UMETA(DisplayName = "Combat"),
+	VE_Building UMETA(DisplayName = "Building"),
+};
+
 
 UCLASS(config=Game)
 class AStoneAgeColonyCharacter : public ACharacter
@@ -56,10 +62,19 @@ public:
 	void RegisterSaveData();
 	void InitializeWidgets();
 	void AddToInventory(int, int);
-	void PrintInventory();
 
+	// States operations
+	EPlayerStates PlayerStates;
+	void ChangeState(EPlayerStates NewState);
+	void UpdateStateDisplay();
+
+	// Inventory
 	TMap<int, int> Inventory;
 
+	// Building System Variables
+	UBuildingManager* BuildingManager;
+
+	// Menu Flags
 	bool InventoryOn = false;
 	bool CharacterMenuOn = false;
 	bool Init = false;
@@ -68,6 +83,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
 	float MaxUseDistance;
 
+	// Stats
 	float Health;
 	float Stamina;
 	int Gold;
@@ -90,9 +106,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	int GetLevel();
 
-	//UFUNCTION(BlueprintPure, Category = "Inventory")
-	//TArray<int> GetInventory();
-
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	TMap<int, int> GetInventory();
 
@@ -103,12 +116,13 @@ public:
 	UUserWidget* InventoryWidget;
 	UUserWidget* CharacterMenuWidget;
 
+	void Debug();
+
 protected:
 	bool bHasNewFocus;
 
 	virtual void BeginPlay();
 	virtual void Tick(float DeltaSeconds) override;
-
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -154,10 +168,7 @@ protected:
 	void OpenCharacterMenu();
 	
 	/** Fires a projectile. */
-	void OnFire();
-
-	/** Resets HMD orientation and position in VR. */
-	void OnResetVR();
+	void OnClick();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -177,6 +188,10 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
+	void ChangeState();
+
+	void StartBuilding();
+
 	struct TouchData
 	{
 		TouchData() { bIsPressed = false;Location=FVector::ZeroVector;}
@@ -185,23 +200,12 @@ protected:
 		FVector Location;
 		bool bMoved;
 	};
-	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
 	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
-
-	/* 
-	 * Configures input for touchscreen devices if there is a valid touch interface for doing so 
-	 *
-	 * @param	InputComponent	The input component pointer to bind controls to
-	 * @returns true if touch controls were enabled.
-	 */
-	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
 
 public:
 	/** Returns Mesh1P subobject **/
@@ -210,4 +214,3 @@ public:
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 };
-

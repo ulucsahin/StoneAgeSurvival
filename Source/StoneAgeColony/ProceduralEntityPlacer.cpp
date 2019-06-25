@@ -12,6 +12,7 @@ AProceduralEntityPlacer::AProceduralEntityPlacer()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Check this again, this should be unnecessary since we already assign items to spawn in editor.
 	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Uluc/ActiveAssets/GatherableObjects/BP_GatherableTree.BP_GatherableTree'"));
 	
 	if (ItemBlueprint.Object) {
