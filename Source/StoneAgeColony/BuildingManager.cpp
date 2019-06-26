@@ -11,7 +11,7 @@ UBuildingManager::UBuildingManager()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 }
 
@@ -49,10 +49,21 @@ FVector UBuildingManager::ToGridLocation(FVector In)
 FVector UBuildingManager::BuildingSnapLocation()
 {
 	auto PlayerCamera = Player->GetFirstPersonCameraComponent();
-	auto PlayerLookAt = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * 350);
+	auto PlayerLookAt = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * ForwardBuildingOffset);
 	auto SnapLocation = ToGridLocation(PlayerLookAt);
 
 	return SnapLocation;
+}
+
+FRotator UBuildingManager::BuildingSnapRotation()
+{
+	/*Rotates(yaw) building that will be placed according to player rotation. */
+	auto PlayerCameraYaw = Player->GetFirstPersonCameraComponent()->GetComponentRotation().Yaw;
+	auto BuildingYaw = (FMath::RoundToInt(PlayerCameraYaw / RotationSnap) * RotationSnap) + RotationOffset;
+	auto BuildingRotation = FRotator::ZeroRotator;
+	BuildingRotation.Yaw = BuildingYaw;
+
+	return BuildingRotation;
 }
 
 ABuilding* UBuildingManager::StartBuilding()
@@ -61,7 +72,7 @@ ABuilding* UBuildingManager::StartBuilding()
 	
 	// Get location to place building
 	FVector BuildingLocation = BuildingSnapLocation();
-	FRotator BuildingRotation = FRotator(0.f,0.f,0.f); // TODO: Rotation calculations
+	FRotator BuildingRotation = BuildingSnapRotation();
 	CurrentBuilding = NewObject<ABuilding>();
 	
 	TSubclassOf<ABuilding> TempClass = CurrentBuilding->GetClass();
@@ -70,17 +81,8 @@ ABuilding* UBuildingManager::StartBuilding()
 		// Spawn Object
 		CurrentBuilding = World->SpawnActor<ABuilding>(TempClass, BuildingLocation, FRotator::ZeroRotator);
 		CurrentBuilding->PreviewMode(true);
-		
-		FTimerDelegate TimerDel;
-
-		//Binding the function with specific values
-		TimerDel.BindUFunction(this, FName("UpdatePreviewTransform"));
-
-		//Calling UpdatePreviewTransform after 1 seconds with looping
-		World->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.15f, true);
-		
-		//World->GetTimerManager().SetTimer(TimerHandle, this, &UBuildingManager::UpdatePreviewTransform, 1.0f, true);
-
+		World->GetTimerManager().SetTimer(TimerHandle, this, &UBuildingManager::UpdatePreviewTransform, 0.15f, true);
+	
 		return CurrentBuilding;
 	}
 	else
@@ -93,8 +95,13 @@ ABuilding* UBuildingManager::StartBuilding()
 void UBuildingManager::CompleteBuilding()
 {
 	World->GetTimerManager().ClearTimer(TimerHandle);
-	CurrentBuilding->CompleteBuilding();
-	CurrentBuilding = nullptr;
+
+	if (CurrentBuilding)
+	{
+		CurrentBuilding->CompleteBuilding();
+		CurrentBuilding = nullptr;
+	}
+	
 }
 
 void UBuildingManager::CancelBuilding()
@@ -108,17 +115,22 @@ void UBuildingManager::CancelBuilding()
 	}	
 }
 
-
 void UBuildingManager::UpdatePreviewTransform()
 {
-	FVector NewLocation = BuildingSnapLocation();
+	UE_LOG(LogTemp, Warning, TEXT("Fuck you gc"));
+
 	if (CurrentBuilding)
 	{
-		CurrentBuilding->SetActorLocation(NewLocation);
+		UE_LOG(LogTemp, Warning, TEXT("Current Building is available"));
+		//CurrentBuilding->SetActorLocation(NewLocation);
+		FVector NewLocation = BuildingSnapLocation();
+		FRotator NewRotation = BuildingSnapRotation();
+		CurrentBuilding->SetActorTransform(FTransform(NewRotation, NewLocation));
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current Building is null"));
+		StopUpdatingPreviewTransform();
 	}
 	
 }
@@ -126,4 +138,22 @@ void UBuildingManager::UpdatePreviewTransform()
 void UBuildingManager::StopUpdatingPreviewTransform()
 {
 	World->GetTimerManager().ClearTimer(TimerHandle);
+}
+
+void UBuildingManager::IncreaseForwardBuildingOffset()
+{
+	UE_LOG(LogTemp, Warning, TEXT("IncreaseForwardBuildingOffset"));
+	if (ForwardBuildingOffset < 1200)
+	{
+		ForwardBuildingOffset += 400;
+	}
+	
+}
+void UBuildingManager::DecreaseForwardBuildingOffset()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DecreaseForwardBuildingOffset"));
+	if (ForwardBuildingOffset >= 750)
+	{
+		ForwardBuildingOffset -= 400;
+	}
 }

@@ -190,6 +190,9 @@ protected:
 
 	void ChangeState();
 
+	void ScrollUp();
+	void ScrollDown();
+
 	void StartBuilding();
 
 	struct TouchData

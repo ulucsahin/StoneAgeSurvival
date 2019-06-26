@@ -108,6 +108,7 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	BuildingManager = NewObject<UBuildingManager>();
 	BuildingManager->SetWorld(GetWorld());
 	BuildingManager->Player = this;
+	BuildingManager->AddToRoot(); // TODO: Fix this
 
 	InventoryOn = false;
 	InitializeWidgets();
@@ -212,6 +213,9 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	// Switch between building state and normal state
 	PlayerInputComponent->BindAction("ChangeState", IE_Pressed, this, &AStoneAgeColonyCharacter::ChangeState);
 
+	PlayerInputComponent->BindAction("ScrollUp", IE_Pressed, this, &AStoneAgeColonyCharacter::ScrollUp);
+	PlayerInputComponent->BindAction("ScrollDown", IE_Pressed, this, &AStoneAgeColonyCharacter::ScrollDown);
+
 	// Debug event
 	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::Debug);
 }
@@ -230,8 +234,12 @@ void AStoneAgeColonyCharacter::OnClick()
 	}
 	else if (PlayerStates == EPlayerStates::VE_Building)
 	{
-		BuildingManager->CompleteBuilding();
-		BuildingManager->StartBuilding();
+		if (BuildingManager)
+		{
+			BuildingManager->CompleteBuilding();
+			BuildingManager->StartBuilding();
+		}
+		
 	}
 	
 		
@@ -500,6 +508,7 @@ void AStoneAgeColonyCharacter::ChangeState(EPlayerStates NewState)
 
 }
 
+
 void AStoneAgeColonyCharacter::UpdateStateDisplay()
 {
 	// Update display such as UI in here
@@ -513,6 +522,16 @@ void AStoneAgeColonyCharacter::UpdateStateDisplay()
 	}
 }
 
+void AStoneAgeColonyCharacter::ScrollUp()
+{
+	BuildingManager->IncreaseForwardBuildingOffset();
+}
+
+void AStoneAgeColonyCharacter::ScrollDown()
+{
+	BuildingManager->DecreaseForwardBuildingOffset();
+}
+
 void AStoneAgeColonyCharacter::StartBuilding()
 {
 	//ABuilding* test = BuildingManager->StartBuilding();
@@ -520,12 +539,13 @@ void AStoneAgeColonyCharacter::StartBuilding()
 
 void AStoneAgeColonyCharacter::Debug()
 {
-	UE_LOG(LogTemp, Warning, TEXT("hehe debug"));
+	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
 
 	// Debug Line Trace
-
 	auto TraceStart = GetActorLocation();
 	auto TraceEnd = BuildingManager->BuildingSnapLocation();
 	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 10.0f);
+
+	//GEngine->ForceGarbageCollection();
 }
 

@@ -9,7 +9,7 @@
 #include "BuildingManager.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class STONEAGECOLONY_API UBuildingManager : public UActorComponent
 {
 	GENERATED_BODY()
@@ -34,6 +34,7 @@ public:
 	int32 YGridSize = 400;
 	int32 ZGridSize = 400;
 	int32 RotationSnap = 90;
+	int32 RotationOffset = 90;
 	int32 ForwardBuildingOffset = 350;
 
 	ABuilding* CurrentBuilding;
@@ -41,12 +42,13 @@ public:
 	// Location methods
 	FVector ToGridLocation(FVector);
 	FVector BuildingSnapLocation();
+	FRotator BuildingSnapRotation();
 
 	// Building process methods
 	ABuilding* StartBuilding();
 	void CompleteBuilding();
 	void CancelBuilding();
-
+	
 	FTimerHandle TimerHandle; // timer for updating building preview
 
 	void SetWorld(UWorld* World);
@@ -56,6 +58,9 @@ public:
 	void UpdatePreviewTransform();
 
 	void StopUpdatingPreviewTransform();
+
+	void IncreaseForwardBuildingOffset();
+	void DecreaseForwardBuildingOffset();
 
 	TArray<TSubclassOf<ABuilding>> Buildings;
 		
