@@ -216,6 +216,9 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("ScrollUp", IE_Pressed, this, &AStoneAgeColonyCharacter::ScrollUp);
 	PlayerInputComponent->BindAction("ScrollDown", IE_Pressed, this, &AStoneAgeColonyCharacter::ScrollDown);
 
+	PlayerInputComponent->BindAction("RightClick", IE_Pressed, this, &AStoneAgeColonyCharacter::RightClick);
+	PlayerInputComponent->BindAction("ShiftRightClick", IE_Pressed, this, &AStoneAgeColonyCharacter::ShiftRightClick);
+
 	// Debug event
 	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::Debug);
 }
@@ -524,12 +527,35 @@ void AStoneAgeColonyCharacter::UpdateStateDisplay()
 
 void AStoneAgeColonyCharacter::ScrollUp()
 {
-	BuildingManager->IncreaseForwardBuildingOffset();
+	if (PlayerStates == EPlayerStates::VE_Building)
+	{
+		BuildingManager->IncreaseForwardBuildingOffset();
+	}
+		
 }
 
 void AStoneAgeColonyCharacter::ScrollDown()
 {
-	BuildingManager->DecreaseForwardBuildingOffset();
+	if (PlayerStates == EPlayerStates::VE_Building)
+	{
+		BuildingManager->DecreaseForwardBuildingOffset();
+	}
+}
+
+void AStoneAgeColonyCharacter::RightClick()
+{
+	if (PlayerStates == EPlayerStates::VE_Building)
+	{
+		BuildingManager->IncreaseRotationOffset();
+	}
+}
+
+void AStoneAgeColonyCharacter::ShiftRightClick()
+{
+	if (PlayerStates == EPlayerStates::VE_Building)
+	{
+		BuildingManager->DecreaseRotationOffset();
+	}
 }
 
 void AStoneAgeColonyCharacter::StartBuilding()

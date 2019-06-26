@@ -157,3 +157,20 @@ void UBuildingManager::DecreaseForwardBuildingOffset()
 		ForwardBuildingOffset -= 400;
 	}
 }
+
+void UBuildingManager::IncreaseRotationOffset()
+{
+	RotationOffset += 90;
+	RotationOffset = RotationOffset % 360;
+	UE_LOG(LogTemp, Warning, TEXT("RotationOffset %d"), RotationOffset);
+}
+
+void UBuildingManager::DecreaseRotationOffset()
+{
+	RotationOffset -= 90;
+	if (RotationOffset < 0)
+	{
+		RotationOffset += 360;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("RotationOffset %d"), RotationOffset);
+}

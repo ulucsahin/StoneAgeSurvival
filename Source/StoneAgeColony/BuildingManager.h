@@ -61,6 +61,8 @@ public:
 
 	void IncreaseForwardBuildingOffset();
 	void DecreaseForwardBuildingOffset();
+	void IncreaseRotationOffset();
+	void DecreaseRotationOffset();
 
 	TArray<TSubclassOf<ABuilding>> Buildings;
 		

@@ -192,6 +192,8 @@ protected:
 
 	void ScrollUp();
 	void ScrollDown();
+	void RightClick();
+	void ShiftRightClick();
 
 	void StartBuilding();
 
