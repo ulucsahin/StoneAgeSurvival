@@ -123,17 +123,6 @@ void AStoneAgeColonyCharacter::BeginPlay()
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
-	//// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	//if (bUsingMotionControllers)
-	//{
-	//	VR_Gun->SetHiddenInGame(false, true);
-	//	Mesh1P->SetHiddenInGame(true, true);
-	//}
-	//else
-	//{
-	//	VR_Gun->SetHiddenInGame(true, true);
-	//	Mesh1P->SetHiddenInGame(false, true);
-	//}
 
 	UE_LOG(LogTemp, Warning, TEXT("PLAYER GOLD: %d"), GetGold());
 
@@ -141,18 +130,20 @@ void AStoneAgeColonyCharacter::BeginPlay()
 
 void AStoneAgeColonyCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-	HandleFocus();
+	//HandleFocus();
 }
 
 void AStoneAgeColonyCharacter::HandleFocus() {
 	if (Controller && Controller->IsLocalController()) {
 
 		// Get currently usable item we are looking at
-		AUsableActor* Usable = GetUsableInView();
+		AUsableActor* Usable = GetActorInView<AUsableActor>(250.f);
 
 		// End Focus
-		if (FocusedUsableActor != Usable) {
-			if (FocusedUsableActor) {
+		if (FocusedUsableActor != Usable) 
+		{
+			if (FocusedUsableActor) 
+			{
 				FocusedUsableActor->OnEndFocus();
 			}
 
@@ -163,8 +154,10 @@ void AStoneAgeColonyCharacter::HandleFocus() {
 		FocusedUsableActor = Usable;
 
 		// Start Focus
-		if (Usable) {
-			if (bHasNewFocus) {
+		if (Usable) 
+		{
+			if (bHasNewFocus) 
+			{
 				Usable->OnBeginFocus();
 				// Can't have new focus because we already have focus on a Usable.
 				bHasNewFocus = false;
@@ -239,8 +232,13 @@ void AStoneAgeColonyCharacter::OnClick()
 	{
 		if (BuildingManager)
 		{
-			BuildingManager->CompleteBuilding();
-			BuildingManager->StartBuilding();
+			bool Success = BuildingManager->CompleteBuilding();
+			if (Success)
+			{
+				// start a new building if previous building succesfully built
+				BuildingManager->StartBuilding();
+			}
+			
 		}
 		
 	}
@@ -297,7 +295,8 @@ void AStoneAgeColonyCharacter::InitializeWidgets()
 	CharacterMenuWidget = CreateWidget<UUserWidget>(PlayerController, CharacterMenuWidgtClass);
 }
 
-AUsableActor* AStoneAgeColonyCharacter::GetUsableInView()
+template<typename T>
+T* AStoneAgeColonyCharacter::GetActorInView(float Range)
 {
 	bool debug = false;
 	FVector CamLoc;
@@ -310,9 +309,7 @@ AUsableActor* AStoneAgeColonyCharacter::GetUsableInView()
 	Controller->GetPlayerViewPoint(CamLoc, CamRot);
 	const FVector TraceStart = CamLoc;
 	const FVector Direction = CamRot.Vector();
-	const FVector TraceEnd = TraceStart + (Direction * 250.f);
-
-
+	const FVector TraceEnd = TraceStart + (Direction * Range);
 
 	FCollisionQueryParams TraceParams(FName(TEXT("TraceUsableActor")), true, this);
 	TraceParams.bTraceAsyncScene = true;
@@ -336,12 +333,19 @@ AUsableActor* AStoneAgeColonyCharacter::GetUsableInView()
 	/* Uncomment this to visualize your line during gameplay. */
 	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 1.0f);
 	
-	return Cast<AUsableActor>(Hit.GetActor());
+	//auto test = Cast<ABuilding>(Hit.GetActor());
+	//if (test)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Building xD"));
+	//}
+
+
+	return Cast<T>(Hit.GetActor());
 }
 
 void AStoneAgeColonyCharacter::Use() 
 {
-	AUsableActor* Usable = GetUsableInView();
+	AUsableActor* Usable = GetActorInView<AUsableActor>(250.f);
 	if (Usable)
 	{
 		Usable->OnUsed(this);
@@ -440,11 +444,6 @@ int AStoneAgeColonyCharacter::GetLevel()
 {
 	return Level;
 }
-
-//TArray<int> AStoneAgeColonyCharacter::GetInventory() 
-//{
-//	return Inventory;
-//}
 
 //AUsableActor* AStoneAgeColonyCharacter::GetInventoryItem(int InventoryItemIndex)
 //{
@@ -568,10 +567,18 @@ void AStoneAgeColonyCharacter::Debug()
 	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
 
 	// Debug Line Trace
-	auto TraceStart = GetActorLocation();
-	auto TraceEnd = BuildingManager->BuildingSnapLocation();
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 10.0f);
+	//auto TraceStart = GetActorLocation();
+	//auto TraceEnd = BuildingManager->BuildingSnapLocation();
+	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 10.0f);
 
 	//GEngine->ForceGarbageCollection();
+
+
+	//GetActorInView<ABuilding>(20.f);
+
+	BuildingManager->ChangeBuildingType();
+
+		
+	
 }
 

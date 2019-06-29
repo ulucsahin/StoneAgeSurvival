@@ -36,8 +36,12 @@ public:
 	int32 RotationSnap = 90;
 	int32 RotationOffset = 90;
 	int32 ForwardBuildingOffset = 350;
+	float InteractRange = 750.f;
 
 	ABuilding* CurrentBuilding;
+	ABuilding* LastBuildingPlayerLookedAt;
+
+	bool CurrentBuildingAttached = false;
 
 	// Location methods
 	FVector ToGridLocation(FVector);
@@ -46,7 +50,7 @@ public:
 
 	// Building process methods
 	ABuilding* StartBuilding();
-	void CompleteBuilding();
+	bool CompleteBuilding();
 	void CancelBuilding();
 	
 	FTimerHandle TimerHandle; // timer for updating building preview
@@ -55,14 +59,21 @@ public:
 	UWorld* World;
 
 	UFUNCTION() // ufunction needed for timer
-	void UpdatePreviewTransform();
+	void UpdatePreview();
 
-	void StopUpdatingPreviewTransform();
+	void StopUpdatingPreview();
 
 	void IncreaseForwardBuildingOffset();
 	void DecreaseForwardBuildingOffset();
 	void IncreaseRotationOffset();
 	void DecreaseRotationOffset();
+
+	void ChangeBuildingType();
+
+	int SelectSocketToAttach(ABuilding*);
+	TTuple<float, int> CalculateMinDistanceToSockets(ABuilding*); // returns distance, index tuple
+	int AttachTo(ABuilding*);
+	void DetachFrom(ABuilding*, int);
 
 	TArray<TSubclassOf<ABuilding>> Buildings;
 		

@@ -57,7 +57,10 @@ class AStoneAgeColonyCharacter : public ACharacter
 
 public:
 	AStoneAgeColonyCharacter();
-	AUsableActor* GetUsableInView();
+
+	template <typename T>
+	T* GetActorInView(float Range);
+
 	class AUsableActor* FocusedUsableActor;
 	void RegisterSaveData();
 	void InitializeWidgets();
