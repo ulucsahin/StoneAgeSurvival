@@ -3,6 +3,9 @@
 #include "Building.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 
+// Static Variables
+int ABuilding::LastMeshType;
+
 // Sets default values
 ABuilding::ABuilding(const FObjectInitializer& ObjectInitializer)
 {
@@ -21,13 +24,14 @@ ABuilding::ABuilding(const FObjectInitializer& ObjectInitializer)
 	MeshTypes.Add(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/MultistoryDungeons/Blueprints/FIRST-PERSON_V2/FP_Base/SM_FP_Wall_01.SM_FP_Wall_01")));
 	
 	// Temporarily assigned to first one
-	if (MeshTypes[0])
+	if (MeshTypes[LastMeshType])
 	{
 		// Initialize default mesh as first type
-		BuildingMesh->SetStaticMesh(MeshTypes[0]);	
-		BuildingType = GetBuildingType(0);
+		BuildingMesh->SetStaticMesh(MeshTypes[LastMeshType]);
+		CurrentMeshType = LastMeshType;
+		
 	}
-
+	
 	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 
 	// Decrease collision bounds otherwise we get unnecessary collisions
@@ -59,22 +63,15 @@ void ABuilding::BeginPlay()
 	// Get Socket name-type pairs which will be used in attaching objects
 	for (auto name : BuildingMesh->GetAllSocketNames())
 	{
-		SocketTaken.Add(false);
-
-		bool bIsFloorSocket = false;
 		if (name.ToString().Contains("Floor"))
 		{
-			Sockets.Add(MakeTuple(name, ESocketTypes::VE_FloorSocket));
+			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Floor));
 		}
 		else if (name.ToString().Contains("Wall"))
 		{
-			Sockets.Add(MakeTuple(name, ESocketTypes::VE_WallSocket));
+			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Wall));
 		}
 		
-		
-		
-		//auto temp = asdf.ToString();
-		//UE_LOG(LogTemp, Warning, TEXT("Socket Name: %s"), *temp);
 	}
 
 }
@@ -92,23 +89,29 @@ void ABuilding::SetBuildingMesh(int type)
 	
 }
 
-EBuildingTypes ABuilding::GetBuildingType(int Index)
+EBuildTypes ABuilding::GetBuildingType()
 {
-	TArray<EBuildingTypes> Types = { EBuildingTypes::VE_Floor, EBuildingTypes::VE_Wall };
-	return Types[Index];
+	TArray<EBuildTypes> Types = { EBuildTypes::VE_Floor, EBuildTypes::VE_Wall };
+	return Types[CurrentMeshType];
 }
 
 void ABuilding::ChangeMesh()
 {
 	// This method is not implemented
 	UE_LOG(LogTemp, Warning, TEXT("MeshTypes.Num: %d"), MeshTypes.Num());
-	if (MeshTypes[1])
+	CurrentMeshType = (CurrentMeshType + 1) % MeshTypes.Num();
+	LastMeshType = CurrentMeshType;
+	UE_LOG(LogTemp, Warning, TEXT("CurrentMeshType: %d"), CurrentMeshType);
+	if (MeshTypes[CurrentMeshType])
 	{
-		BuildingMesh->SetStaticMesh(MeshTypes[1]);
+		UE_LOG(LogTemp, Warning, TEXT("Inside if"));
+		BuildingMesh->SetStaticMesh(MeshTypes[CurrentMeshType]);
 		Box->SetBoxExtent(BuildingMesh->Bounds.BoxExtent);
 		Box->SetCollisionProfileName("OverlapAll");
 		//Box->SetupAttachment(SceneComponent);
 	}
+
+	ComputeSocketsArray();
 
 }
 
@@ -221,6 +224,34 @@ void ABuilding::SetScale(float Scale)
 	BuildingMesh->SetRelativeScale3D(FVector(Scale, Scale, Scale));
 
 	Box->SetBoxExtent(BuildingMesh->Bounds.BoxExtent);
+}
+
+void ABuilding::ComputeSocketsArray()
+{
+	Sockets.Empty();
+	for (auto name : BuildingMesh->GetAllSocketNames())
+	{
+		if (name.ToString().Contains("Floor"))
+		{
+			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Floor));
+		}
+		else if (name.ToString().Contains("Wall"))
+		{
+			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Wall));
+		}
+	}
+}
+
+TArray<FName> ABuilding::GetSocketsWithType(EBuildTypes SocketType)
+{
+	TArray<FName> Result;
+	for (auto Pair : Sockets)
+	{
+		if (Pair.Value == SocketType)
+			Result.Add(Pair.Key);
+	}
+
+	return Result;
 }
 
 void ABuilding::OnBeginFocus() {

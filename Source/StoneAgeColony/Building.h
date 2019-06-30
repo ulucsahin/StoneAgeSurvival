@@ -8,16 +8,10 @@
 #include "Building.generated.h"
 
 
-enum class EBuildingTypes : uint8
+enum class EBuildTypes : uint8
 {
 	VE_Floor  UMETA(DisplayName = "Floor"),
 	VE_Wall   UMETA(DisplayName = "Wall")
-};
-
-enum class ESocketTypes : uint8
-{
-	VE_FloorSocket	UMETA(DisplayName = "FloorSocket"),
-	VE_WallSocket   UMETA(DisplayName = "WallSocket"),
 };
 
 UCLASS()
@@ -47,17 +41,17 @@ public:
 
 	TArray<UStaticMesh*> MeshTypes; // building types
 	int CurrentMeshType = 0;
+	static int LastMeshType;
 
 	USceneComponent* SceneComponent;
 	UStaticMeshComponent* BuildingMesh;
 	UBoxComponent* Box;
 
 	// Certain type of building can only be attached to certain types of sockets
-	EBuildingTypes BuildingType;
-	TArray< TTuple<FName, ESocketTypes> > Sockets;
-	TArray<bool> SocketTaken;
+	TArray< TTuple<FName, EBuildTypes> > Sockets;
+	TArray<FName> GetSocketsWithType(EBuildTypes);
 
-	EBuildingTypes GetBuildingType(int Index);
+	EBuildTypes GetBuildingType();
 
 	// Ghost Material and Collision Material for building preview
 	UMaterial* GhostMaterial;
@@ -84,6 +78,7 @@ public:
 	void PreviewMode(bool);
 	bool CompleteBuilding();
 
+	
 	void SetScale(float);
 
 	/* Player is looking at */
@@ -91,4 +86,7 @@ public:
 
 	/* Player is no longer looking at */
 	virtual void OnEndFocus();
+
+private:
+	void ComputeSocketsArray();
 };

@@ -70,10 +70,10 @@ public:
 
 	void ChangeBuildingType();
 
-	int SelectSocketToAttach(ABuilding*);
-	TTuple<float, int> CalculateMinDistanceToSockets(ABuilding*); // returns distance, index tuple
-	int AttachTo(ABuilding*);
-	void DetachFrom(ABuilding*, int);
+	FName SelectSocketToAttach(EBuildTypes SocketType);
+	TTuple<float, FName> CalculateMinDistanceSocket(ABuilding*, EBuildTypes); // returns socket distance, socket name tuple
+	FName AttachTo(ABuilding*); 
+	void DetachFrom();
 
 	TArray<TSubclassOf<ABuilding>> Buildings;
 		

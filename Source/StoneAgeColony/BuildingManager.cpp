@@ -143,7 +143,7 @@ void UBuildingManager::UpdatePreview()
 		{
 			if (LastBuildingPlayerLookedAt)
 			{
-				auto Distance_Index = CalculateMinDistanceToSockets(LastBuildingPlayerLookedAt); // no deconstruct????
+				auto Distance_Index = CalculateMinDistanceSocket(LastBuildingPlayerLookedAt, CurrentBuilding->GetBuildingType()); // no deconstruct????
 				auto Distance = Distance_Index.Key; // retarded solutions
 				auto Index = Distance_Index.Value;
 
@@ -151,7 +151,7 @@ void UBuildingManager::UpdatePreview()
 				{
 					if (CurrentBuildingAttached)
 					{
-						DetachFrom(LastBuildingPlayerLookedAt, 0);
+						DetachFrom();
 						CurrentBuildingAttached = false;
 					}
 					
@@ -226,80 +226,44 @@ void UBuildingManager::ChangeBuildingType()
 	CurrentBuilding->ChangeMesh();
 }
 
-int UBuildingManager::AttachTo(ABuilding* BuildingLookedAt)
+FName UBuildingManager::AttachTo(ABuilding* BuildingLookedAt)
 {
 	// Select socket which player is looking at
-	int SocketIndexToAttach = SelectSocketToAttach(nullptr);
+	EBuildTypes CurrentBuildingType = CurrentBuilding->GetBuildingType();
+	FName SocketNameToAttach = SelectSocketToAttach(CurrentBuildingType);
+	
+	if (SocketNameToAttach.ToString() == "")
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OOPS"));
+	}
 
-	auto SocketName = LastBuildingPlayerLookedAt->Sockets[SocketIndexToAttach].Key; // Sockets is Name-type as key-value pairs.
-
-	// We do not need to check SocketTaken array because Attach-Detach functions already do that in Unreal Engine
-
-	//if (Building->SocketTaken[SocketIndexToAttach] == false)
-	//{
-
-	auto test = SocketName.ToString();
-
-	UE_LOG(LogTemp, Warning, TEXT("Socket Not Taken."));
-	CurrentBuilding->AttachToComponent(LastBuildingPlayerLookedAt->BuildingMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, SocketName);
-	UE_LOG(LogTemp, Warning, TEXT("SOCKET NAME %s"), *test);
+	CurrentBuilding->AttachToComponent(LastBuildingPlayerLookedAt->BuildingMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, SocketNameToAttach);
 	CurrentBuilding->PreviewMode(true);
 
-	LastBuildingPlayerLookedAt->SocketTaken[SocketIndexToAttach] = true;
-	return SocketIndexToAttach;
-	//}
-	//else
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Socket Taken."));
-	//	return -1;
-	//}
-	
-
-	
+	return SocketNameToAttach;
 }
 
-void UBuildingManager::DetachFrom(ABuilding* Building, int SocketIndex)
+void UBuildingManager::DetachFrom()
 {
-	Building->SocketTaken[SocketIndex] = false; // we do not need this array, will be removed.
 	CurrentBuilding->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 }
 
-int UBuildingManager::SelectSocketToAttach(ABuilding* BuildingLookedAt)
+FName UBuildingManager::SelectSocketToAttach(EBuildTypes SocketType)
 {
-	/* Find which socket is closest to player interaction range (TraceEnd) */
+	/* Select closest socket to player's LookAt EndTrace location.
+	Selects sockets among sockets of LastBuildingPlayerLookedAt
+	*/
 
-	FVector CamLoc;
-	FRotator CamRot;
-	Player->Controller->GetPlayerViewPoint(CamLoc, CamRot);
-	const FVector TraceStart = CamLoc;
-	const FVector Direction = CamRot.Vector();
-	const FVector TraceEnd = TraceStart + (Direction * InteractRange);
-	
-	auto SocketNames = LastBuildingPlayerLookedAt->BuildingMesh->GetAllSocketNames(); //const TArray<USkeletalMeshSocket*> AllSockets = SkeletalMesh->GetActiveSocketList();
+	auto Result = CalculateMinDistanceSocket(LastBuildingPlayerLookedAt, SocketType);
+	auto ClosestSocketIndex = Result.Value; // value = index
 
-	int SmallestIndex = -1;
-	float SmallestDistance = 999999.f;
-	int i = 0;
-	for (auto temp : SocketNames)
-	{
-		FString SocketName = temp.ToString();
-		FVector SocketLocation = LastBuildingPlayerLookedAt->BuildingMesh->GetSocketLocation(*SocketName);
-
-		auto Distance = FVector::Dist(TraceEnd, SocketLocation);
-		if (Distance < SmallestDistance)
-		{
-			SmallestDistance = Distance;
-			SmallestIndex = i;
-		}
-
-		i++;
-	}
-
-	return SmallestIndex;
+	return ClosestSocketIndex;
 }
 
-TTuple<float, int> UBuildingManager::CalculateMinDistanceToSockets(ABuilding* Building)
+TTuple<float, FName> UBuildingManager::CalculateMinDistanceSocket(ABuilding* Building, EBuildTypes SocketType)
 {
+	/* Finds closest socket to player's LookAt EndTrace Location for desired Building.*/
+
 	FVector CamLoc;
 	FRotator CamRot;
 	Player->Controller->GetPlayerViewPoint(CamLoc, CamRot);
@@ -307,13 +271,13 @@ TTuple<float, int> UBuildingManager::CalculateMinDistanceToSockets(ABuilding* Bu
 	const FVector Direction = CamRot.Vector();
 	const FVector TraceEnd = TraceStart + (Direction * InteractRange);
 
-	auto SocketNames = Building->BuildingMesh->GetAllSocketNames();
+	auto SocketNames = Building->GetSocketsWithType(SocketType); 
 
-	int SmallestIndex = -1;
 	float SmallestDistance = 999999.f;
-	int i = 0;
+	FName ClosestSocketName = "";
 	for (auto temp : SocketNames)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Selected Socket Name: %s"), *temp.ToString());
 		FString SocketName = temp.ToString();
 		FVector SocketLocation = Building->BuildingMesh->GetSocketLocation(*SocketName);
 
@@ -321,11 +285,10 @@ TTuple<float, int> UBuildingManager::CalculateMinDistanceToSockets(ABuilding* Bu
 		if (Distance < SmallestDistance)
 		{
 			SmallestDistance = Distance;
-			SmallestIndex = i;
+			ClosestSocketName = temp;
 		}
 
-		i++;
 	}
 	
-	return MakeTuple(SmallestDistance, SmallestIndex);
+	return MakeTuple(SmallestDistance, ClosestSocketName);
 }

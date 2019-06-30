@@ -553,7 +553,8 @@ void AStoneAgeColonyCharacter::ShiftRightClick()
 {
 	if (PlayerStates == EPlayerStates::VE_Building)
 	{
-		BuildingManager->DecreaseRotationOffset();
+		//BuildingManager->DecreaseRotationOffset();
+		BuildingManager->ChangeBuildingType();
 	}
 }
 
@@ -564,6 +565,7 @@ void AStoneAgeColonyCharacter::StartBuilding()
 
 void AStoneAgeColonyCharacter::Debug()
 {
+	//GetActorInView<ABuilding>(20.f); // WE NEED THIS LINE OR LINKER ERROR CAUSED BY OPTIONS IN STONEAGECOLONY.BUILD.CS WHICH IS USED FOR FASTER COMPILE TIMES
 	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
 
 	// Debug Line Trace
@@ -574,9 +576,9 @@ void AStoneAgeColonyCharacter::Debug()
 	//GEngine->ForceGarbageCollection();
 
 
-	//GetActorInView<ABuilding>(20.f);
+	
 
-	BuildingManager->ChangeBuildingType();
+	//BuildingManager->ChangeBuildingType();
 
 		
 	
