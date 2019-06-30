@@ -43,6 +43,15 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
+	// Create box component to get nearby items when necessary
+	CollisionSphereRadius = 500.f;
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
+	Sphere->SetSphereRadius(CollisionSphereRadius);
+	Sphere->SetCollisionProfileName("OverlapAll");
+	Sphere->SetupAttachment(GetCapsuleComponent());
+	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AStoneAgeColonyCharacter::OnOverlapBegin);
+	Sphere->OnComponentEndOverlap.AddDynamic(this, &AStoneAgeColonyCharacter::OnOverlapEnd);
+
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	/*Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
@@ -131,6 +140,46 @@ void AStoneAgeColonyCharacter::BeginPlay()
 void AStoneAgeColonyCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	//HandleFocus();
+}
+
+void AStoneAgeColonyCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor != this)
+	{
+		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		if (Mesh != nullptr)
+		{
+			ABuilding* Building = Cast<ABuilding>(OtherActor);
+			if (Building != nullptr && Building->GetIsBuilt())
+			{
+				BuildingManager->BuildingsNearPlayer.Add(Building);
+				//if (!bOverlapping)
+				//	OnOverlappingBegin();
+			}
+		}
+	}
+	
+}
+
+void AStoneAgeColonyCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor != this)
+	{
+		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		if (Mesh != nullptr)
+		{
+			ABuilding* Building = Cast<ABuilding>(OtherActor);
+			if (Building && Building->GetIsBuilt())
+			{
+				if (BuildingManager->BuildingsNearPlayer.Contains(Building))
+				{
+					BuildingManager->BuildingsNearPlayer.Remove(Building);
+					//if (OverlappingBuildings.Array().Num() <= 0)
+					//	OnOverlappingEnd();
+				}
+			}
+		}
+	}
 }
 
 void AStoneAgeColonyCharacter::HandleFocus() {
@@ -562,6 +611,8 @@ void AStoneAgeColonyCharacter::StartBuilding()
 {
 	//ABuilding* test = BuildingManager->StartBuilding();
 }
+
+
 
 void AStoneAgeColonyCharacter::Debug()
 {

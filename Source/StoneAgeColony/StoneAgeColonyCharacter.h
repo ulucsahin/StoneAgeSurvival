@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "UsableActor.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "Components/SphereComponent.h"
 #include "StoneAgeColonyCharacter.generated.h"
 
 class UInputComponent;
@@ -61,6 +62,9 @@ public:
 	template <typename T>
 	T* GetActorInView(float Range);
 
+	USphereComponent* Sphere;
+	float CollisionSphereRadius;
+
 	class AUsableActor* FocusedUsableActor;
 	void RegisterSaveData();
 	void InitializeWidgets();
@@ -85,6 +89,12 @@ public:
 	/*Max distance to use/focus on actors. */
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
 	float MaxUseDistance;
+
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	// Stats
 	float Health;

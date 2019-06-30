@@ -44,7 +44,6 @@ ABuilding::ABuilding(const FObjectInitializer& ObjectInitializer)
 	Box->SetBoxExtent(CollisionBounds); // FVector(90.f, 90.f, 90.f)
 	Box->SetCollisionProfileName("OverlapAll");
 	Box->SetupAttachment(SceneComponent);
-
 	Box->OnComponentBeginOverlap.AddDynamic(this, &ABuilding::OnOverlapBegin);
 	Box->OnComponentEndOverlap.AddDynamic(this, &ABuilding::OnOverlapEnd);
 
@@ -98,13 +97,10 @@ EBuildTypes ABuilding::GetBuildingType()
 void ABuilding::ChangeMesh()
 {
 	// This method is not implemented
-	UE_LOG(LogTemp, Warning, TEXT("MeshTypes.Num: %d"), MeshTypes.Num());
 	CurrentMeshType = (CurrentMeshType + 1) % MeshTypes.Num();
 	LastMeshType = CurrentMeshType;
-	UE_LOG(LogTemp, Warning, TEXT("CurrentMeshType: %d"), CurrentMeshType);
 	if (MeshTypes[CurrentMeshType])
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Inside if"));
 		BuildingMesh->SetStaticMesh(MeshTypes[CurrentMeshType]);
 		Box->SetBoxExtent(BuildingMesh->Bounds.BoxExtent);
 		Box->SetCollisionProfileName("OverlapAll");

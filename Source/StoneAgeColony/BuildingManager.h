@@ -40,6 +40,7 @@ public:
 
 	ABuilding* CurrentBuilding;
 	ABuilding* LastBuildingPlayerLookedAt;
+	TSet<ABuilding*> BuildingsNearPlayer;
 
 	bool CurrentBuildingAttached = false;
 
@@ -70,10 +71,10 @@ public:
 
 	void ChangeBuildingType();
 
-	FName SelectSocketToAttach(EBuildTypes SocketType);
-	TTuple<float, FName> CalculateMinDistanceSocket(ABuilding*, EBuildTypes); // returns socket distance, socket name tuple
-	FName AttachTo(ABuilding*); 
 	void DetachFrom();
+	TTuple<ABuilding*, FName> AttachTo();
+	TTuple<ABuilding*, FName> SelectSocketToAttach(); // Returns Building and socket name of that building which we will attach
+	TTuple<float, FName> CalculateMinDistanceSocket(ABuilding*, EBuildTypes); // returns socket distance, socket name tuple
 
 	TArray<TSubclassOf<ABuilding>> Buildings;
 		
