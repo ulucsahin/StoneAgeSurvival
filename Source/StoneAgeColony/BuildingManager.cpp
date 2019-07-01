@@ -131,53 +131,44 @@ void UBuildingManager::CancelBuilding()
 	}	
 }
 
+void UBuildingManager::StartUpdatingPreview()
+{
+	World->GetTimerManager().SetTimer(TimerHandle, this, &UBuildingManager::UpdatePreview, 0.15f, true);
+}
+
 void UBuildingManager::UpdatePreview()
 {
-	///// Continue 
-	///// Continue 
-	///// Continue 
-	///// Continue 
-	///// Continue 
-	///// Continue 
-	///// Continue 
-
 	// Working version saved in txt.
 	if (CurrentBuilding)
 	{
 		auto Building_Socket = SelectSocketToAttach();
-		auto Building = Building_Socket.Key; 
+		auto Building = Building_Socket.Key;
 		auto SocketName = Building_Socket.Value;
-
-		//if (Building)
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("Building available."));
-		//}
-		//else
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("Building is null."));
-		//}
-
 		if (Building)
 		{
-
-			auto Distance_Index = CalculateMinDistanceSocket(Building, CurrentBuilding->GetBuildingType()); // no deconstruct????
-			auto Distance = Distance_Index.Key; // retarded solutions
-
-			if (CurrentBuildingAttached && Distance > Player->CollisionSphereRadius)
+		    auto Distance_Name = CalculateMinDistanceSocket(Building, CurrentBuilding->GetBuildingType()); // no deconstruct????
+			auto Distance = Distance_Name.Key; // retarded solutions
+			auto SocketName = Distance_Name.Value;
+			if (SocketName != "")
 			{
-
-				DetachFrom();
-				CurrentBuildingAttached = false;
+				if (CurrentBuildingAttached && Distance > Player->CollisionSphereRadius)
+				{
+					DetachFrom();
+					CurrentBuildingAttached = false;
+				}
+				else
+				{
+					AttachTo();
+					CurrentBuildingAttached = true;
+				}
 			}
 			else
 			{
-
-				AttachTo();
-				CurrentBuildingAttached = true;
+				UE_LOG(LogTemp, Warning, TEXT("Socket null"));
 			}
-		
+			
 		}
-		else if (!CurrentBuildingAttached)
+		else 
 		{
 			auto PlayerCamera = Player->GetFirstPersonCameraComponent();
 			FVector NewLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * ForwardBuildingOffset); //BuildingSnapLocation();
@@ -273,20 +264,33 @@ TTuple<ABuilding*, FName> UBuildingManager::SelectSocketToAttach()
 	ABuilding* ChosenBuilding;
 	if (BuildingsNearPlayer.Num() > 0)
 	{
+		bool FoundAtLeastOne = false;
 		for (auto Building : BuildingsNearPlayer)
 		{
+
 			auto Result = CalculateMinDistanceSocket(Building, CurrentBuilding->GetBuildingType());
 			if (Result.Key < SmallestDistance)
 			{
 				SmallestDistance = Result.Key;
 				ClosestSocketName = Result.Value;
 				ChosenBuilding = Building;
+				FoundAtLeastOne = true;
 			}
 		}
-		return MakeTuple(ChosenBuilding, ClosestSocketName);
+		if (FoundAtLeastOne)
+		{
+			return MakeTuple(ChosenBuilding, ClosestSocketName);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("UBuildingManager::SelectSocketToAttach returning nullptr as building"));
+			return MakeTuple((ABuilding*)nullptr, FName());
+		}
+		
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("UBuildingManager::SelectSocketToAttach returning nullptr as building"));
 		return MakeTuple((ABuilding*)nullptr, FName());
 	}
 	
@@ -316,31 +320,30 @@ TTuple<ABuilding*, FName> UBuildingManager::SelectSocketToAttach()
 TTuple<float, FName> UBuildingManager::CalculateMinDistanceSocket(ABuilding* Building, EBuildTypes SocketType)
 {
 	/* Finds closest socket to player's LookAt EndTrace Location for desired Building.*/
-
 	FVector CamLoc;
 	FRotator CamRot;
 	Player->Controller->GetPlayerViewPoint(CamLoc, CamRot);
 	const FVector TraceStart = CamLoc;
 	const FVector Direction = CamRot.Vector();
 	const FVector TraceEnd = TraceStart + (Direction * InteractRange);
-
 	auto SocketNames = Building->GetSocketsWithType(SocketType); 
-
 	float SmallestDistance = 999999.f;
 	FName ClosestSocketName = "";
-	for (auto temp : SocketNames)
+	if (SocketNames.Num() > 0)
 	{
-		FString SocketName = temp.ToString();
-		FVector SocketLocation = Building->BuildingMesh->GetSocketLocation(*SocketName);
-
-		float Distance = FVector::Dist(TraceEnd, SocketLocation);
-		if (Distance < SmallestDistance)
+		for (auto temp : SocketNames)
 		{
-			SmallestDistance = Distance;
-			ClosestSocketName = temp;
-		}
+			FString SocketName = temp.ToString();
+			FVector SocketLocation = Building->BuildingMesh->GetSocketLocation(*SocketName);
 
+			float Distance = FVector::Dist(TraceEnd, SocketLocation);
+			if (Distance < SmallestDistance)
+			{
+				SmallestDistance = Distance;
+				ClosestSocketName = temp;
+			}
+
+		}
 	}
-	
 	return MakeTuple(SmallestDistance, ClosestSocketName);
 }

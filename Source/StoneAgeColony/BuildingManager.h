@@ -62,6 +62,7 @@ public:
 	UFUNCTION() // ufunction needed for timer
 	void UpdatePreview();
 
+	void StartUpdatingPreview();
 	void StopUpdatingPreview();
 
 	void IncreaseForwardBuildingOffset();

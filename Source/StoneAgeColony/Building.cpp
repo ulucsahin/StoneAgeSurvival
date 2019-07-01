@@ -79,7 +79,6 @@ void ABuilding::BeginPlay()
 void ABuilding::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 
@@ -113,8 +112,6 @@ void ABuilding::ChangeMesh()
 
 void ABuilding::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("OnOverlapBegin"));
-
 	if (OtherActor != this)
 	{
 		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
@@ -133,7 +130,6 @@ void ABuilding::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 
 void ABuilding::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("OnOverlapEnd"));
 	if (OtherActor != this)
 	{
 		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
@@ -241,12 +237,14 @@ void ABuilding::ComputeSocketsArray()
 TArray<FName> ABuilding::GetSocketsWithType(EBuildTypes SocketType)
 {
 	TArray<FName> Result;
+	this->Sockets;
+
 	for (auto Pair : Sockets)
 	{
 		if (Pair.Value == SocketType)
 			Result.Add(Pair.Key);
 	}
-
+	
 	return Result;
 }
 
