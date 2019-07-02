@@ -20,9 +20,11 @@ ABuilding::ABuilding(const FObjectInitializer& ObjectInitializer)
 	//RootComponent = BuildingMesh;
 	
 	// Initialize building types (meshes) TODO: This should not be done for each building. Lots of wasted memory and processing power
-	MeshTypes.Add(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/MultistoryDungeons/Blueprints/FIRST-PERSON_V2/FP_Base/SM_Floor_03.SM_Floor_03")));
-	MeshTypes.Add(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/MultistoryDungeons/Blueprints/FIRST-PERSON_V2/FP_Base/SM_FP_Wall_01.SM_FP_Wall_01")));
-	
+	MeshTypes.Add(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Uluc/BuildingSystem/Meshes/SM_Floor_03.SM_Floor_03"))); // floor
+	MeshTypes.Add(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Uluc/BuildingSystem/Meshes/SM_FP_Wall_01.SM_FP_Wall_01"))); // wall
+	MeshTypes.Add(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Uluc/BuildingSystem/Meshes/SM_Doorway_04.SM_Doorway_04"))); // wall
+	MeshTypes.Add(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Uluc/BuildingSystem/Meshes/Door_Bronze_01.Door_Bronze_01"))); // door
+
 	// Temporarily assigned to first one
 	if (MeshTypes[LastMeshType])
 	{
@@ -32,22 +34,8 @@ ABuilding::ABuilding(const FObjectInitializer& ObjectInitializer)
 		
 	}
 	
-	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	SetBoxComponent(true);
 
-	// Decrease collision bounds otherwise we get unnecessary collisions
-	auto CollisionBounds = BuildingMesh->Bounds.BoxExtent;
-	float Offset = 100.f;
-	CollisionBounds.X = CollisionBounds.X - Offset;
-	CollisionBounds.Y = CollisionBounds.Y - Offset;
-	CollisionBounds.Z = CollisionBounds.Z - Offset;
-
-	Box->SetBoxExtent(CollisionBounds); // FVector(90.f, 90.f, 90.f)
-	Box->SetCollisionProfileName("OverlapAll");
-	Box->SetupAttachment(SceneComponent);
-	Box->OnComponentBeginOverlap.AddDynamic(this, &ABuilding::OnOverlapBegin);
-	Box->OnComponentEndOverlap.AddDynamic(this, &ABuilding::OnOverlapEnd);
-
-	
 	// Set preview materials and original Material
 	GhostMaterial = LoadObject<UMaterial>(nullptr, TEXT("/Game/Uluc/BuildingSystem/GhostMaterial.GhostMaterial"));
 	CollisionMaterial = LoadObject<UMaterial>(nullptr, TEXT("/Game/Uluc/BuildingSystem/ColiisionMaterial.ColiisionMaterial"));
@@ -70,6 +58,10 @@ void ABuilding::BeginPlay()
 		{
 			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Wall));
 		}
+		else if (name.ToString().Contains("Door"))
+		{
+			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Door));
+		}
 		
 	}
 
@@ -89,7 +81,11 @@ void ABuilding::SetBuildingMesh(int type)
 
 EBuildTypes ABuilding::GetBuildingType()
 {
-	TArray<EBuildTypes> Types = { EBuildTypes::VE_Floor, EBuildTypes::VE_Wall };
+	// Regular Floor
+	// Regular Wall
+	// Wall with doorway
+	// Door
+	TArray<EBuildTypes> Types = { EBuildTypes::VE_Floor, EBuildTypes::VE_Wall, EBuildTypes::VE_Wall, EBuildTypes::VE_Door};
 	return Types[CurrentMeshType];
 }
 
@@ -101,20 +97,56 @@ void ABuilding::ChangeMesh()
 	if (MeshTypes[CurrentMeshType])
 	{
 		BuildingMesh->SetStaticMesh(MeshTypes[CurrentMeshType]);
-		Box->SetBoxExtent(BuildingMesh->Bounds.BoxExtent);
-		Box->SetCollisionProfileName("OverlapAll");
+		SetBoxComponent(false);
 		//Box->SetupAttachment(SceneComponent);
 	}
 
 	ComputeSocketsArray();
+	//SetBoxComponent(false);
 
+}
+
+void ABuilding::SetBoxComponent(bool Init)
+{
+	
+	UE_LOG(LogTemp, Warning, TEXT("SetBoxComponent"));
+	if (Init)
+	{
+		Box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+		Box->SetupAttachment(SceneComponent);
+		Box->OnComponentBeginOverlap.AddDynamic(this, &ABuilding::OnOverlapBegin);
+		Box->OnComponentEndOverlap.AddDynamic(this, &ABuilding::OnOverlapEnd);
+		Box->SetCollisionProfileName("OverlapAll");
+	}
+	
+
+	float Offset = 100.f;
+
+	auto CollisionBounds = BuildingMesh->Bounds.BoxExtent;
+	CollisionBounds.X = CollisionBounds.X / 2;
+	CollisionBounds.Y = CollisionBounds.Y / 2;
+	CollisionBounds.Z = CollisionBounds.Z / 2;
+
+	FVector OffsetVector(0.f, 0.f, -CollisionBounds.Z);
+	
+	auto Rotation = BuildingMesh->GetComponentRotation();
+	// Decrease collision bounds otherwise we get unnecessary collisions
+	Box->SetBoxExtent(CollisionBounds); //   FVector(45.f, 45.f, 45.f)
+	Box->SetRelativeRotation(Rotation);
+	//Box->SetWorldRotation(Rotation);
+	//Box->AddRelativeLocation(OffsetVector);
+	Box->SetVisibility(true);
+	Box->bHiddenInGame = false;
+	Box->SetHiddenInGame(false);
+	
 }
 
 void ABuilding::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor != this)
 	{
-		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		//UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		UBoxComponent* Mesh = Cast<UBoxComponent>(OtherComp);
 		if (Mesh != nullptr)
 		{
 			ABuilding* Building = Cast<ABuilding>(OtherActor);
@@ -132,7 +164,8 @@ void ABuilding::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AA
 {
 	if (OtherActor != this)
 	{
-		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		//UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		UBoxComponent* Mesh = Cast<UBoxComponent>(OtherComp);
 		if (Mesh != nullptr)
 		{
 			ABuilding* Building = Cast<ABuilding>(OtherActor);
@@ -230,6 +263,10 @@ void ABuilding::ComputeSocketsArray()
 		else if (name.ToString().Contains("Wall"))
 		{
 			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Wall));
+		}
+		else if (name.ToString().Contains("Door"))
+		{
+			Sockets.Add(MakeTuple(name, EBuildTypes::VE_Door));
 		}
 	}
 }

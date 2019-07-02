@@ -11,7 +11,8 @@
 enum class EBuildTypes : uint8
 {
 	VE_Floor  UMETA(DisplayName = "Floor"),
-	VE_Wall   UMETA(DisplayName = "Wall")
+	VE_Wall   UMETA(DisplayName = "Wall"),
+	VE_Door   UMETA(DisplayName = "Door")
 };
 
 UCLASS()
@@ -46,6 +47,8 @@ public:
 	USceneComponent* SceneComponent;
 	UStaticMeshComponent* BuildingMesh;
 	UBoxComponent* Box;
+
+	void SetBoxComponent(bool Init);
 
 	// Certain type of building can only be attached to certain types of sockets
 	TArray< TTuple<FName, EBuildTypes> > Sockets;
