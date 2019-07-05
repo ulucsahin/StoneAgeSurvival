@@ -6,17 +6,22 @@
 void Communicator::Reset() {
 	// Reset all variables.
 	test = 0;
+	ElapsedGameMinutes = 0.f;
+
+	// TODO : reset player inventory?
+	// Reset Player Details
 	PlayerTransform = FTransform();
 	PlayerRotation = FRotator();
 	PlayerHealth = 100.f;
-	// TODO : reset player inventory?
 	float PlayerStamina = 100.f;
 	int PlayerLevel = 1;
 	int PlayerExperience = 0;
 	int PlayerGold = 50;
+
+	// Reset object arrays
 	SpawnedCharacterDetails.Empty();
 	SpawnedGatherableTreeDetails.Empty();
-	ElapsedGameMinutes = 0.f;
+	SpawnedBuildingDetails.Empty();
 
 	// Log to console.
 	UE_LOG(LogTemp, Warning, TEXT("Communicator variables are reset."));

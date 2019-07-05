@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EnemyCharacter.h"
 
 /**
  * 
@@ -17,7 +16,7 @@ public:
 	void LoadGame(APawn* InstigatorPawn);
 
 	template <typename T>
-	void SpawnCharacters();
+	void SpawnLoadedActors();
 
 	template<typename T> 
 	void DestroyActors();

@@ -31,8 +31,10 @@ public:
 	// Save-Load Methods
 	void RegisterActorDetailsToSave();
 	static void EmptyCommunicatorDetailsArray();
-	static TArray<FGatherableTreeDetails> GetCommunicatorDetailsArray();
-	static TSubclassOf<AGatherableTree> GetActorToSpawn();
+	//static TArray<FGatherableTreeDetails> GetCommunicatorDetailsArray();
+	//static TSubclassOf<AGatherableTree> GetActorToSpawn();
+	static void SpawnLoadedActors();
+	//static TSubclassOf<AGatherableTree> GatherableTreeBlueprint;
 
 protected:
 	virtual void BeginPlay() override;

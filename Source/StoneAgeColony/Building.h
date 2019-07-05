@@ -15,6 +15,18 @@ enum class EBuildTypes : uint8
 	VE_Door   UMETA(DisplayName = "Door")
 };
 
+USTRUCT(BlueprintType)
+struct FBuildingDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Type")
+	int MeshType;
+};
+
 UCLASS()
 class STONEAGECOLONY_API ABuilding : public AActor
 {
@@ -41,8 +53,10 @@ public:
 	TSet<ABuilding*> OverlappingBuildings;
 
 	TArray<UStaticMesh*> MeshTypes; // building types
+	TArray<UMaterialInterface*> Materials; // Materials aligned with MeshTypes
 	int CurrentMeshType = 0;
 	static int LastMeshType;
+	int FinalMeshType = 0;
 
 	USceneComponent* SceneComponent;
 	UStaticMeshComponent* BuildingMesh;
@@ -52,6 +66,7 @@ public:
 
 	// Certain type of building can only be attached to certain types of sockets
 	TArray< TTuple<FName, EBuildTypes> > Sockets;
+	TSet<FName> OccupiedSockets;
 	TArray<FName> GetSocketsWithType(EBuildTypes);
 
 	EBuildTypes GetBuildingType();
@@ -77,12 +92,15 @@ public:
 	UMaterialInterface* OriginalMaterial;
 
 	void SetBuildingMesh(int type);
-	void ChangeMesh();
+	void ChangeMesh(int);
 	void PreviewMode(bool);
 	bool CompleteBuilding();
 
-	
-	void SetScale(float);
+	// Save-Load system required functions
+	static void EmptyCommunicatorDetailsArray();
+	void RegisterActorDetailsToSave();
+	static void SpawnLoadedActors();
+	//static TSubclassOf<ABuilding> BuildingBlueprint;
 
 	/* Player is looking at */
 	virtual void OnBeginFocus();
@@ -92,4 +110,7 @@ public:
 
 private:
 	void ComputeSocketsArray();
+
+	// Save-Load system required variable
+	
 };

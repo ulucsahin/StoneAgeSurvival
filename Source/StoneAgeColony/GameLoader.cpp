@@ -7,6 +7,7 @@
 #include "Communicator.h"
 #include "EnemyCharacter.h"
 #include "GatherableTree.h"
+#include "Building.h"
 #include "PeopleSpawner.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
@@ -23,9 +24,7 @@ GameLoader::~GameLoader()
 
 void GameLoader::LoadGame(APawn* InstigatorPawn)
 {
-	/*
-		This method handles everything about loading game from a savefile.
-	*/
+	/* This method handles everything about loading game from a savefile. */
 
 	// LOAD SYSTEM
 	USaveGameEntity* SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::CreateSaveGameObject(USaveGameEntity::StaticClass()));
@@ -35,11 +34,13 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		// Destroy existing characters that should be deleted before loading.
 		DestroyActors<AEnemyCharacter>();
 		DestroyActors<AGatherableTree>();
+		DestroyActors<ABuilding>();
 
-		// Set varibles to communicator (update with loaded variables).
+		// Load varibles to communicator (update with loaded variables).
 		Communicator::GetInstance().test = SaveGameEntityLoad->test;
 		Communicator::GetInstance().SpawnedCharacterDetails = SaveGameEntityLoad->SpawnedCharacterDetails;
 		Communicator::GetInstance().SpawnedGatherableTreeDetails = SaveGameEntityLoad->SpawnedGatherableTreeDetails;
+		Communicator::GetInstance().SpawnedBuildingDetails = SaveGameEntityLoad->SpawnedBuildingDetails;
 		Communicator::GetInstance().PlayerTransform = SaveGameEntityLoad->PlayerTransform;
 		Communicator::GetInstance().PlayerRotation = SaveGameEntityLoad->PlayerRotation;
 		Communicator::GetInstance().PlayerHealth = SaveGameEntityLoad->PlayerHealth;
@@ -64,42 +65,25 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		UpdateInventoryUI();
 
 		// Spawn saved characters.
-		SpawnCharacters<AEnemyCharacter>();
-		SpawnCharacters<AGatherableTree>();
+		SpawnLoadedActors<AEnemyCharacter>();
+		SpawnLoadedActors<AGatherableTree>();
+		SpawnLoadedActors<ABuilding>();
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));
 }
 
 template <typename T>
-void GameLoader::SpawnCharacters() 
+void GameLoader::SpawnLoadedActors() 
 {
-	/*
-	Spawn previously saved characters from savefile.
-	*/
-
-	FActorSpawnParameters SpawnParams;
-
-	// Get actor details to spawn from communicator.
-	auto ActorDetailsToSpawn = T::GetCommunicatorDetailsArray(); //Communicator::GetInstance().SpawnedCharacterDetails;
-	auto ActorToSpawn = T::GetActorToSpawn(); //Communicator::GetInstance().EnemyCharacterToSpawn;
-
-	// Iterate over array and saved spawn actors.
-	for (auto Details : ActorDetailsToSpawn)
-	{
-		FTransform ActorTransform = Details.Transform;
-		Communicator::GetInstance().World->SpawnActor<T>(ActorToSpawn, ActorTransform, SpawnParams);
-	}
-
+	/* Spawn previously saved characters from savefile. */
+	T::SpawnLoadedActors();
 }
 
 template <typename T>
 void GameLoader::DestroyActors() 
 {
-	/*
-	Actors are needed to be destroyed first otherwise we would have duplicates.
-	This method fixes this problem.
-	*/
+	/* Actors are needed to be destroyed first otherwise we would have duplicates. */
 
 	// We will reset spawned character details and update it with current details.
 	UWorld* YourGameWorld = Communicator::GetInstance().World;

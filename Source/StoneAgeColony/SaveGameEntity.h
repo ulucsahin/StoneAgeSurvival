@@ -7,6 +7,7 @@
 #include "SurvivalGameInstance.h"
 #include "EnemyCharacter.h"
 #include "GatherableTree.h"
+#include "Building.h"
 #include "SaveGameEntity.generated.h"
 
 /**
@@ -61,6 +62,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	TArray<struct FGatherableTreeDetails> SpawnedGatherableTreeDetails;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	TArray<FBuildingDetails> SpawnedBuildingDetails;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	float ElapsedGameMinutes;

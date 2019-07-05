@@ -3,8 +3,12 @@
 #include "EnemyCharacter.h"
 #include "EnemyAI.h"
 #include "Communicator.h"
+#include "UObject/ConstructorHelpers.h"
 /* AI Include */
 #include "Perception/PawnSensingComponent.h"
+
+// Static variables
+//TSubclassOf<AEnemyCharacter> AEnemyCharacter::EnemyCharacterBlueprint;
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -94,12 +98,27 @@ void AEnemyCharacter::EmptyCommunicatorDetailsArray()
 	Communicator::GetInstance().SpawnedCharacterDetails.Empty();
 }
 
-TArray<FEnemyCharacterDetails> AEnemyCharacter::GetCommunicatorDetailsArray()
-{
-	return Communicator::GetInstance().SpawnedCharacterDetails;
-}
+//TArray<FEnemyCharacterDetails> AEnemyCharacter::GetCommunicatorDetailsArray()
+//{
+//	return Communicator::GetInstance().SpawnedCharacterDetails;
+//}
+//
+//TSubclassOf<AEnemyCharacter> AEnemyCharacter::GetActorToSpawn()
+//{
+//	return Communicator::GetInstance().EnemyCharacterToSpawn;
+//}
 
-TSubclassOf<AEnemyCharacter> AEnemyCharacter::GetActorToSpawn()
+void AEnemyCharacter::SpawnLoadedActors()
 {
-	return Communicator::GetInstance().EnemyCharacterToSpawn;
+	/* Spawn previously saved characters from savefile. */
+
+	FActorSpawnParameters SpawnParams;
+	auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterBlueprint;
+
+	// Iterate over array and saved spawn actors.
+	for (auto Details : Communicator::GetInstance().SpawnedCharacterDetails)
+	{
+		FTransform ActorTransform = Details.Transform;
+		Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
+	}
 }

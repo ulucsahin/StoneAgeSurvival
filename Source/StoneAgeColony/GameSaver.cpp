@@ -6,6 +6,7 @@
 #include "StoneAgeColonyCharacter.h"
 #include "EnemyCharacter.h"
 #include "Communicator.h"
+#include "Building.h"
 #include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
 
 GameSaver::GameSaver()
@@ -36,6 +37,7 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	// Saves actors to communicator.
 	RegisterActors<AEnemyCharacter>();
 	RegisterActors<AGatherableTree>();
+	RegisterActors<ABuilding>();
 
 	// Assign variables to save file (from communicator).
 	SaveGameEntity->PlayerTransform = Communicator::GetInstance().PlayerTransform;
@@ -47,6 +49,7 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	SaveGameEntity->test = Communicator::GetInstance().test;
 	SaveGameEntity->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
 	SaveGameEntity->SpawnedGatherableTreeDetails = Communicator::GetInstance().SpawnedGatherableTreeDetails;
+	SaveGameEntity->SpawnedBuildingDetails = Communicator::GetInstance().SpawnedBuildingDetails;
 	SaveGameEntity->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 	SaveGameEntity->PlayerInventory = Communicator::GetInstance().PlayerInventory;
 

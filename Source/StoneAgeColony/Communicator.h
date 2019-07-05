@@ -6,11 +6,13 @@
 #include "EnemyCharacter.h"
 #include "GatherableTree.h"
 #include "UsableActor.h"
+#include "Building.h"
 
 
 /**
  * 
  */
+
 class STONEAGECOLONY_API Communicator
 {
 public:
@@ -68,10 +70,12 @@ public:
 	float ElapsedGameMinutes;
 
 	// Details of objects that should be saved-loaded
-	TArray<FEnemyCharacterDetails> SpawnedCharacterDetails;
-	TArray<FGatherableTreeDetails> SpawnedGatherableTreeDetails;
+	TArray<FEnemyCharacterDetails>   SpawnedCharacterDetails;
+	TArray<FGatherableTreeDetails>   SpawnedGatherableTreeDetails;
+	TArray<FBuildingDetails>         SpawnedBuildingDetails;
 
-	// Blueprints
-	TSubclassOf<AEnemyCharacter> EnemyCharacterToSpawn;
-	TSubclassOf<AGatherableTree> GatherableTreeToSpawn;
+	// Blueprints that are used in save-load system or spawning actors
+	TSubclassOf<AEnemyCharacter> EnemyCharacterBlueprint;
+	TSubclassOf<AGatherableTree> GatherableTreeBlueprint;
+	TSubclassOf<ABuilding>       BuildingBlueprint;
 };

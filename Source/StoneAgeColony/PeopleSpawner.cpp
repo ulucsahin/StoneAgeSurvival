@@ -36,7 +36,7 @@ void APeopleSpawner::SpawnCharacter(bool bShouldRegister)
 	Location.Z += 0.f;
 	Transform.SetLocation(Location);
 
-	auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterToSpawn;
+	auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterBlueprint; // AEnemyCharacter::EnemyCharacterBlueprint;
 	AEnemyCharacter* SpawnedActor = GetWorld()->SpawnActor<AEnemyCharacter>(ActorToSpawn, Transform, SpawnParams);
 
 	SpawnCount += 1;

@@ -6,12 +6,15 @@
 #include "StoneAgeColonyCharacter.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
+// Static Variables
+//TSubclassOf<AGatherableTree> AGatherableTree::GatherableTreeBlueprint;
 
 AGatherableTree::AGatherableTree(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	// im not sure if this calls super's constructor
 	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/ItemIcons/TreeIcon.TreeIcon'"));
 	InventoryTexture = InventoryTexObj.Object;
+
 }
 
 void AGatherableTree::BeginPlay()
@@ -53,8 +56,6 @@ void AGatherableTree::RegisterActorDetailsToSave() {
 
 	// Save details as struct to communicator. Which will be used during saving.
 	Communicator::GetInstance().SpawnedGatherableTreeDetails.Add(TreeDetails);
-
-	UE_LOG(LogTemp, Warning, TEXT("GatherableTree added to communicator."));
 }
 
 void AGatherableTree::EmptyCommunicatorDetailsArray()
@@ -62,12 +63,29 @@ void AGatherableTree::EmptyCommunicatorDetailsArray()
 	Communicator::GetInstance().SpawnedGatherableTreeDetails.Empty();
 }
 
-TArray<FGatherableTreeDetails> AGatherableTree::GetCommunicatorDetailsArray()
-{
-	return Communicator::GetInstance().SpawnedGatherableTreeDetails;
-}
+//TArray<FGatherableTreeDetails> AGatherableTree::GetCommunicatorDetailsArray()
+//{
+//	return Communicator::GetInstance().SpawnedGatherableTreeDetails;
+//}
+//
+//TSubclassOf<AGatherableTree> AGatherableTree::GetActorToSpawn()
+//{
+//	return Communicator::GetInstance().GatherableTreeToSpawn;
+//}
 
-TSubclassOf<AGatherableTree> AGatherableTree::GetActorToSpawn()
+void AGatherableTree::SpawnLoadedActors()
 {
-	return Communicator::GetInstance().GatherableTreeToSpawn;
+	/* Spawn previously saved characters from savefile. */
+
+	FActorSpawnParameters SpawnParams;
+
+	// Get actor details to spawn from communicator.
+	auto ActorToSpawn = Communicator::GetInstance().GatherableTreeBlueprint;
+
+	// Iterate over array and saved spawn actors.
+	for (auto Details : Communicator::GetInstance().SpawnedGatherableTreeDetails)
+	{
+		FTransform ActorTransform = Details.Transform;
+		Communicator::GetInstance().World->SpawnActor<AGatherableTree>(ActorToSpawn, ActorTransform, SpawnParams);
+	}
 }

@@ -27,7 +27,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	AStoneAgeColonyCharacter* Player;
-	//UCameraComponent* PlayerCamera;
 
 	// Grid Variables
 	int32 XGridSize = 400;
@@ -44,7 +43,7 @@ public:
 
 	bool CurrentBuildingAttached = false;
 
-	// Location methods
+	// Location methods (not used anymore, will be deleted)
 	FVector ToGridLocation(FVector);
 	FVector BuildingSnapLocation();
 	FRotator BuildingSnapRotation();

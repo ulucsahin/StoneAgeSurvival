@@ -23,6 +23,9 @@
 // Gatherable Actors
 #include "GatherableTree.h"
 
+// Other Actors
+#include "Building.h"
+
 // HUD
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
@@ -35,10 +38,12 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 
 	// Set communicator blueprints
 	static ConstructorHelpers::FClassFinder<AEnemyCharacter> BPClass(TEXT("'/Game/Uluc/ActiveAssets/BP_FollowerEnemyCharacter'"));
-	Communicator::GetInstance().EnemyCharacterToSpawn = BPClass.Class;
-	
+	Communicator::GetInstance().EnemyCharacterBlueprint = BPClass.Class;
 	static ConstructorHelpers::FClassFinder<AGatherableTree> BPClass2(TEXT("'/Game/Uluc/ActiveAssets/GatherableObjects/BP_GatherableTree'"));
-	Communicator::GetInstance().GatherableTreeToSpawn = BPClass2.Class;
+	Communicator::GetInstance().GatherableTreeBlueprint = BPClass2.Class;
+	static ConstructorHelpers::FClassFinder<ABuilding> BPClass3(TEXT("/Game/Uluc/BuildingSystem/Blueprints/BP_Building"));
+	Communicator::GetInstance().BuildingBlueprint = BPClass3.Class;
+
 
 	// Set usable item IDs
 	RegisterItemIDs();
@@ -184,5 +189,6 @@ void AStoneAgeColonyGameMode::RegisterItemIDs()
 		// Add objects in UsableItemIDMap to RootSet so they will not be garbage collected during gameplay.
 		item.Value->AddToRoot();
 	}
-
+	//auto testis = NewObject<ABuilding>();
+	//testis->AddToRoot();
 }

@@ -138,6 +138,7 @@ void UBuildingManager::StartUpdatingPreview()
 
 void UBuildingManager::UpdatePreview()
 {
+	
 	// Working version saved in txt.
 	if (CurrentBuilding)
 	{
@@ -166,7 +167,7 @@ void UBuildingManager::UpdatePreview()
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Socket null"));
+				UE_LOG(LogTemp, Warning, TEXT("Socket is null"));
 			}
 			
 		}
@@ -239,10 +240,6 @@ TTuple<ABuilding*, FName> UBuildingManager::AttachTo()
 	auto BuildingAndSocketToAttach = SelectSocketToAttach(); // key: ABuilding*, value: socket FName
 	FName SocketName = BuildingAndSocketToAttach.Value;
 	ABuilding* ChosenBuilding = BuildingAndSocketToAttach.Key;
-	if (BuildingAndSocketToAttach.Value.ToString() == "")
-	{
-		UE_LOG(LogTemp, Warning, TEXT("OOPS"));
-	}
 
 	CurrentBuilding->AttachToComponent(ChosenBuilding->BuildingMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, SocketName);
 	CurrentBuilding->PreviewMode(true);

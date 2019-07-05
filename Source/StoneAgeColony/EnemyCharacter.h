@@ -11,8 +11,8 @@ struct FEnemyCharacterDetails
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
-		FTransform Transform;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
 };
 
 UCLASS()
@@ -47,8 +47,10 @@ public:
 	// Save-Load Methods
 	void RegisterActorDetailsToSave();
 	static void EmptyCommunicatorDetailsArray();
-	static TArray<FEnemyCharacterDetails> GetCommunicatorDetailsArray();
-	static TSubclassOf<AEnemyCharacter> GetActorToSpawn();
+	//static TArray<FEnemyCharacterDetails> GetCommunicatorDetailsArray();
+	//static TSubclassOf<AEnemyCharacter> GetActorToSpawn();
+	static void SpawnLoadedActors();
+	//static TSubclassOf<AEnemyCharacter> EnemyCharacterBlueprint;
 
 	UPROPERTY(EditAnywhere, Category = "Identification")
 	int ExternalID;
@@ -58,5 +60,6 @@ public:
 
 private:
 	float FollowRadius;
+	
 };
 
