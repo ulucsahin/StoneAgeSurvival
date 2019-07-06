@@ -7,15 +7,18 @@
 #include "UsableActor.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "Components/SphereComponent.h"
+#include "PickupManager.h"
 #include "StoneAgeColonyCharacter.generated.h"
 
+// forward declare to prevent circular dependency
 class UInputComponent;
-class UBuildingManager; // forward declare to prevent circular dependency
+class UBuildingManager; 
 
 enum class EPlayerStates : uint8
 {
 	VE_Combat 	UMETA(DisplayName = "Combat"),
 	VE_Building UMETA(DisplayName = "Building"),
+	VE_Pickup   UMETA(DisplayName = "Pickup"),
 };
 
 
@@ -80,6 +83,7 @@ public:
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;
+	APickupManager* PickupManager;
 
 	// Menu Flags
 	bool InventoryOn = false;
@@ -207,6 +211,7 @@ protected:
 	void ScrollDown();
 	void RightClick();
 	void ShiftRightClick();
+	void InteractPickup();
 
 	void StartBuilding();
 

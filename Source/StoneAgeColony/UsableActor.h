@@ -47,4 +47,26 @@ public:
 	virtual int GetID() { return ID; };
 
 	virtual UTexture2D* GetInventoryTexture() { return InventoryTexture; };
+
+	// Collision Methods
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void OnOverlappingBegin();
+	void OnOverlappingEnd();
+
+	void OnPickedUp();
+	void SetMaterialToGhost();
+	void SetMaterialToOriginal();
+
+	bool bOverlapping;
+private:
+	UMaterialInterface* OriginalMaterial;
+	UMaterial* GhostMaterial;
+	UMaterial* CollisionMaterial;
+
+	TSet<AActor*> OverlappingActors;
 };

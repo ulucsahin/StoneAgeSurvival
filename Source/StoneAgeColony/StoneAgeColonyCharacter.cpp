@@ -119,9 +119,14 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	BuildingManager->Player = this;
 	BuildingManager->AddToRoot(); // TODO: Fix this
 
+	// Initialize PickupManager
+	PickupManager = NewObject<APickupManager>();
+	PickupManager->SetWorld(GetWorld());
+	PickupManager->SetPlayer(this);
+	PickupManager->AddToRoot(); // stupid gc
+
 	InventoryOn = false;
 	InitializeWidgets();
-
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -260,6 +265,8 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	PlayerInputComponent->BindAction("RightClick", IE_Pressed, this, &AStoneAgeColonyCharacter::RightClick);
 	PlayerInputComponent->BindAction("ShiftRightClick", IE_Pressed, this, &AStoneAgeColonyCharacter::ShiftRightClick);
+	
+	PlayerInputComponent->BindAction("PickupActor", IE_Pressed, this, &AStoneAgeColonyCharacter::InteractPickup);
 
 	// Debug event
 	PlayerInputComponent->BindAction("DEBUG", IE_Pressed, this, &AStoneAgeColonyCharacter::Debug);
@@ -267,7 +274,6 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void AStoneAgeColonyCharacter::OnClick()
 {
-
 	if (PlayerStates == EPlayerStates::VE_Combat)
 	{
 		// For debug
@@ -291,8 +297,11 @@ void AStoneAgeColonyCharacter::OnClick()
 		}
 		
 	}
+	else if (PlayerStates == EPlayerStates::VE_Pickup)
+	{
+		InteractPickup();
+	}
 	
-		
 }
 
 void AStoneAgeColonyCharacter::MoveForward(float Value)
@@ -579,6 +588,10 @@ void AStoneAgeColonyCharacter::ScrollUp()
 	{
 		BuildingManager->IncreaseForwardBuildingOffset();
 	}
+	else if (PlayerStates == EPlayerStates::VE_Pickup)
+	{
+		PickupManager->IncreaseForwardBuildingOffset();
+	}
 		
 }
 
@@ -587,6 +600,10 @@ void AStoneAgeColonyCharacter::ScrollDown()
 	if (PlayerStates == EPlayerStates::VE_Building)
 	{
 		BuildingManager->DecreaseForwardBuildingOffset();
+	}
+	else if (PlayerStates == EPlayerStates::VE_Pickup)
+	{
+		PickupManager->DecreaseForwardBuildingOffset();
 	}
 }
 
@@ -607,6 +624,29 @@ void AStoneAgeColonyCharacter::ShiftRightClick()
 	}
 }
 
+// Z Button
+void AStoneAgeColonyCharacter::InteractPickup()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pickup Actor"));
+	
+	// Don't do it while in building mode
+	if (PlayerStates != EPlayerStates::VE_Building)
+	{
+		AUsableActor* Usable = GetActorInView<AUsableActor>(250.f);
+		bool EnteredState = PickupManager->HandlePickup(Usable);
+		if (EnteredState)
+		{
+			PlayerStates = EPlayerStates::VE_Pickup;
+		}
+		else
+		{
+			PlayerStates = EPlayerStates::VE_Combat;
+		}
+	}
+	
+
+}
+
 void AStoneAgeColonyCharacter::StartBuilding()
 {
 	//ABuilding* test = BuildingManager->StartBuilding();
@@ -618,20 +658,6 @@ void AStoneAgeColonyCharacter::Debug()
 {
 	//GetActorInView<ABuilding>(20.f); // WE NEED THIS LINE OR LINKER ERROR CAUSED BY OPTIONS IN STONEAGECOLONY.BUILD.CS WHICH IS USED FOR FASTER COMPILE TIMES
 	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
-
-	// Debug Line Trace
-	//auto TraceStart = GetActorLocation();
-	//auto TraceEnd = BuildingManager->BuildingSnapLocation();
-	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 10.0f);
-
-	//GEngine->ForceGarbageCollection();
-
-
-	
-
-	//BuildingManager->ChangeBuildingType();
-
-		
 	
 }
 
