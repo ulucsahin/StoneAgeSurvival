@@ -85,8 +85,7 @@ ABuilding* UBuildingManager::StartBuilding()
 			// Spawn Object
 			CurrentBuilding = World->SpawnActor<ABuilding>(TempClass, BuildingLocation, FRotator::ZeroRotator);
 			CurrentBuilding->PreviewMode(true);
-			//CurrentBuilding->SetScale(0.66f);
-			World->GetTimerManager().SetTimer(TimerHandle, this, &UBuildingManager::UpdatePreview, 0.15f, true);
+			StartUpdatingPreview();
 			
 			return CurrentBuilding;
 		}
@@ -133,58 +132,75 @@ void UBuildingManager::CancelBuilding()
 
 void UBuildingManager::StartUpdatingPreview()
 {
-	World->GetTimerManager().SetTimer(TimerHandle, this, &UBuildingManager::UpdatePreview, 0.15f, true);
+	World->GetTimerManager().SetTimer(TimerHandle, this, &UBuildingManager::UpdatePreview, 0.01f, true);
 }
 
 void UBuildingManager::UpdatePreview()
 {
-	
+	auto UpdatePosition = [=]() {
+		if (CurrentBuildingAttached)
+		{
+			DetachFrom();
+			CurrentBuildingAttached = false;
+		}
+
+		auto PlayerCamera = Player->GetFirstPersonCameraComponent();
+		FVector NewLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * ForwardBuildingOffset); //BuildingSnapLocation();
+		FRotator NewRotation = BuildingSnapRotation();
+
+		CurrentBuilding->SetActorTransform(FTransform(NewRotation, NewLocation));
+	};
+
 	// Working version saved in txt.
 	if (CurrentBuilding)
 	{
 		auto Building_Socket = SelectSocketToAttach();
 		auto Building = Building_Socket.Key;
 		auto SocketName = Building_Socket.Value;
-		if (Building)
+
+		if(Building)
 		{
-		    auto Distance_Name = CalculateMinDistanceSocket(Building, CurrentBuilding->GetBuildingType()); // no deconstruct????
+			auto Distance_Name = CalculateMinDistanceSocket(Building, CurrentBuilding->GetBuildingType()); // no deconstruct????
 			auto Distance = Distance_Name.Key; // retarded solutions
-			auto SocketName = Distance_Name.Value;
-			if (SocketName != "")
+
+			if (Distance > ForwardBuildingOffset)
 			{
-				if (CurrentBuildingAttached && Distance > Player->CollisionSphereRadius)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Detach, Distance: %f, SphereRadius: %f"), Distance, Player->CollisionSphereRadius);
-					DetachFrom();
-					CurrentBuildingAttached = false;
-				}
-				else if(Distance < Player->CollisionSphereRadius)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Attach, Distance: %f, SphereRadius: %f"), Distance, Player->CollisionSphereRadius);
-					AttachTo();
-					CurrentBuildingAttached = true;
-				}
+				UpdatePosition();
+				return;
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Socket is null"));
+				auto Distance_Name = CalculateMinDistanceSocket(Building, CurrentBuilding->GetBuildingType()); // no deconstruct????
+				auto Distance = Distance_Name.Key; // retarded solutions
+				auto SocketName = Distance_Name.Value;
+				if (SocketName != "")
+				{
+					if (Distance < ForwardBuildingOffset)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Attach, Distance: %f, ForwardBuildingOffset: %d, SphereRadius: %f"), Distance, ForwardBuildingOffset, Player->CollisionSphereRadius);
+						AttachTo();
+						CurrentBuildingAttached = true;
+					}
+				}
 			}
-			
-		}
-		else 
-		{
-			if (CurrentBuildingAttached)
-			{
-				DetachFrom();
-				CurrentBuildingAttached = false;
-			}
-			
-			auto PlayerCamera = Player->GetFirstPersonCameraComponent();
-			FVector NewLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * ForwardBuildingOffset); //BuildingSnapLocation();
-			FRotator NewRotation = BuildingSnapRotation();
 
-			CurrentBuilding->SetActorTransform(FTransform(NewRotation, NewLocation));
 		}
+		else
+		{
+			UpdatePosition();
+			return;
+		}
+
+		if(Building)
+		{
+		    
+			//else
+			//{
+			//	UE_LOG(LogTemp, Warning, TEXT("Socket is null"));
+			//}
+			
+		}
+		
 
 	}
 	else
@@ -197,6 +213,7 @@ void UBuildingManager::UpdatePreview()
 void UBuildingManager::StopUpdatingPreview()
 {
 	World->GetTimerManager().ClearTimer(TimerHandle);
+	CurrentBuildingAttached = false;
 }
 
 void UBuildingManager::IncreaseForwardBuildingOffset()
@@ -205,7 +222,9 @@ void UBuildingManager::IncreaseForwardBuildingOffset()
 	{
 		ForwardBuildingOffset += 400;
 	}
-	
+
+	UE_LOG(LogTemp, Warning, TEXT("ForwardBuildingOffset: %d"), ForwardBuildingOffset);
+
 }
 void UBuildingManager::DecreaseForwardBuildingOffset()
 {
@@ -213,6 +232,8 @@ void UBuildingManager::DecreaseForwardBuildingOffset()
 	{
 		ForwardBuildingOffset -= 400;
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("ForwardBuildingOffset: %d"), ForwardBuildingOffset);
 }
 
 void UBuildingManager::IncreaseRotationOffset()
@@ -262,7 +283,6 @@ TTuple<ABuilding*, FName> UBuildingManager::SelectSocketToAttach()
 		bool FoundAtLeastOne = false;
 		for (auto Building : BuildingsNearPlayer)
 		{
-
 			auto Result = CalculateMinDistanceSocket(Building, CurrentBuilding->GetBuildingType());
 			if (Result.Key < SmallestDistance)
 			{
@@ -297,7 +317,7 @@ TTuple<float, FName> UBuildingManager::CalculateMinDistanceSocket(ABuilding* Bui
 	Player->Controller->GetPlayerViewPoint(CamLoc, CamRot);
 	const FVector TraceStart = CamLoc;
 	const FVector Direction = CamRot.Vector();
-	const FVector TraceEnd = TraceStart + (Direction * InteractRange);
+	const FVector TraceEnd = TraceStart + (Direction * ForwardBuildingOffset);
 	auto SocketNames = Building->GetSocketsWithType(SocketType); 
 	float SmallestDistance = 999999.f;
 	FName ClosestSocketName = "";

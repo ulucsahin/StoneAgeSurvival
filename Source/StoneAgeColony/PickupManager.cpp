@@ -116,7 +116,7 @@ void APickupManager::SetupBoxComponent()
 		Box->AttachTo(CurrentMesh);
 		Box->OnComponentBeginOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapBegin);
 		Box->OnComponentEndOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapEnd);
-		Box->SetCollisionProfileName("Overlap All");
+		Box->SetCollisionProfileName("OverlapAll");
 	}
 }
 

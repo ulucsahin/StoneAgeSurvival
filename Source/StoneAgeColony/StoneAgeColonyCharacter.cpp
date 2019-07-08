@@ -44,7 +44,7 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
 	// Create box component to get nearby items when necessary
-	CollisionSphereRadius = 500.f;
+	CollisionSphereRadius = 1500.f;
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	Sphere->SetSphereRadius(CollisionSphereRadius);
 	Sphere->SetCollisionProfileName("OverlapAll");
