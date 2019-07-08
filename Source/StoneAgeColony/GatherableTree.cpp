@@ -43,10 +43,9 @@ void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 
 }
 
-int AGatherableTree::GetID()
-{
-	return ID;
-}
+int AGatherableTree::GetID() { return ID; }
+
+bool AGatherableTree::IsPickupable() { return bIsPickupable; }
 
 void AGatherableTree::RegisterActorDetailsToSave() {
 	FGatherableTreeDetails TreeDetails;
@@ -89,3 +88,4 @@ void AGatherableTree::SpawnLoadedActors()
 		Communicator::GetInstance().World->SpawnActor<AGatherableTree>(ActorToSpawn, ActorTransform, SpawnParams);
 	}
 }
+

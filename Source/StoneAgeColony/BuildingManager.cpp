@@ -75,7 +75,8 @@ ABuilding* UBuildingManager::StartBuilding()
 	if (CurrentBuilding == nullptr)
 	{
 		// Get location to place building
-		FVector BuildingLocation = BuildingSnapLocation();
+		auto PlayerCamera = Player->GetFirstPersonCameraComponent();
+		FVector BuildingLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * ForwardBuildingOffset);
 		FRotator BuildingRotation = BuildingSnapRotation();
 		CurrentBuilding = NewObject<ABuilding>();
 
@@ -137,7 +138,7 @@ void UBuildingManager::StartUpdatingPreview()
 
 void UBuildingManager::UpdatePreview()
 {
-	auto UpdatePosition = [=]() {
+	auto UpdateBuildingPosition = [=]() {
 		if (CurrentBuildingAttached)
 		{
 			DetachFrom();
@@ -165,7 +166,7 @@ void UBuildingManager::UpdatePreview()
 
 			if (Distance > ForwardBuildingOffset)
 			{
-				UpdatePosition();
+				UpdateBuildingPosition();
 				return;
 			}
 			else
@@ -183,24 +184,12 @@ void UBuildingManager::UpdatePreview()
 					}
 				}
 			}
-
 		}
 		else
 		{
-			UpdatePosition();
+			UpdateBuildingPosition();
 			return;
-		}
-
-		if(Building)
-		{
-		    
-			//else
-			//{
-			//	UE_LOG(LogTemp, Warning, TEXT("Socket is null"));
-			//}
-			
-		}
-		
+		}	
 
 	}
 	else

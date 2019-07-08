@@ -38,8 +38,14 @@ void APickupManager::SetPlayer(AStoneAgeColonyCharacter* Player) { this->Player 
 
 bool APickupManager::HandlePickup(AUsableActor* Actor)
 {
-	/* Returns true or false depending on starting or stopping the pickup */
-	
+	/* Returns true or false depending on starting or stopping the pickup
+	*  true: 
+	*  false:
+	*/
+
+	// if CurrentActor is not pickupable then exit from this function.
+	if (Actor) { if (!Actor->IsPickupable()) { return true; } }
+
 	// If we already have an item and it is not colliding then drop it to where it is. // TODO: snap to ground.
 	if (CurrentActor)
 	{
@@ -58,17 +64,19 @@ bool APickupManager::HandlePickup(AUsableActor* Actor)
 	// If we do not have a CurrentItem then pick up that item.
 	else
 	{
+		
+		
+
 		CurrentActor = Actor;
 		
 		if (Player)
 		{
 			if (CurrentActor)
 			{
-				
 				SetupBoxComponent();
 				ActorInitialLocation = CurrentActor->GetActorLocation();
 				PlayerActorLocationDifference = ActorInitialLocation - Player->GetActorLocation();
-				World->GetTimerManager().SetTimer(TimerHandle, this, &APickupManager::UpdatePreview, 0.15f, true);
+				World->GetTimerManager().SetTimer(TimerHandle, this, &APickupManager::UpdatePreview, 0.015f, true);
 				return true;
 			}
 
@@ -104,9 +112,10 @@ void APickupManager::SetupBoxComponent()
 	auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
 	if (!Box)
 	{
+
 		Box = NewObject<UBoxComponent>(CurrentActor);
 		Box->RegisterComponent();
-		Box->SetBoxExtent(FVector(100.f, 100.f, 100.f));
+		Box->SetBoxExtent(CurrentActor->MeshComp->Bounds.BoxExtent);
 		Box->SetVisibility(true);
 		Box->bHiddenInGame = false;
 		Box->SetHiddenInGame(false);
@@ -125,6 +134,8 @@ void APickupManager::PlaceObject()
 	if (!CurrentActor->bOverlapping)
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
+		auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
+		Box->DestroyComponent();
 		CurrentActor = nullptr;
 	}
 	else

@@ -35,9 +35,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, Category = "Mesh")
-	UStaticMeshComponent* MeshComp;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -47,6 +44,11 @@ public:
 	virtual int GetID() { return ID; };
 
 	virtual UTexture2D* GetInventoryTexture() { return InventoryTexture; };
+
+	UPROPERTY(VisibleAnywhere, Category = "Mesh")
+	UStaticMeshComponent* MeshComp;
+
+	virtual bool IsPickupable() { return bIsPickupable; }
 
 	// Collision Methods
 	UFUNCTION()
@@ -67,6 +69,6 @@ private:
 	UMaterialInterface* OriginalMaterial;
 	UMaterial* GhostMaterial;
 	UMaterial* CollisionMaterial;
-
 	TSet<AActor*> OverlappingActors;
+	bool bIsPickupable = true;
 };

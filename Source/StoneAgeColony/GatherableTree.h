@@ -28,13 +28,14 @@ public:
 	const static int ID = 100;
 	virtual int GetID() override;
 
+	virtual bool IsPickupable() override;
+
 	// Save-Load Methods
 	void RegisterActorDetailsToSave();
 	static void EmptyCommunicatorDetailsArray();
-	//static TArray<FGatherableTreeDetails> GetCommunicatorDetailsArray();
-	//static TSubclassOf<AGatherableTree> GetActorToSpawn();
 	static void SpawnLoadedActors();
-	//static TSubclassOf<AGatherableTree> GatherableTreeBlueprint;
+
+
 
 protected:
 	virtual void BeginPlay() override;
@@ -43,5 +44,6 @@ protected:
 private:
 	int WoodAmount;
 	float LastGatherTime;
+	bool bIsPickupable = false;
 };
 

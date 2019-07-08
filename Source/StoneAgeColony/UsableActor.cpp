@@ -28,7 +28,6 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 
 void AUsableActor::PreInitializeComponents() {
 	Super::PreInitializeComponents();
-	//UE_LOG(LogTemp, Warning, TEXT("AUsableActor::PreInitializeComponents"));
 }
 
 //int AUsableActor::GetID()
