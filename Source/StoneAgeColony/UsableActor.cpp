@@ -100,7 +100,7 @@ void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 			UE_LOG(LogTemp, Warning, TEXT("OtherActorClassName: %s"), *OtherActorClassName);
 
 			// also check for mesh if building, this is to prevent collisions with invisible box components
-			if (OtherActorClassName == "Building")
+			if (OtherActorClassName == "BP_Building_C")
 			{
 				UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
 				if (Mesh != nullptr)

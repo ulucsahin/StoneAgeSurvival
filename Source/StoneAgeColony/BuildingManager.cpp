@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "Runtime/Engine/Classes/Engine/StaticMeshSocket.h"
+#include "Communicator.h"
 
 // Sets default values for this component's properties
 UBuildingManager::UBuildingManager()
@@ -78,13 +79,14 @@ ABuilding* UBuildingManager::StartBuilding()
 		auto PlayerCamera = Player->GetFirstPersonCameraComponent();
 		FVector BuildingLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * ForwardBuildingOffset);
 		FRotator BuildingRotation = BuildingSnapRotation();
-		CurrentBuilding = NewObject<ABuilding>();
+		auto ActorToSpawn = Communicator::GetInstance().BuildingBlueprint;
 
-		TSubclassOf<ABuilding> TempClass = CurrentBuilding->GetClass();
+		//TSubclassOf<ABuilding> TempClass = CurrentBuilding->GetClass();
 		if (World)
 		{
 			// Spawn Object
-			CurrentBuilding = World->SpawnActor<ABuilding>(TempClass, BuildingLocation, FRotator::ZeroRotator);
+			CurrentBuilding = World->SpawnActor<ABuilding>(ActorToSpawn, BuildingLocation, FRotator::ZeroRotator);
+			CurrentBuilding->ChangeMesh(ABuilding::LastMeshType);
 			CurrentBuilding->PreviewMode(true);
 			StartUpdatingPreview();
 			
