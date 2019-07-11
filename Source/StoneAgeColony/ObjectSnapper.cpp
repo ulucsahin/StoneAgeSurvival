@@ -38,7 +38,6 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 
 	// Get item location
 	FVector ActorLocation = Actor->GetActorLocation();
-	//Actor->MeshComp->
 
 	// Get item height(size)
 	auto ItemHeightSize = Actor->GetComponentsBoundingBox().GetSize().Z;
@@ -47,7 +46,8 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 	float TraceLength = 1000.f;
 
 	// Set initial start and end positions of line
-	FVector Start = FVector(Location.X, Location.Y, ActorLocation.Z);
+	float LineStartOffsetZ = 200.f;
+	FVector Start = FVector(Location.X, Location.Y, ActorLocation.Z + LineStartOffsetZ);
 	FVector End = Start;
 
 	FCollisionQueryParams CollisionParams(FName(TEXT("LandscapeTracer")), true, this);
@@ -73,6 +73,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 			if (HittedClass)
 			{
 				HittedObjectName = HittedClass->GetName();
+				UE_LOG(LogTemp, Warning, TEXT("HittedActor: %s"), *HittedObjectName);
 			}
 		}
 
@@ -88,7 +89,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 		if (HittedObjectName == "Landscape")
 		{
 			End.Z += TraceLength;
-			TraceLength /= 2;
+			TraceLength /= 4;
 			//UE_LOG(LogTemp, Warning, TEXT("TraceLength: %f"), TraceLength);
 		}
 
@@ -102,7 +103,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 		else
 		{
 			End.Z += TraceLength;
-			TraceLength /= 2;
+			TraceLength /= 4;
 		}
 
 		// "end of current loop" operations
@@ -116,7 +117,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 	}
 
 	//if(Success)
-	Actor->SetActorLocation(FVector(Location.X, Location.Y, ActorLocation.Z - DistanceToFloor ));
+	Actor->SetActorLocation(FVector(Location.X, Location.Y, ActorLocation.Z - DistanceToFloor + LineStartOffsetZ));
 
 }
 
