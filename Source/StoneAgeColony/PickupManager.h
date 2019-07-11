@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "UsableActor.h"
+#include "ObjectSnapper.h"
 #include "PickupManager.generated.h"
 
 // To prevent circular dependency
@@ -51,6 +52,8 @@ private:
 	FVector PlayerActorLocationDifference;
 	FVector ActorInitialLocation;
 	int32 ForwardBuildingOffset;
+	AObjectSnapper* ObjectSnapper;
+	
 
 public:
 	UFUNCTION()

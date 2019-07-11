@@ -7,8 +7,10 @@
 /**
  * 
  */
+
 class STONEAGECOLONY_API MyUtility
 {
+
 public:
 	MyUtility();
 	~MyUtility();

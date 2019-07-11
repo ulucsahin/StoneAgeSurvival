@@ -17,13 +17,14 @@ APickupManager::APickupManager()
 	GhostMaterial = LoadObject<UMaterial>(nullptr, TEXT("/Game/Uluc/BuildingSystem/GhostMaterial.GhostMaterial"));
 	CollisionMaterial = LoadObject<UMaterial>(nullptr, TEXT("/Game/Uluc/BuildingSystem/ColiisionMaterial.ColiisionMaterial"));
 
+	// Initialize object snapper
+	ObjectSnapper = NewObject<AObjectSnapper>();
 }
 
 // Called when the game starts or when spawned
 void APickupManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -39,8 +40,9 @@ void APickupManager::SetPlayer(AStoneAgeColonyCharacter* Player) { this->Player 
 bool APickupManager::HandlePickup(AUsableActor* Actor)
 {
 	/* Returns true or false depending on starting or stopping the pickup
-	*  true: 
-	*  false:
+	*  true: started pickup or continues being in pickup mode
+	*  false: exiting pickup mode or continues being not in pickup mode
+	*  true false returns need a rework?
 	*/
 
 	// if CurrentActor is not pickupable then exit from this function.
@@ -64,9 +66,6 @@ bool APickupManager::HandlePickup(AUsableActor* Actor)
 	// If we do not have a CurrentItem then pick up that item.
 	else
 	{
-		
-		
-
 		CurrentActor = Actor;
 		
 		if (Player)
@@ -76,6 +75,11 @@ bool APickupManager::HandlePickup(AUsableActor* Actor)
 				SetupBoxComponent();
 				ActorInitialLocation = CurrentActor->GetActorLocation();
 				PlayerActorLocationDifference = ActorInitialLocation - Player->GetActorLocation();
+				//CurrentActor->SetActorEnableCollision(false);
+				//CurrentActor->MeshComp->MoveIgnoreActors.Add(Player);
+				CurrentActor->MeshComp->SetCollisionProfileName("OverlapAll");
+				auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
+				
 				World->GetTimerManager().SetTimer(TimerHandle, this, &APickupManager::UpdatePreview, 0.015f, true);
 				return true;
 			}
@@ -97,9 +101,10 @@ void APickupManager::UpdatePreview()
 {
 	auto PlayerCamera = Player->GetFirstPersonCameraComponent();
 	FVector NewLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * (PlayerActorLocationDifference.Size() + ForwardBuildingOffset));
-
-	// We already checked CurrentActor before calling this method
 	CurrentActor->SetActorLocation(NewLocation);
+	ObjectSnapper->SnapToGround(CurrentActor, World, NewLocation);
+	// We already checked CurrentActor before calling this method
+	
 }
 
 void APickupManager::PreviewMode(bool IsPreview)
@@ -123,9 +128,11 @@ void APickupManager::SetupBoxComponent()
 		//UBoxComponent* Box = CurrentActor->CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 		auto CurrentMesh = (UStaticMeshComponent*)CurrentActor->GetComponentByClass(UStaticMeshComponent::StaticClass());
 		Box->AttachTo(CurrentMesh);
+		Box->SetRelativeLocation(FVector(0.f, 0.f, CurrentActor->MeshComp->Bounds.BoxExtent.Z));
 		Box->OnComponentBeginOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapBegin);
 		Box->OnComponentEndOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapEnd);
 		Box->SetCollisionProfileName("OverlapAll");
+		
 	}
 }
 
@@ -134,6 +141,7 @@ void APickupManager::PlaceObject()
 	if (!CurrentActor->bOverlapping)
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
+		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll");
 		auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
 		Box->DestroyComponent();
 		CurrentActor = nullptr;
@@ -151,6 +159,8 @@ void APickupManager::CancelPlacingObject()
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
 		CurrentActor->SetActorLocation(ActorInitialLocation);
+		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll");
+		//CurrentActor->SetActorEnableCollision(true);
 		CurrentActor = nullptr;
 	}
 }

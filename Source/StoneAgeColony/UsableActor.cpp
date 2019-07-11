@@ -83,19 +83,60 @@ void AUsableActor::PrintName() {
 
 void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+
+	// CONTINUE FROM HERE
+	// CONTINUE FROM HERE
+	// CONTINUE FROM HERE
+	// CONTINUE FROM HERE
+	// CONTINUE FROM HERE
 	if (OtherActor != this)
 	{
-		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
-		if (Mesh != nullptr)
+		UE_LOG(LogTemp, Warning, TEXT("COLLISION"));
+		if (OtherActor != nullptr)
 		{
-			AActor* Actor = Cast<AActor>(OtherActor);
-			if (Actor != nullptr)
+			UE_LOG(LogTemp, Warning, TEXT("COLLISION1.5"));
+
+			auto OtherActorClassName = OtherActor->GetClass()->GetFName().ToString();
+			UE_LOG(LogTemp, Warning, TEXT("OtherActorClassName: %s"), *OtherActorClassName);
+
+			// also check for mesh if building, this is to prevent collisions with invisible box components
+			if (OtherActorClassName == "Building")
 			{
-				OverlappingActors.Add(Actor);
+				UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+				if (Mesh != nullptr)
+				{
+					OverlappingActors.Add(OtherActor);
+					if (!bOverlapping)
+						OnOverlappingBegin();
+				}
+			}
+			else
+			{
+				OverlappingActors.Add(OtherActor);
 				if (!bOverlapping)
 					OnOverlappingBegin();
 			}
+
+
+			
 		}
+		/*UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		if (Mesh != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("COLLISION2"));
+			auto OtherActorClassName = OtherActor->GetClass()->GetFName();
+			auto asd = OtherActorClassName.ToString();
+			UE_LOG(LogTemp, Warning, TEXT("OtherActorClassName: %s"), *asd);
+
+			AActor* Actor = Cast<AActor>(OtherActor);
+			if (OtherActor != nullptr)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("COLLISION33131"));
+				OverlappingActors.Add(OtherActor);
+				if (!bOverlapping)
+					OnOverlappingBegin();
+			}
+		}*/
 	}
 }
 
@@ -103,21 +144,32 @@ void AUsableActor::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class
 {
 	if (OtherActor != this)
 	{
-		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
+		if (OtherActor != nullptr)
+		{
+			if (OverlappingActors.Contains(OtherActor))
+			{
+				
+				OverlappingActors.Remove(OtherActor);
+				if (OverlappingActors.Array().Num() <= 0)
+					OnOverlappingEnd();
+
+			}
+		}
+		/*UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
 		if (Mesh != nullptr)
 		{
 			AActor* Actor = Cast<AActor>(OtherActor);
-			if (Actor)
+			if (OtherActor)
 			{
-				if (OverlappingActors.Contains(Actor))
+				if (OverlappingActors.Contains(OtherActor))
 				{
-					OverlappingActors.Remove(Actor);
+					OverlappingActors.Remove(OtherActor);
 					if (OverlappingActors.Array().Num() <= 0)
 						OnOverlappingEnd();
 
 				}
 			}
-		}
+		}*/
 	}
 }
 

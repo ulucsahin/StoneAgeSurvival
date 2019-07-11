@@ -5,6 +5,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Communicator.h"
+#include "MyUtility.h"
 
 // Sets default values
 AProceduralEntityPlacer::AProceduralEntityPlacer()
@@ -70,9 +71,6 @@ void AProceduralEntityPlacer::AdjustHeight(AActor* item)
 	// Get item location
 	FVector ActorLocation = item->GetActorLocation();
 
-	// Get item height
-	//auto ItemHeight = item->GetComponentsBoundingBox().GetSize().Z;
-
 	// Create Line Trace
 	float TraceLength = 1000.f;
 
@@ -85,6 +83,7 @@ void AProceduralEntityPlacer::AdjustHeight(AActor* item)
 	int iteration = 0;
 	FString HittedObjectName = "";
 	FHitResult OutHit(ForceInit);
+
 	while (TraceLength > 5.f)
 	{
 		HittedObjectName = "";
@@ -103,7 +102,6 @@ void AProceduralEntityPlacer::AdjustHeight(AActor* item)
 			}
 		}
 
-		
 		// if linetrace hit the landscape
 		if (HittedObjectName == "Landscape")
 		{
