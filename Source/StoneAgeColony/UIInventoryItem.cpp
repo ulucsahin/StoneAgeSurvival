@@ -9,19 +9,16 @@
 UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	
+}
+
+void UUIInventoryItem::OnClick()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Inventory Item Clicked, ID: %d"), ItemID);
 	
 }
 
-
 void UUIInventoryItem::SetupInventoryItemCell()
 {
-	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-
-	if (PlayerCharacter)
-	{
-		// Set texture and amount variables
-		InventoryTexture = Communicator::GetInstance().UsableItemIDMap[ItemID]->InventoryTexture;
-		ItemAmount = PlayerCharacter->Inventory[ItemID];
-	}
+	Super::SetupInventoryItemCell();
 
 }

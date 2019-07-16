@@ -11,6 +11,8 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
+	//ID = 0;
+
 	MeshComp = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("Mesh"));
 	RootComponent = MeshComp;
 
@@ -48,6 +50,11 @@ void AUsableActor::BeginPlay()
 void AUsableActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AUsableActor::SetupUsableActorType(FString Type)
+{
+
 }
 
 void AUsableActor::OnBeginFocus(){

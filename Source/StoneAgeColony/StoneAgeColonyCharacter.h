@@ -13,6 +13,8 @@
 // forward declare to prevent circular dependency
 class UInputComponent;
 class UBuildingManager; 
+class UUIBottomBar;
+class UUIPlayerInventory;
 
 enum class EPlayerStates : uint8
 {
@@ -79,7 +81,7 @@ public:
 	void UpdateStateDisplay();
 
 	// Inventory
-	TMap<int, int> Inventory;
+	TMap<int, int> Inventory = { MakeTuple(1,5), MakeTuple(2,31) };
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;
@@ -89,6 +91,14 @@ public:
 	bool InventoryOn = false;
 	bool CharacterMenuOn = false;
 	bool Init = false;
+
+	// UI Bottom Bar
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UserInterface")
+	UUIBottomBar* BottomBar;
+
+	// UI Player Inventory
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UserInterface")
+	UUIPlayerInventory* UIPlayerInventory;
 
 	/*Max distance to use/focus on actors. */
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")

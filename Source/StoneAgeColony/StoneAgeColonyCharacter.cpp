@@ -19,6 +19,9 @@
 #include "Communicator.h"
 #include "Building.h"
 #include "BuildingManager.h"
+#include "UIBottomBar.h"
+#include "UIPlayerInventory.h"
+#include "Edible.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
@@ -414,6 +417,8 @@ void AStoneAgeColonyCharacter::OpenInventory()
 {	
 	// BE CAREFUL:
 	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
+	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OpenInventoryy"));
+
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
 	if (!InventoryOn)
@@ -427,11 +432,12 @@ void AStoneAgeColonyCharacter::OpenInventory()
 		{
 			PlayerController->SetInputMode(FInputModeGameAndUI());
 			PlayerController->bShowMouseCursor = true;
+			PlayerController->bEnableClickEvents = true;
+			PlayerController->bEnableMouseOverEvents = true;
 		}
 		
 		InventoryOn = true;
 	}
-	
 	else
 	{
 		// Close Inventory
@@ -440,6 +446,8 @@ void AStoneAgeColonyCharacter::OpenInventory()
 		{
 			PlayerController->SetInputMode(FInputModeGameOnly());
 			PlayerController->bShowMouseCursor = false;
+			PlayerController->bEnableClickEvents = false;
+			PlayerController->bEnableMouseOverEvents = false;
 		}
 		
 		InventoryOn = false;
@@ -532,17 +540,27 @@ void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 		Inventory.Emplace(ItemToAdd, Inventory[ItemToAdd] + AmountToAdd);
 	}
 
-	for (auto item : Inventory)
+	if (BottomBar)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("InventoryVersion3 item: %d, amount: %d"), item.Key, item.Value);
+		BottomBar->Refresh();
 	}
+	
+	if (UIPlayerInventory)
+	{
+		UIPlayerInventory->Refresh();
+	}
+	
+	//for (auto item : Inventory)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("InventoryVersion3 item: %d, amount: %d"), item.Key, item.Value);
+	//}
 	
 }
 
 // Called on key press
 void AStoneAgeColonyCharacter::ChangeState()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Change State"));
+	UE_LOG(LogTemp, Warning, TEXT("Change State."));
 
 	if (PlayerStates == EPlayerStates::VE_Building)
 	{
@@ -592,6 +610,10 @@ void AStoneAgeColonyCharacter::ScrollUp()
 	{
 		PickupManager->IncreaseForwardBuildingOffset();
 	}
+	else if (PlayerStates == EPlayerStates::VE_Combat)
+	{
+		BottomBar->SelectNextSlot();
+	}
 		
 }
 
@@ -604,6 +626,10 @@ void AStoneAgeColonyCharacter::ScrollDown()
 	else if (PlayerStates == EPlayerStates::VE_Pickup)
 	{
 		PickupManager->DecreaseForwardBuildingOffset();
+	}
+	else if (PlayerStates == EPlayerStates::VE_Combat)
+	{
+		BottomBar->SelectPreviousSlot();
 	}
 }
 
@@ -658,6 +684,12 @@ void AStoneAgeColonyCharacter::Debug()
 {
 	//GetActorInView<ABuilding>(20.f); // WE NEED THIS LINE OR LINKER ERROR CAUSED BY OPTIONS IN STONEAGECOLONY.BUILD.CS WHICH IS USED FOR FASTER COMPILE TIMES
 	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
-	
+
+	AEdible* asd = NewObject<AEdible>();
+	asd->SetupEdibleType("Apple");
+	asd->test();
+	asd->Use(this);
+	//BottomBar->SetItemAtIndex(1, nullptr);
+	//BottomBar->SelectPreviousSlot();
 }
 

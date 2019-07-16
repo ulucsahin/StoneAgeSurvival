@@ -6,6 +6,32 @@
 #include "UsableActor.h"
 #include "GatherableTree.generated.h"
 
+// Object details
+USTRUCT(BlueprintType)
+struct FGatherableData : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	FGatherableData() {}
+
+	// Item ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	int32 ID;
+
+	// Gathered Item ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	int32 GatherID;
+
+	/** Icon to use for Achivement */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	TAssetPtr<UTexture2D> Icon;
+
+};
+
+
+// Save details
 USTRUCT(BlueprintType)
 struct FGatherableTreeDetails
 {
@@ -25,7 +51,10 @@ class STONEAGECOLONY_API AGatherableTree : public AUsableActor
 
 public:
 	AGatherableTree(const FObjectInitializer& ObjectInitializer);
-	const static int ID = 100;
+
+	void SetupType(FString);
+
+	int ID = 100;
 	virtual int GetID() override;
 
 	virtual bool IsPickupable() override;
@@ -35,8 +64,6 @@ public:
 	static void EmptyCommunicatorDetailsArray();
 	static void SpawnLoadedActors();
 
-
-
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnUsed(APawn* InstigatorPawn) override;
@@ -45,5 +72,6 @@ private:
 	int WoodAmount;
 	float LastGatherTime;
 	bool bIsPickupable = false;
+	FGatherableData* Data;
 };
 

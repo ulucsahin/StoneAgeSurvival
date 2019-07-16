@@ -64,7 +64,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 
 		bool isHit = World->LineTraceSingleByChannel(OutHit, Start, End, ECC_WorldStatic, CollisionParams);
 
-		DrawDebugLine(World, Start, End, FColor(255.f,125.f,125.f), true, 5.0f);
+		//DrawDebugLine(World, Start, End, FColor(255.f,125.f,125.f), true, 5.0f);
 
 		auto HittedActor = OutHit.GetActor();
 		if (HittedActor)
@@ -73,7 +73,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 			if (HittedClass)
 			{
 				HittedObjectName = HittedClass->GetName();
-				UE_LOG(LogTemp, Warning, TEXT("HittedActor: %s"), *HittedObjectName);
+				//UE_LOG(LogTemp, Warning, TEXT("HittedActor: %s"), *HittedObjectName);
 			}
 		}
 

@@ -180,7 +180,7 @@ void UBuildingManager::UpdatePreview()
 				{
 					if (Distance < ForwardBuildingOffset)
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Attach, Distance: %f, ForwardBuildingOffset: %d, SphereRadius: %f"), Distance, ForwardBuildingOffset, Player->CollisionSphereRadius);
+						//UE_LOG(LogTemp, Warning, TEXT("Attach, Distance: %f, ForwardBuildingOffset: %d, SphereRadius: %f"), Distance, ForwardBuildingOffset, Player->CollisionSphereRadius);
 						AttachTo();
 						CurrentBuildingAttached = true;
 					}

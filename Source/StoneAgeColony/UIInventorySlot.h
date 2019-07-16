@@ -3,22 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "Runtime/UMG/Public/Components/TextBlock.h"
 #include "UIItemSlot.h"
-#include "UIInventoryItem.generated.h"
+#include "Runtime/UMG/Public/Components/TextBlock.h"
+#include "UIInventorySlot.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class STONEAGECOLONY_API UUIInventoryItem : public  UUIItemSlot //UUserWidget
+class STONEAGECOLONY_API UUIInventorySlot : public UUIItemSlot
 {
 	GENERATED_BODY()
 	
-
 public:
-	UUIInventoryItem(const FObjectInitializer& ObjectInitializer);
+	UUIInventorySlot(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
 	int IndexInInventory = 0;
@@ -26,10 +24,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
 	UTextBlock* ItemIDTextBlock;
 
-	void OnClick() override; 	
+	//UFUNCTION(BlueprintCallable, Category = "Lol")
+	void SetupInventoryItemCell() override; 	//void SetupInventoryItemCell(UPARAM(ref) const int& id);
 
-	void SetupInventoryItemCell() override;
-
-
-
+	//UFUNCTION(BlueprintCallable, Category = "MouseEvents")
+	//void OnClick();
 };

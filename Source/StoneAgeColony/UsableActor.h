@@ -4,7 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "UsableActor.generated.h"
+
+
+USTRUCT(BlueprintType)
+struct FUsableActorData : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	FUsableActorData() {}
+
+	int32 ID;
+
+	/** Icon to use for Achivement */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	TAssetPtr<UTexture2D> InventoryTexture;
+
+};
+
 
 UCLASS()
 class STONEAGECOLONY_API AUsableActor : public AActor
@@ -15,6 +35,10 @@ public:
 	// Sets default values for this actor's properties
 	//AUsableActor();
 	AUsableActor(const FObjectInitializer& ObjectInitializer);
+
+	class UDataTable* PropertiesDataTable;
+
+	void SetupUsableActorType(FString);
 
 	const static int ID = 0;
 
@@ -41,7 +65,7 @@ public:
 
 	virtual void PreInitializeComponents() override;
 
-	virtual int GetID() { return ID; };
+	virtual int GetID() { return 0; };
 
 	virtual UTexture2D* GetInventoryTexture() { return InventoryTexture; };
 

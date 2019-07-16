@@ -44,7 +44,6 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 	static ConstructorHelpers::FClassFinder<ABuilding> BPClass3(TEXT("/Game/Uluc/BuildingSystem/Blueprints/BP_Building"));
 	Communicator::GetInstance().BuildingBlueprint = BPClass3.Class;
 
-
 	// Set usable item IDs
 	RegisterItemIDs();
 
@@ -176,15 +175,17 @@ void AStoneAgeColonyGameMode::OnNightEnded() {
 void AStoneAgeColonyGameMode::RegisterItemIDs() 
 {
 	AUsableActor* test = NewObject<AUsableActor>();
-	Communicator::GetInstance().UsableItemIDMap.Add(  AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID,		   NewObject<AUsableActor>());
+	Communicator::GetInstance().UsableItemIDMap.Add(  0/*AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID*/,		   NewObject<AUsableActor>());
 	Communicator::GetInstance().UsableItemIDMap.Add(  ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID,     NewObject<ATestGameLoader>());
 	Communicator::GetInstance().UsableItemIDMap.Add(  APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID,	   NewObject<APeopleSpawner>());
 	Communicator::GetInstance().UsableItemIDMap.Add(  AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID,			   NewObject<AObjectBed>());
-	Communicator::GetInstance().UsableItemIDMap.Add(  AGatherableTree::StaticClass()->GetDefaultObject<AGatherableTree>()->ID,     NewObject<AGatherableTree>());
+	auto tmp = NewObject<AGatherableTree>();
+	tmp->SetupType("GatherableTree");
+	Communicator::GetInstance().UsableItemIDMap.Add(  tmp->ID/*AGatherableTree::StaticClass()->GetDefaultObject<AGatherableTree>()->ID*/,     tmp);
 
 	for (auto& item : Communicator::GetInstance().UsableItemIDMap)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Class ID: %d,"), item.Value->GetID());
+		//UE_LOG(LogTemp, Warning, TEXT("Class ID: %d,"), item.Value->GetID());
 
 		// Add objects in UsableItemIDMap to RootSet so they will not be garbage collected during gameplay.
 		item.Value->AddToRoot();

@@ -4,6 +4,8 @@
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Communicator.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
+#include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Static Variables
@@ -12,6 +14,19 @@
 AGatherableTree::AGatherableTree(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	// im not sure if this calls super's constructor
+
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/GatherablesDataTable.GatherablesDataTable'"));
+	if (PropertiesDataObject.Succeeded())
+	{
+		PropertiesDataTable = PropertiesDataObject.Object;
+		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject Succeeded"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject FAILED"));
+	}
+
 	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/ItemIcons/TreeIcon.TreeIcon'"));
 	InventoryTexture = InventoryTexObj.Object;
 
@@ -24,6 +39,33 @@ void AGatherableTree::BeginPlay()
 
 }
 
+void AGatherableTree::SetupType(FString Type)
+{
+	auto Type_ = FName(*Type);
+
+	const FString ContextString(TEXT("Edible Type Context"));
+	Data = PropertiesDataTable->FindRow<FGatherableData>(Type_, ContextString, true);
+	ID = Data->ID;
+
+	// Required for loading icon from TAssetPtr with Get()
+	/*if (Data->Icon.IsPending()) 
+	{
+		FStreamableManager& AssetMgr = UAssetManager::GetStreamableManager();
+		const FStringAssetReference& AssetRef = Data->Icon.ToStringReference();
+		Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(AssetRef));
+	}
+
+	InventoryTexture = Data->Icon.Get();*/
+	if (InventoryTexture)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::SetupType Inventory Texture loaded."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::SetupType Failed Texture"));
+	}
+}
+
 void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 {
 
@@ -31,6 +73,7 @@ void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 	
 	// Put harvesting on a cooldown
 	// Can this cause int overflow after certain time?
+	// dont be dumb use timer handle
 	if (GatherTime - LastGatherTime > 2.f)
 	{
 		WoodAmount -= 10;

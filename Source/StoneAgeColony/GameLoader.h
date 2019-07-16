@@ -21,5 +21,6 @@ public:
 	template<typename T> 
 	void DestroyActors();
 
-	void UpdateInventoryUI();
+	void RefreshUI(APawn* InstigatorPawn);
+	//void RefreshUI(APawn* InstigatorPawn);
 };

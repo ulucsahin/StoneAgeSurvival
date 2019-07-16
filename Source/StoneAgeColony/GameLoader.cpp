@@ -9,6 +9,8 @@
 #include "GatherableTree.h"
 #include "Building.h"
 #include "PeopleSpawner.h"
+#include "UIBottomBar.h"
+#include "UIPlayerInventory.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "StoneAgeColonyCharacter.h"
@@ -30,7 +32,8 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 	USaveGameEntity* SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::CreateSaveGameObject(USaveGameEntity::StaticClass()));
 	SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::LoadGameFromSlot(SaveGameEntityLoad->SaveSlotName, SaveGameEntityLoad->UserIndex));
 
-	if (SaveGameEntityLoad) {
+	if (SaveGameEntityLoad) 
+	{
 		// Destroy existing characters that should be deleted before loading.
 		DestroyActors<AEnemyCharacter>();
 		DestroyActors<AGatherableTree>();
@@ -62,14 +65,14 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		CurrentGameState->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 
 		// Update UI Inventory Elements
-		UpdateInventoryUI();
+		RefreshUI(InstigatorPawn);
 
 		// Spawn saved characters.
 		SpawnLoadedActors<AEnemyCharacter>();
 		SpawnLoadedActors<AGatherableTree>();
 		SpawnLoadedActors<ABuilding>();
 	}
-
+	
 	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));
 }
 
@@ -106,25 +109,20 @@ void GameLoader::DestroyActors()
 	T::EmptyCommunicatorDetailsArray();
 }
 
-void GameLoader::UpdateInventoryUI()
+
+// why is this even here? Put this in UI classes
+void GameLoader::RefreshUI(APawn* InstigatorPawn)
 {
-	//FStringClassReference HUDRef(TEXT("/Game/Uluc/HUD/BP_Widget.BP_Widget_C"));
-	//if (UClass* HUD = MyWidgetClassRef.TryLoadClass<UUserWidget>())
-	//{
-	//	UUserWidget* MyWidget = CreateWidget<UUserWidget>(this, HUD);
-	//	// Do stuff with MyWidget
-	//	HUD->AddToViewport(9999);
-	//}
+	auto UIBottomBar = ((AStoneAgeColonyCharacter*)InstigatorPawn)->BottomBar;
+	auto UIPlayerInventory = ((AStoneAgeColonyCharacter*)InstigatorPawn)->UIPlayerInventory;
 
-	//UFloatProperty* FloatProp = FindField(Object->GetClass(), PropertyName);
-	//if (FloatProp != NULL)
-	//{
-	//	float* FloatPtr = FloatProp->GetPropertyValue_InContainer(Object);
-	//	if (FloatPtr != NULL)
-	//	{
-	//		float MyFloat = *FloatPtr;
-	//	}
-	//}
-
-
+	if (UIBottomBar)
+	{
+		UIBottomBar->Refresh();
+	}
+	if (UIPlayerInventory)
+	{
+		UIPlayerInventory->Refresh();
+	}
+	
 }
