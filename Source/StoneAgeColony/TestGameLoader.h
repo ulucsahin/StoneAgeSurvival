@@ -19,7 +19,7 @@ class STONEAGECOLONY_API ATestGameLoader : public AUsableActor
 public:
 	const static int ID = 1;
 	virtual int GetID() override;
-protected:
+
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 		
 };

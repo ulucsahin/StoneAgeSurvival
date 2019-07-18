@@ -6,6 +6,8 @@
 #include "UsableActor.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "Runtime/Engine/Classes/Engine/Texture2D.h"
+#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
+#include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Edible.generated.h"
 
 /**
@@ -21,20 +23,17 @@ public:
 
 	FEdibleData(): Health(0), Stamina(0) {}
 
-	/** XP to get to the given level from the previous level */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	int32 Health;
 
-	/** Extra HitPoints gained at this level */
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	int32 Stamina;
 
-	/** Icon to use for Achivement */
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	TAssetPtr<UTexture> Icon;
+	TAssetPtr<UTexture2D> Icon;
 
 };
 
@@ -49,11 +48,14 @@ public:
 
 	class UDataTable* PropertiesDataTable;
 
+	int32 ID;
+
 	float Health;
 
 	void SetupEdibleType(FString);
-	void Use(APawn*);
+	virtual void OnUsed(APawn* InstigatorPawn) override;
 	void test();
+	
 
 private:
 	FName EdibleType;

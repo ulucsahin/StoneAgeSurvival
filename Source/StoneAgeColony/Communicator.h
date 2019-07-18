@@ -26,6 +26,7 @@ public:
 	void Reset();
 	void Increment();
 	void SetPlayerLocation(APawn* Player);
+	void SetupAssets();
 
 private:
 	Communicator() {}
@@ -55,6 +56,7 @@ public:
 
 	// IDs of usable items in game
 	TMap<int, AUsableActor*> UsableItemIDMap; // how?
+	//TMap<int, FString> UsableItemIDSetupTypes;
 	
 	// TMap of ID-Amount pairs for items.
 	TMap<int, int> PlayerInventory;

@@ -25,6 +25,7 @@
 
 // Other Actors
 #include "Building.h"
+#include "Edible.h"
 
 // HUD
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
@@ -33,6 +34,8 @@
 AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("WHY THE FUCK"));
 	// Set world for communicator
 	Communicator::GetInstance().World = GetWorld();
 
@@ -44,9 +47,7 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 	static ConstructorHelpers::FClassFinder<ABuilding> BPClass3(TEXT("/Game/Uluc/BuildingSystem/Blueprints/BP_Building"));
 	Communicator::GetInstance().BuildingBlueprint = BPClass3.Class;
 
-	// Set usable item IDs
-	RegisterItemIDs();
-
+	
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
@@ -69,6 +70,7 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 
 	/* Default team is 1 for players and 0 for enemies */
 	PlayerTeamNum = 1;
+	//RegisterItemIDs();
 }
 
 
@@ -76,8 +78,12 @@ void AStoneAgeColonyGameMode::InitGameState()
 {
 	Super::InitGameState();
 
+	// Set usable item IDs
+	RegisterItemIDs();
+
 	// Resets communicator variables.
 	Communicator::GetInstance().Reset();
+	//Communicator::GetInstance().SetupAssets();
 
 	ASurvivalGameState* MyGameState = Cast<ASurvivalGameState>(GameState);
 	if (MyGameState)
@@ -175,13 +181,21 @@ void AStoneAgeColonyGameMode::OnNightEnded() {
 void AStoneAgeColonyGameMode::RegisterItemIDs() 
 {
 	AUsableActor* test = NewObject<AUsableActor>();
-	Communicator::GetInstance().UsableItemIDMap.Add(  0/*AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID*/,		   NewObject<AUsableActor>());
-	Communicator::GetInstance().UsableItemIDMap.Add(  ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID,     NewObject<ATestGameLoader>());
-	Communicator::GetInstance().UsableItemIDMap.Add(  APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID,	   NewObject<APeopleSpawner>());
-	Communicator::GetInstance().UsableItemIDMap.Add(  AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID,			   NewObject<AObjectBed>());
+	Communicator::GetInstance().UsableItemIDMap.Add(  0/*AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID*/,	   NewObject<AUsableActor>()); 
+	Communicator::GetInstance().UsableItemIDMap.Add(  ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID,     NewObject<ATestGameLoader>()); 
+	Communicator::GetInstance().UsableItemIDMap.Add(  APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID,	   NewObject<APeopleSpawner>()); 
+	Communicator::GetInstance().UsableItemIDMap.Add(  AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID,			   NewObject<AObjectBed>()); 
+	
+
 	auto tmp = NewObject<AGatherableTree>();
 	tmp->SetupType("GatherableTree");
 	Communicator::GetInstance().UsableItemIDMap.Add(  tmp->ID/*AGatherableTree::StaticClass()->GetDefaultObject<AGatherableTree>()->ID*/,     tmp);
+
+
+	auto tmp2 = NewObject<AEdible>();
+	tmp2->SetupEdibleType("Apple");
+	Communicator::GetInstance().UsableItemIDMap.Add(tmp2->ID, tmp2);
+	UE_LOG(LogTemp, Warning, TEXT("APPLE ID: %d"), tmp2->ID);
 
 	for (auto& item : Communicator::GetInstance().UsableItemIDMap)
 	{

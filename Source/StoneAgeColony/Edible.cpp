@@ -12,8 +12,8 @@ AEdible::AEdible(const FObjectInitializer& ObjectInitializer) : Super(ObjectInit
 		PropertiesDataTable = PropertiesDataObject.Object;
 	}
 
-	// Set default edible type to prevent crashes if setup being forgotten
-	SetupEdibleType("Apple");
+	//// Set default edible type to prevent crashes if setup being forgotten
+	//SetupEdibleType("Apple");
 	
 }
 
@@ -23,9 +23,23 @@ void AEdible::SetupEdibleType(FString Type)
 
 	const FString ContextString(TEXT("Edible Type Context"));
 	Data = PropertiesDataTable->FindRow<FEdibleData>(EdibleType, ContextString, true);
+	ID = Data->ID;
+
+	// Required for loading icon from TAssetPtr with Get()
+	if (Data->Icon.IsPending())
+	{
+		UAssetManager* tmp = NewObject<UAssetManager>();
+		FStreamableManager& AssetMgr = tmp->GetStreamableManager();//UAssetManager::GetStreamableManager();
+		const FStringAssetReference& AssetRef = Data->Icon.ToStringReference();
+		Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(AssetRef));
+	}
+
+	InventoryTexture = Data->Icon.Get();
+
+
 }
 
-void AEdible::Use(APawn* InstigatorPawn)
+void AEdible::OnUsed(APawn* InstigatorPawn)
 {
 	((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold += Data->Health;
 }

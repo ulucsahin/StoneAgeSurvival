@@ -37,6 +37,7 @@ public:
 	void SelectNextSlot();
 	void SelectPreviousSlot();
 	void GetNotification(UBottomBarItem* Item);
+	bool IsItemInBar(int32 ItemID);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Slots")
 	TArray<int> Test;

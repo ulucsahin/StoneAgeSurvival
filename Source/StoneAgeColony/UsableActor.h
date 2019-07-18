@@ -38,13 +38,14 @@ public:
 
 	class UDataTable* PropertiesDataTable;
 
-	void SetupUsableActorType(FString);
+	virtual void SetupType(FString);
 
 	const static int ID = 0;
 
 	UTexture2D* InventoryTexture;
 
 	virtual void OnUsed(APawn* InstigatorPawn);
+	virtual void OnGathered(APawn* InstigatorPawn);
 
 	/* Player is looking at */
 	virtual void OnBeginFocus();

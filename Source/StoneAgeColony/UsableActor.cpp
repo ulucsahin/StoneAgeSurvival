@@ -52,9 +52,9 @@ void AUsableActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AUsableActor::SetupUsableActorType(FString Type)
+void AUsableActor::SetupType(FString Type)
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::SetupType"));
 }
 
 void AUsableActor::OnBeginFocus(){
@@ -68,7 +68,8 @@ void AUsableActor::OnEndFocus() {
 }
 
 
-void AUsableActor::OnUsed(APawn* InstigatorPawn) {
+void AUsableActor::OnUsed(APawn* InstigatorPawn) 
+{
 	GLog->Log("im used");
 	//AUsableActor* temp = NewObject<AUsableActor>();
 	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
@@ -83,7 +84,15 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn) {
 	
 }
 
-void AUsableActor::PrintName() {
+void AUsableActor::OnGathered(APawn* InstigatorPawn)
+{
+	/* Overridden by gatherable objects */
+
+	UE_LOG(LogTemp, Warning, TEXT("Item is not gatherable."));
+}
+
+void AUsableActor::PrintName() 
+{
 	UE_LOG(LogTemp, Warning, TEXT("IM USABLE ACTOR XD"));
 }
 

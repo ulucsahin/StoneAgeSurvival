@@ -2,34 +2,12 @@
 
 #include "GatherableObject.h"
 
-// Called when the game starts or when spawned
-void AGatherableObject::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void AGatherableObject::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void AGatherableObject::OnBeginFocus()
+AGatherableObject::AGatherableObject(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 
 }
 
-void AGatherableObject::OnEndFocus()
+void AGatherableObject::OnUsed(APawn* InstigatorPawn)
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("AGatherableObject::OnUsed"));
 }
-
-void AGatherableObject::OnClicked()
-{
-	UE_LOG(LogTemp, Warning, TEXT("AGatherableObject::OnClicked"));
-}
-
-
-

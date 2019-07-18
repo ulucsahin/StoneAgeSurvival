@@ -279,12 +279,17 @@ void AStoneAgeColonyCharacter::OnClick()
 {
 	if (PlayerStates == EPlayerStates::VE_Combat)
 	{
-		// For debug
-		if (Health > 0.f)
+		// Use item in BottomBar
+		BottomBar->BarItems[BottomBar->SelectedSlot]->UseBarItem();
+		int32 UsedItemID = BottomBar->BarItems[BottomBar->SelectedSlot]->ItemID;
+		if (Inventory.Contains(UsedItemID))
 		{
-			Health -= 1.f;
-			UE_LOG(LogTemp, Warning, TEXT("Health: %f"), Health);
+			UE_LOG(LogTemp, Warning, TEXT("ALSDJALKSDJ"));
+			Inventory.Emplace(UsedItemID, Inventory[UsedItemID] - 1);
+			BottomBar->Refresh();
 		}
+		
+		
 	}
 	else if (PlayerStates == EPlayerStates::VE_Building)
 	{
@@ -410,6 +415,19 @@ void AStoneAgeColonyCharacter::Use()
 	if (Usable)
 	{
 		Usable->OnUsed(this);
+	}
+}
+
+void AStoneAgeColonyCharacter::Gather()
+{
+	AUsableActor* Usable = GetActorInView<AUsableActor>(250.f);
+	if (Usable)
+	{
+		Usable->OnGathered(this);
+		if (BottomBar->IsItemInBar(Usable->ID))
+		{
+			BottomBar->Refresh();
+		}
 	}
 }
 
@@ -685,11 +703,12 @@ void AStoneAgeColonyCharacter::Debug()
 	//GetActorInView<ABuilding>(20.f); // WE NEED THIS LINE OR LINKER ERROR CAUSED BY OPTIONS IN STONEAGECOLONY.BUILD.CS WHICH IS USED FOR FASTER COMPILE TIMES
 	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
 
-	AEdible* asd = NewObject<AEdible>();
-	asd->SetupEdibleType("Apple");
-	asd->test();
-	asd->Use(this);
+	//AEdible* asd = NewObject<AEdible>();
+	//asd->SetupEdibleType("Apple");
+	//asd->test();
+	//asd->Use(this);
 	//BottomBar->SetItemAtIndex(1, nullptr);
 	//BottomBar->SelectPreviousSlot();
-}
 
+	Gather();
+}

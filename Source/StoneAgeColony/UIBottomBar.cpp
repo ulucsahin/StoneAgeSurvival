@@ -60,6 +60,7 @@ void UUIBottomBar::AddItems()
 	{
 		WrapBox->AddChild(Item);
 	}
+	
 }
 
 void UUIBottomBar::SetItemAtIndex(UBottomBarItem* Item)
@@ -75,33 +76,23 @@ void UUIBottomBar::SetItemAtIndex(UBottomBarItem* Item)
 
 void UUIBottomBar::Refresh()
 {
-	/*for (auto item : BarItems)
+	UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::Refresh"));
+	WrapBox->ClearChildren();
+	for (auto Item : BarItems)
 	{
-		WrapBox->RemoveChild(item);
-		
-	}*/
-	WrapBox->ClearChildren(); // same thing as above
-	//BarItems.Empty();
+		Item->Update();
+	}
 	AddItems();
-
-	
-	//InitializeBottomBarItems();
 }
 
 void UUIBottomBar::SelectSlot(int32 Index)
 {
 	// Set previously selected item to normal scale and alpha
-	UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::SelectSlot, SelectedSlot: %d, Index: %d"), SelectedSlot, Index);
-	UE_LOG(LogTemp, Warning, TEXT("BarItems.Num(): %d"), BarItems.Num());
-	//if (SelectedSlot < BarItems.Num() && Index < BarItems.Num())
-	//{
-		BarItems[SelectedSlot]->SetRenderScale(FVector2D(1.f, 1.f));
+	BarItems[SelectedSlot]->SetRenderScale(FVector2D(1.f, 1.f));
 
-		// Set newly selected item
-		SelectedSlot = Index;
-		BarItems[SelectedSlot]->SetRenderScale(FVector2D(1.2f, 1.2f));
-	//}
-	
+	// Set newly selected item
+	SelectedSlot = Index;
+	BarItems[SelectedSlot]->SetRenderScale(FVector2D(1.2f, 1.2f));
 	
 }
 
@@ -123,4 +114,19 @@ void UUIBottomBar::GetNotification(UBottomBarItem* Item)
 {
 	/* Gets notification from "Item", means there is a change about "Item" */
 	SetItemAtIndex(Item);
+}
+
+bool UUIBottomBar::IsItemInBar(int32 ItemID)
+{
+	bool result = false;
+	for (auto Item : BarItems)
+	{
+		if (Item->ItemID == ItemID)
+		{
+			result = true;
+			break;
+		}
+	}
+		
+	return result;
 }

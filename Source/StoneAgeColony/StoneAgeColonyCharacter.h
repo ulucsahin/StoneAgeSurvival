@@ -80,8 +80,8 @@ public:
 	void ChangeState(EPlayerStates NewState);
 	void UpdateStateDisplay();
 
-	// Inventory
-	TMap<int, int> Inventory = { MakeTuple(1,5), MakeTuple(2,31) };
+	// Inventory, with items to test
+	TMap<int, int> Inventory = { {1, 5}, {2,31}, {200,17} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;
@@ -187,6 +187,9 @@ protected:
 
 	// Uses looked item
 	void Use();
+
+	// Gathers looked item
+	void Gather();
 
 	// Opens inventory ui
 	void OpenInventory();

@@ -13,8 +13,13 @@ void ATestGameLoader::OnUsed(APawn* InstigatorPawn)
 	/*
 	This method calls GameLoader class to handle loading system.
 	*/
-	GameLoader* GameLoaderInstance = new GameLoader();
-	GameLoaderInstance->LoadGame(InstigatorPawn);
+	UE_LOG(LogTemp, Warning, TEXT("ATestGameLoader::OnUsed"));
+	if (InstigatorPawn)
+	{
+		GameLoader* GameLoaderInstance = new GameLoader();
+		GameLoaderInstance->LoadGame(InstigatorPawn);
+	}
+	
 
 }
 

@@ -41,6 +41,7 @@ void AGatherableTree::BeginPlay()
 
 void AGatherableTree::SetupType(FString Type)
 {
+	UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::SetupType"));
 	auto Type_ = FName(*Type);
 
 	const FString ContextString(TEXT("Edible Type Context"));
@@ -48,29 +49,29 @@ void AGatherableTree::SetupType(FString Type)
 	ID = Data->ID;
 
 	// Required for loading icon from TAssetPtr with Get()
-	/*if (Data->Icon.IsPending()) 
+	if (Data->Icon.IsPending()) 
 	{
-		FStreamableManager& AssetMgr = UAssetManager::GetStreamableManager();
+		UAssetManager* tmp = NewObject<UAssetManager>();
+		FStreamableManager& AssetMgr = tmp->GetStreamableManager();//UAssetManager::GetStreamableManager();
 		const FStringAssetReference& AssetRef = Data->Icon.ToStringReference();
 		Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(AssetRef));
 	}
 
-	InventoryTexture = Data->Icon.Get();*/
-	if (InventoryTexture)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::SetupType Inventory Texture loaded."));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::SetupType Failed Texture"));
-	}
+	InventoryTexture = Data->Icon.Get();
 }
 
 void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 {
+	//Super::OnUsed(InstigatorPawn);
+
+}
+
+void AGatherableTree::OnGathered(APawn* InstigatorPawn)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::OnGathered"));
 
 	float GatherTime = Communicator::GetInstance().World->GetTimeSeconds();
-	
+
 	// Put harvesting on a cooldown
 	// Can this cause int overflow after certain time?
 	// dont be dumb use timer handle
@@ -82,8 +83,6 @@ void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 		int AmountToAdd = 10;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID, AmountToAdd);
 	}
-
-
 }
 
 int AGatherableTree::GetID() { return ID; }

@@ -29,5 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BarNotify")
 	void NotifyBottomBar();
 
+	void UseBarItem();
+
+	void Update();
+
 	UUIBottomBar* BottomBar;
 };

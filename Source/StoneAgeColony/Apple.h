@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "UsableActor.h"
+#include "Edible.h"
 #include "Apple.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class STONEAGECOLONY_API AApple : public AUsableActor
+class STONEAGECOLONY_API AApple : public AEdible
 {
 	GENERATED_BODY()
 	

@@ -27,18 +27,19 @@ GameLoader::~GameLoader()
 void GameLoader::LoadGame(APawn* InstigatorPawn)
 {
 	/* This method handles everything about loading game from a savefile. */
-
+	UE_LOG(LogTemp, Warning, TEXT("GameLoader 1"));
 	// LOAD SYSTEM
 	USaveGameEntity* SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::CreateSaveGameObject(USaveGameEntity::StaticClass()));
 	SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::LoadGameFromSlot(SaveGameEntityLoad->SaveSlotName, SaveGameEntityLoad->UserIndex));
-
+	UE_LOG(LogTemp, Warning, TEXT("GameLoader 2"));
 	if (SaveGameEntityLoad) 
 	{
+		UE_LOG(LogTemp, Warning, TEXT("GameLoader 3"));
 		// Destroy existing characters that should be deleted before loading.
 		DestroyActors<AEnemyCharacter>();
 		DestroyActors<AGatherableTree>();
 		DestroyActors<ABuilding>();
-
+		UE_LOG(LogTemp, Warning, TEXT("GameLoader 4"));
 		// Load varibles to communicator (update with loaded variables).
 		Communicator::GetInstance().test = SaveGameEntityLoad->test;
 		Communicator::GetInstance().SpawnedCharacterDetails = SaveGameEntityLoad->SpawnedCharacterDetails;
@@ -51,7 +52,7 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		Communicator::GetInstance().PlayerExperience = SaveGameEntityLoad->PlayerExperience;
 		Communicator::GetInstance().PlayerGold = SaveGameEntityLoad->PlayerGold;
 		Communicator::GetInstance().ElapsedGameMinutes = SaveGameEntityLoad->ElapsedGameMinutes;
-
+		UE_LOG(LogTemp, Warning, TEXT("GameLoader 5"));
 		// Load player variables.
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorTransform(SaveGameEntityLoad->PlayerTransform);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->SetActorRotation(SaveGameEntityLoad->PlayerRotation);
@@ -60,17 +61,18 @@ void GameLoader::LoadGame(APawn* InstigatorPawn)
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Experience = Communicator::GetInstance().PlayerExperience;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold = Communicator::GetInstance().PlayerGold;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory = SaveGameEntityLoad->PlayerInventory;
-
+		UE_LOG(LogTemp, Warning, TEXT("GameLoader 6"));
 		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());
 		CurrentGameState->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
-
+		UE_LOG(LogTemp, Warning, TEXT("GameLoader 7"));
 		// Update UI Inventory Elements
 		RefreshUI(InstigatorPawn);
-
+		UE_LOG(LogTemp, Warning, TEXT("GameLoader 8"));
 		// Spawn saved characters.
 		SpawnLoadedActors<AEnemyCharacter>();
 		SpawnLoadedActors<AGatherableTree>();
 		SpawnLoadedActors<ABuilding>();
+		UE_LOG(LogTemp, Warning, TEXT("GameLoader 9"));
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));

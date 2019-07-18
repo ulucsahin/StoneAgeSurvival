@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UsableActor.h"
+#include "GatherableObject.h"
 #include "GatherableTree.generated.h"
 
 // Object details
@@ -45,14 +46,14 @@ struct FGatherableTreeDetails
 
 
 UCLASS()
-class STONEAGECOLONY_API AGatherableTree : public AUsableActor
+class STONEAGECOLONY_API AGatherableTree : public AGatherableObject
 {
 	GENERATED_BODY()
 
 public:
 	AGatherableTree(const FObjectInitializer& ObjectInitializer);
 
-	void SetupType(FString);
+	virtual void SetupType(FString) override;
 
 	int ID = 100;
 	virtual int GetID() override;
@@ -67,6 +68,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnUsed(APawn* InstigatorPawn) override;
+	virtual void OnGathered(APawn* InstigatorPawn) override;
 
 private:
 	int WoodAmount;
