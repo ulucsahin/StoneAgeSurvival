@@ -72,7 +72,8 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn)
 {
 	GLog->Log("im used");
 	//AUsableActor* temp = NewObject<AUsableActor>();
-	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	
+	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(Communicator::GetInstance().World, 0);
 	if (PlayerCharacter)
 	{
 		PlayerCharacter->AddToInventory(this->ID, 1);
@@ -82,6 +83,11 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn)
 		UE_LOG(LogTemp, Warning, TEXT("PLAYER CHARACTER IS NULL IN AUsableActor::OnUsed"));
 	}
 	
+}
+
+void AUsableActor::OnUsedFromInventory(APawn* InstigatorPawn)
+{
+	GLog->Log("AUsableActor::OnUsedFromInventory");
 }
 
 void AUsableActor::OnGathered(APawn* InstigatorPawn)

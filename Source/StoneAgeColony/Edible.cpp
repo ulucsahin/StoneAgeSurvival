@@ -44,6 +44,11 @@ void AEdible::OnUsed(APawn* InstigatorPawn)
 	((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold += Data->Health;
 }
 
+void AEdible::OnUsedFromInventory(APawn* InstigatorPawn)
+{
+	((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold += Data->Health;
+}
+
 void AEdible::test()
 {
 	UE_LOG(LogTemp, Warning, TEXT("EDIBLE ROW DATA: %d"), Data->Health)

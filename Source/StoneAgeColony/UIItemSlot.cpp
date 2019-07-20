@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UIItemSlot.h"
-#include "StoneAgeColonyCharacter.h"
 #include "Communicator.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
@@ -12,7 +11,7 @@ UUIItemSlot::UUIItemSlot(const FObjectInitializer& ObjectInitializer) : Super(Ob
 
 void UUIItemSlot::SetupInventoryItemCell()
 {
-	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 
 	if (PlayerCharacter)
 	{

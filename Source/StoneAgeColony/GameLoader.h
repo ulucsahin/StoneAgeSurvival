@@ -10,17 +10,18 @@
 class STONEAGECOLONY_API GameLoader
 {
 public:
-	GameLoader();
-	~GameLoader();
+	//GameLoader();
+	//~GameLoader();
 
-	void LoadGame(APawn* InstigatorPawn);
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
+	//void LoadGame(APawn* InstigatorPawn);
 
-	template <typename T>
-	void SpawnLoadedActors();
+	//template <typename T>
+	//void SpawnLoadedActors();
 
-	template<typename T> 
-	void DestroyActors();
+	//template<typename T> 
+	//void DestroyActors();
 
-	void RefreshUI(APawn* InstigatorPawn);
 	//void RefreshUI(APawn* InstigatorPawn);
+	////void RefreshUI(APawn* InstigatorPawn);
 };

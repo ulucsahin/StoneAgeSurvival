@@ -114,6 +114,9 @@ void UUIBottomBar::GetNotification(UBottomBarItem* Item)
 {
 	/* Gets notification from "Item", means there is a change about "Item" */
 	SetItemAtIndex(Item);
+
+	// Re-select
+	SelectSlot(SelectedSlot); 
 }
 
 bool UUIBottomBar::IsItemInBar(int32 ItemID)

@@ -20,11 +20,11 @@ AGatherableTree::AGatherableTree(const class FObjectInitializer& ObjectInitializ
 	if (PropertiesDataObject.Succeeded())
 	{
 		PropertiesDataTable = PropertiesDataObject.Object;
-		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject Succeeded"));
+		//UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject Succeeded"));
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject FAILED"));
+		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject FAILED :("));
 	}
 
 	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/ItemIcons/TreeIcon.TreeIcon'"));

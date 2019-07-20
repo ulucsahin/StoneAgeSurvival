@@ -30,6 +30,8 @@ public:
 
 	void SetupInventoryItemCell() override;
 
+	UFUNCTION(BlueprintCallable, Category = "SubMenuButtons")
+	void Use();
 
 
 };

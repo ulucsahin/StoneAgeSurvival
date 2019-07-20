@@ -280,15 +280,17 @@ void AStoneAgeColonyCharacter::OnClick()
 	if (PlayerStates == EPlayerStates::VE_Combat)
 	{
 		// Use item in BottomBar
-		BottomBar->BarItems[BottomBar->SelectedSlot]->UseBarItem();
 		int32 UsedItemID = BottomBar->BarItems[BottomBar->SelectedSlot]->ItemID;
-		if (Inventory.Contains(UsedItemID))
+		if (Inventory.Contains(UsedItemID)) 
 		{
-			UE_LOG(LogTemp, Warning, TEXT("ALSDJALKSDJ"));
-			Inventory.Emplace(UsedItemID, Inventory[UsedItemID] - 1);
-			BottomBar->Refresh();
+			if (Inventory[UsedItemID] > 0)
+			{
+				Inventory.Emplace(UsedItemID, Inventory[UsedItemID] - 1);
+				BottomBar->BarItems[BottomBar->SelectedSlot]->UseBarItem();
+				BottomBar->Refresh();
+			}
+			
 		}
-		
 		
 	}
 	else if (PlayerStates == EPlayerStates::VE_Building)
@@ -342,23 +344,20 @@ void AStoneAgeColonyCharacter::LookUpAtRate(float Rate)
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-/*
-	Performs ray-trace to find closest looked-at UsableActor.
-*/
-
 void AStoneAgeColonyCharacter::InitializeWidgets()
 {
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
-	// Initialize Inventory Widget
-	//FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/PlayerInventory.PlayerInventory_C"));
+	// Inventory Menu
 	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
 	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
 	InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
 
+	// Character Menu 
 	FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
 	UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<UUserWidget>();
 	CharacterMenuWidget = CreateWidget<UUserWidget>(PlayerController, CharacterMenuWidgtClass);
+
 }
 
 template<typename T>

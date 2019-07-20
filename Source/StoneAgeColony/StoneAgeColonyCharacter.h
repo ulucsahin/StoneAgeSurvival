@@ -142,6 +142,8 @@ public:
 	// UI Variables
 	UUserWidget* InventoryWidget;
 	UUserWidget* CharacterMenuWidget;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MainMenu")
+	UUserWidget* MainMenuWidget;
 
 	void Debug();
 

@@ -45,6 +45,7 @@ public:
 	UTexture2D* InventoryTexture;
 
 	virtual void OnUsed(APawn* InstigatorPawn);
+	virtual void OnUsedFromInventory(APawn* InstigatorPawn);
 	virtual void OnGathered(APawn* InstigatorPawn);
 
 	/* Player is looking at */

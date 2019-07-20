@@ -13,7 +13,7 @@ void UBottomBarItem::SetupBarItem(UUIBottomBar* BottomBar, int32 Index)
 
 void UBottomBarItem::NotifyBottomBar()
 {
-	/* Notified bottom bar on changed made to this object so bottom bar can refresh */
+	/* Notified bottom bar on changes made to this object so bottom bar can refresh */
 	if (BottomBar)
 	{
 		BottomBar->GetNotification(this);
@@ -23,40 +23,36 @@ void UBottomBarItem::NotifyBottomBar()
 
 void UBottomBarItem::UseBarItem()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UBottomBarItem::UseBarItem"));
-	if (ItemAmount > 0)
+	UE_LOG(LogTemp, Warning, TEXT("UBottomBarItem::UseBarItemm"));
+
+	if (BottomBar->Player)
 	{
-		if (BottomBar->Player)
-		{
-			Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsed(BottomBar->Player);
-			ItemAmount--;
-			Update();
-		}
-		
+		Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(BottomBar->Player);
+		ItemAmount = BottomBar->Player->Inventory[ItemID];
 	}
 	
 }
 
 void UBottomBarItem::Update()
 {
-	if (BottomBar)
-	{
-		if (BottomBar->Player)
-		{
-			auto PlayerInventory = BottomBar->Player->Inventory;
+	//if (BottomBar)
+	//{
+	//	if (BottomBar->Player)
+	//	{
+	//		auto PlayerInventory = BottomBar->Player->Inventory;
 
-			if (PlayerInventory.Contains(ItemID))
-			{
-				ItemAmount = PlayerInventory[ItemID];
-				//NotifyBottomBar();
-			}
-			else 
-			{
-				ItemAmount = 0;
-			}
-			
-		}
-	}
+	//		if (PlayerInventory.Contains(ItemID))
+	//		{
+	//			ItemAmount = PlayerInventory[ItemID];
+	//			//NotifyBottomBar();
+	//		}
+	//		else 
+	//		{
+	//			ItemAmount = 0;
+	//		}
+	//		
+	//	}
+	//}
 	
 }
 

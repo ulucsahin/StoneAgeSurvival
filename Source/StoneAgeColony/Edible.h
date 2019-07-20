@@ -54,6 +54,7 @@ public:
 
 	void SetupEdibleType(FString);
 	virtual void OnUsed(APawn* InstigatorPawn) override;
+	virtual void OnUsedFromInventory(APawn* InstigatorPawn) override;
 	void test();
 	
 

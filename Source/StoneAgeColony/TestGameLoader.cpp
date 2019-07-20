@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TestGameLoader.h"
-#include "GameLoader.h"
+#include "GameLoadManager.h"
 #include "PeopleSpawner.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Communicator.h"
@@ -16,7 +16,7 @@ void ATestGameLoader::OnUsed(APawn* InstigatorPawn)
 	UE_LOG(LogTemp, Warning, TEXT("ATestGameLoader::OnUsed"));
 	if (InstigatorPawn)
 	{
-		GameLoader* GameLoaderInstance = new GameLoader();
+		AGameLoadManager* GameLoaderInstance = NewObject<AGameLoadManager>();
 		GameLoaderInstance->LoadGame(InstigatorPawn);
 	}
 	

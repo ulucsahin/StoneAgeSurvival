@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "StoneAgeColonyCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "UIItemSlot.generated.h"
 
@@ -31,5 +32,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MouseEvents")
 	virtual void OnClick();
+
+	AStoneAgeColonyCharacter* PlayerCharacter;
 
 };

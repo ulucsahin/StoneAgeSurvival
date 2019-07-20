@@ -40,4 +40,7 @@ public:
 	void Test();
 
 	TSubclassOf<UUIInventoryItem> InvItemClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Tooltip")
+	UUserWidget* ItemTooltipWidget;
 };
