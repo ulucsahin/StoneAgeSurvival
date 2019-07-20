@@ -52,7 +52,7 @@ public:
 
 	float Health;
 
-	void SetupEdibleType(FString);
+	virtual void SetupType(FString) override;
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	virtual void OnUsedFromInventory(APawn* InstigatorPawn) override;
 	void test();

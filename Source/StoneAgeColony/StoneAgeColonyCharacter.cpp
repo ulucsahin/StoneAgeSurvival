@@ -670,13 +670,19 @@ void AStoneAgeColonyCharacter::ShiftRightClick()
 // Z Button
 void AStoneAgeColonyCharacter::InteractPickup()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pickup Actor"));
+	AUsableActor* Actor = GetActorInView<AUsableActor>(250.f);
+	InteractPickup(Actor);
 	
+}
+
+void AStoneAgeColonyCharacter::InteractPickup(AUsableActor* Actor)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Pickup Actor"));
+
 	// Don't do it while in building mode
 	if (PlayerStates != EPlayerStates::VE_Building)
 	{
-		AUsableActor* Usable = GetActorInView<AUsableActor>(250.f);
-		bool EnteredState = PickupManager->HandlePickup(Usable);
+		bool EnteredState = PickupManager->HandlePickup(Actor);
 		if (EnteredState)
 		{
 			PlayerStates = EPlayerStates::VE_Pickup;
@@ -686,8 +692,6 @@ void AStoneAgeColonyCharacter::InteractPickup()
 			PlayerStates = EPlayerStates::VE_Combat;
 		}
 	}
-	
-
 }
 
 void AStoneAgeColonyCharacter::StartBuilding()

@@ -227,6 +227,7 @@ protected:
 	void RightClick();
 	void ShiftRightClick();
 	void InteractPickup();
+	
 
 	void StartBuilding();
 
@@ -251,4 +252,5 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	void InteractPickup(AUsableActor* Actor);
 };

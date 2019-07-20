@@ -32,6 +32,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "SubMenuButtons")
 	void Use();
-
+	
+	UFUNCTION(BlueprintCallable, Category = "SubMenuButtons")
+	void PlaceItem();
 
 };

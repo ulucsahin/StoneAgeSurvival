@@ -11,9 +11,12 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
-	//ID = 0;
 
 	MeshComp = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("Mesh"));
+
+	// Set default mesh, also used as default world model for items dropped through inventory
+	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/SoulCave/Environment/Meshes/Building_Slum/SM_Slums_Trashbag.SM_Slums_Trashbag"));
+	//MeshComp->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/SoulCave/Environment/Meshes/Building_Slum/SM_Slums_Trashbag.SM_Slums_Trashbag")));
 	RootComponent = MeshComp;
 
 	// Set InventoryTexture
@@ -31,12 +34,6 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 void AUsableActor::PreInitializeComponents() {
 	Super::PreInitializeComponents();
 }
-
-//int AUsableActor::GetID()
-//{
-//	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::GetID"));
-//	return 69;
-//}
 
 // Called when the game starts or when spawned
 void AUsableActor::BeginPlay()
@@ -67,7 +64,6 @@ void AUsableActor::OnEndFocus() {
 	MeshComp->SetRenderCustomDepth(false);
 }
 
-
 void AUsableActor::OnUsed(APawn* InstigatorPawn) 
 {
 	GLog->Log("im used");
@@ -96,6 +92,7 @@ void AUsableActor::OnGathered(APawn* InstigatorPawn)
 
 	UE_LOG(LogTemp, Warning, TEXT("Item is not gatherable."));
 }
+
 
 void AUsableActor::PrintName() 
 {
@@ -231,4 +228,14 @@ void AUsableActor::SetMaterialToGhost()
 void AUsableActor::SetMaterialToOriginal()
 {
 	MeshComp->SetMaterial(0, OriginalMaterial);
+}
+
+void AUsableActor::SetMeshToDefault()
+{
+	/* Sets mesh of this object to default world model mesh, which is a bag.
+	* Used when dropping items from inventory (If dropped item has no unique mesh)
+	*/
+
+	MeshComp->SetStaticMesh(DefaultMesh);
+
 }

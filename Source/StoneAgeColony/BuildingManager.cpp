@@ -154,7 +154,6 @@ void UBuildingManager::UpdatePreview()
 		CurrentBuilding->SetActorTransform(FTransform(NewRotation, NewLocation));
 	};
 
-	// Working version saved in txt.
 	if (CurrentBuilding)
 	{
 		auto Building_Socket = SelectSocketToAttach();

@@ -38,8 +38,6 @@ public:
 
 	class UDataTable* PropertiesDataTable;
 
-	virtual void SetupType(FString);
-
 	const static int ID = 0;
 
 	UTexture2D* InventoryTexture;
@@ -47,6 +45,7 @@ public:
 	virtual void OnUsed(APawn* InstigatorPawn);
 	virtual void OnUsedFromInventory(APawn* InstigatorPawn);
 	virtual void OnGathered(APawn* InstigatorPawn);
+	virtual void SetupType(FString Type);
 
 	/* Player is looking at */
 	virtual void OnBeginFocus();
@@ -89,12 +88,14 @@ public:
 	void OnPickedUp();
 	void SetMaterialToGhost();
 	void SetMaterialToOriginal();
+	void SetMeshToDefault();
 
 	bool bOverlapping;
 private:
 	UMaterialInterface* OriginalMaterial;
 	UMaterial* GhostMaterial;
 	UMaterial* CollisionMaterial;
+	UStaticMesh* DefaultMesh;
 	TSet<AActor*> OverlappingActors;
 	bool bIsPickupable = true;
 };

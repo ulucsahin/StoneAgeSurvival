@@ -17,8 +17,10 @@ AEdible::AEdible(const FObjectInitializer& ObjectInitializer) : Super(ObjectInit
 	
 }
 
-void AEdible::SetupEdibleType(FString Type)
+void AEdible::SetupType(FString Type)
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("AEdible::SetupType"));
 	EdibleType = FName(*Type);
 
 	const FString ContextString(TEXT("Edible Type Context"));

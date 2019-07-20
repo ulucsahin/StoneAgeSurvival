@@ -193,7 +193,7 @@ void AStoneAgeColonyGameMode::RegisterItemIDs()
 
 
 	auto tmp2 = NewObject<AEdible>();
-	tmp2->SetupEdibleType("Apple");
+	tmp2->SetupType("Apple");
 	Communicator::GetInstance().UsableItemIDMap.Add(tmp2->ID, tmp2);
 	UE_LOG(LogTemp, Warning, TEXT("APPLE ID: %d"), tmp2->ID);
 
