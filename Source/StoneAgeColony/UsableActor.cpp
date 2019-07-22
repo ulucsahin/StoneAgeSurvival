@@ -51,6 +51,7 @@ void AUsableActor::Tick(float DeltaTime)
 
 void AUsableActor::SetupType(FString Type)
 {
+	/* Will be implemented by required child classes. */
 	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::SetupType"));
 }
 

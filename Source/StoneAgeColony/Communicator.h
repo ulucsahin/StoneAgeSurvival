@@ -71,6 +71,8 @@ public:
 
 	float ElapsedGameMinutes;
 
+	UDataTable* ObjectNameDataTable;
+
 	// Details of objects that should be saved-loaded
 	TArray<FEnemyCharacterDetails>   SpawnedCharacterDetails;
 	TArray<FGatherableTreeDetails>   SpawnedGatherableTreeDetails;

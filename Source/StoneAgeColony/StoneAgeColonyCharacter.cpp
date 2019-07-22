@@ -288,6 +288,8 @@ void AStoneAgeColonyCharacter::OnClick()
 				Inventory.Emplace(UsedItemID, Inventory[UsedItemID] - 1);
 				BottomBar->BarItems[BottomBar->SelectedSlot]->UseBarItem();
 				BottomBar->Refresh();
+				
+				if (InventoryOn) UIPlayerInventory->Refresh();
 			}
 			
 		}

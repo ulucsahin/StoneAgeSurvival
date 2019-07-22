@@ -34,8 +34,6 @@
 AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-
-	UE_LOG(LogTemp, Warning, TEXT("WHY THE FUCK"));
 	// Set world for communicator
 	Communicator::GetInstance().World = GetWorld();
 
@@ -47,7 +45,14 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 	static ConstructorHelpers::FClassFinder<ABuilding> BPClass3(TEXT("/Game/Uluc/BuildingSystem/Blueprints/BP_Building"));
 	Communicator::GetInstance().BuildingBlueprint = BPClass3.Class;
 
-	
+	// Set Communicator ItemID-Name Table
+	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/ObjectNameDataTable.ObjectNameDataTable'"));
+	if (PropertiesDataObject.Succeeded())
+	{
+		Communicator::GetInstance().ObjectNameDataTable = PropertiesDataObject.Object;
+	}
+
+
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
@@ -195,7 +200,6 @@ void AStoneAgeColonyGameMode::RegisterItemIDs()
 	auto tmp2 = NewObject<AEdible>();
 	tmp2->SetupType("Apple");
 	Communicator::GetInstance().UsableItemIDMap.Add(tmp2->ID, tmp2);
-	UE_LOG(LogTemp, Warning, TEXT("APPLE ID: %d"), tmp2->ID);
 
 	for (auto& item : Communicator::GetInstance().UsableItemIDMap)
 	{

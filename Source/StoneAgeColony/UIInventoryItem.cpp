@@ -6,6 +6,8 @@
 #include "UsableActor.h"
 #include "Communicator.h"
 #include "PickupManager.h"
+#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
+#include "Runtime/Engine/Classes/Engine/AssetManager.h"
 
 UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -45,6 +47,12 @@ void UUIInventoryItem::PlaceItem()
 {
 	/* Spawns item in slot into world */
 
+	if (ItemAmount <= 0)
+	{
+		PlayerCharacter->UIPlayerInventory->Refresh();
+		return;
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("UUIInventoryItem::PlaceItem, ID: %d"), ItemID);
 
 	// Calculate location to spawn (in front of player)
@@ -54,9 +62,18 @@ void UUIInventoryItem::PlaceItem()
 	SpawnLocation.Y += PlayerForwardVector.Y * 150.f;
 
 	auto ClassToSpawn = Communicator::GetInstance().UsableItemIDMap[ItemID]->GetClass();
+	
+	UE_LOG(LogTemp, Warning, TEXT("Before"));
+	const FString ContextString(TEXT("Spawned Type Context"));
+	auto IDAsString = FString::FromInt(ItemID);
+	auto IDAsFName = FName(*IDAsString);
+	auto ObjectNameData = Communicator::GetInstance().ObjectNameDataTable->FindRow<FObjectNameData>(IDAsFName, ContextString, true);
+
+	UE_LOG(LogTemp, Warning, TEXT("After"));
+	UE_LOG(LogTemp, Warning, TEXT("Object name: %s"), *ObjectNameData->Name);
 
 	auto SpawnedItem = Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, SpawnLocation, FRotator::ZeroRotator);
-	SpawnedItem->SetupType("Apple");
+	SpawnedItem->SetupType(ObjectNameData->Name);
 	SpawnedItem->SetMeshToDefault();
 
 	PlayerCharacter->Inventory.Emplace(ItemID, PlayerCharacter->Inventory[ItemID] - 1);

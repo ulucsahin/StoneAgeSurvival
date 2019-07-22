@@ -13,23 +13,14 @@
 
 AGatherableTree::AGatherableTree(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	// im not sure if this calls super's constructor
-
-
 	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/GatherablesDataTable.GatherablesDataTable'"));
 	if (PropertiesDataObject.Succeeded())
 	{
 		PropertiesDataTable = PropertiesDataObject.Object;
-		//UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject Succeeded"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::AGatherableTree PropertiesDataObject FAILED :("));
 	}
 
 	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/ItemIcons/TreeIcon.TreeIcon'"));
 	InventoryTexture = InventoryTexObj.Object;
-
 }
 
 void AGatherableTree::BeginPlay()
@@ -44,7 +35,7 @@ void AGatherableTree::SetupType(FString Type)
 	UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::SetupType"));
 	auto Type_ = FName(*Type);
 
-	const FString ContextString(TEXT("Edible Type Context"));
+	const FString ContextString(TEXT("Gatherable Type Context"));
 	Data = PropertiesDataTable->FindRow<FGatherableData>(Type_, ContextString, true);
 	ID = Data->ID;
 

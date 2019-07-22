@@ -29,6 +29,9 @@ void UUIPlayerInventory::AddItems()
 {
 	for (auto item : Player->GetInventory())
 	{
+		// If item amount is 0 or less(should never be less than 0) just skip to next item in player inventory
+		if (item.Value <= 0) continue;
+
 		//item.key = ItemID, item.value = amount of that item
 		auto BarItem = CreateWidget<UUIInventoryItem>((APlayerController*)Player->GetController(), InvItemClass);
 		BarItem->ItemID = item.Key;
