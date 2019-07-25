@@ -13,6 +13,7 @@
 // forward declare to prevent circular dependency
 class UInputComponent;
 class UBuildingManager; 
+class UFPAnimationManager;
 class UUIBottomBar;
 class UUIPlayerInventory;
 
@@ -86,6 +87,9 @@ public:
 	// Building System Variables
 	UBuildingManager* BuildingManager;
 	APickupManager* PickupManager;
+
+	// Animation Manager
+	UFPAnimationManager* AnimationManager;
 
 	// Menu Flags
 	bool InventoryOn = false;
@@ -176,7 +180,7 @@ public:
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	class UAnimMontage* IdleAnimationEmptyHands;
 
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)

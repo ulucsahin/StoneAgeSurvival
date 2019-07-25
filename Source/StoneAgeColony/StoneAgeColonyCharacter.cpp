@@ -8,6 +8,8 @@
 #include "Components/InputComponent.h"
 #include "Components/TimelineComponent.h"
 
+#include "Runtime/Engine/Public/TimerManager.h"
+
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -19,10 +21,12 @@
 #include "Communicator.h"
 #include "Building.h"
 #include "BuildingManager.h"
+#include "FPAnimationManager.h"
 #include "UIBottomBar.h"
 #include "UIPlayerInventory.h"
 #include "Edible.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
@@ -56,20 +60,20 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	Sphere->OnComponentEndOverlap.AddDynamic(this, &AStoneAgeColonyCharacter::OnOverlapEnd);
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	/*Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);*/
+	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 95.2f);
+	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
 	// Create a gun mesh component
 	FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
 	FP_Gun->bCastDynamicShadow = false;
 	FP_Gun->CastShadow = false;
-	// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
+	FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
 	FP_Gun->SetupAttachment(RootComponent);
 
 	FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
@@ -128,8 +132,17 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	PickupManager->SetPlayer(this);
 	PickupManager->AddToRoot(); // stupid gc
 
+	// Initialize Animation Manager
+	AnimationManager = NewObject<UFPAnimationManager>();
+	AnimationManager->Player = this;
+	AnimationManager->World = GetWorld();
+	AnimationManager->PlayAnimation(EAnimations::VE_Idle);
+	AnimationManager->AddToRoot(); // .............
+
 	InventoryOn = false;
 	InitializeWidgets();
+
+	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 00"));
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -138,11 +151,20 @@ void AStoneAgeColonyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
-
-	UE_LOG(LogTemp, Warning, TEXT("PLAYER GOLD: %d"), GetGold());
-
+	// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
+	if (bUsingMotionControllers)
+	{
+		VR_Gun->SetHiddenInGame(false, true);
+		Mesh1P->SetHiddenInGame(true, true);
+	}
+	else
+	{
+		VR_Gun->SetHiddenInGame(true, true);
+		Mesh1P->SetHiddenInGame(false, true);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 1"));
 }
 
 void AStoneAgeColonyCharacter::Tick(float DeltaTime) {
@@ -292,8 +314,7 @@ void AStoneAgeColonyCharacter::OnClick()
 				if (InventoryOn) UIPlayerInventory->Refresh();
 			}
 			
-		}
-		
+		}		
 	}
 	else if (PlayerStates == EPlayerStates::VE_Building)
 	{
@@ -390,7 +411,7 @@ T* AStoneAgeColonyCharacter::GetActorInView(float Range)
 	// log
 	if (debug)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Camera:, %f, %f, %f"), CamLoc.X, CamLoc.Y, CamLoc.Z);
+		UE_LOG(LogTemp, Warning, TEXT("Camera: , %f, %f, %f"), CamLoc.X, CamLoc.Y, CamLoc.Z);
 		UE_LOG(LogTemp, Warning, TEXT("TraceEnd:, %f, %f, %f"), TraceEnd.X, TraceEnd.Y, TraceEnd.Z);
 
 		bool isHit = ActorLineTraceSingle(Hit, TraceStart, TraceEnd, ECC_WorldStatic, TraceParams);
@@ -714,6 +735,9 @@ void AStoneAgeColonyCharacter::Debug()
 	//asd->Use(this);
 	//BottomBar->SetItemAtIndex(1, nullptr);
 	//BottomBar->SelectPreviousSlot();
+
+	//AnimationManager->PlayAnimation(EAnimations::VE_Idle);
+	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
 
 	Gather();
 }
