@@ -68,6 +68,7 @@ public:
 	int PlayerLevel;
 	int PlayerExperience;
 	int PlayerGold;
+	TArray<int32> BottomBarItems;
 
 	float ElapsedGameMinutes;
 

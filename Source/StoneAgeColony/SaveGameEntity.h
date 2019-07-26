@@ -72,6 +72,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	TMap<int, int> PlayerInventory;
 
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	TArray<int32> BottomBarItems;
+
 	// Will be deleted, saving pointers is useless.
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	USurvivalGameInstance* GameInstance;

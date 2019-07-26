@@ -235,6 +235,9 @@ protected:
 
 	void StartBuilding();
 
+	UFUNCTION(BlueprintCallable, Category = "FirstPerson")
+	void HideFirstPersonHands(bool Hide);
+
 	struct TouchData
 	{
 		TouchData() { bIsPressed = false;Location=FVector::ZeroVector;}

@@ -19,7 +19,7 @@ UFPAnimationManager::UFPAnimationManager()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> CutBP(TEXT("'/Game/Uluc/FirstPerson/uluc_FPSArms/KnifeCutAnim/KnifeCutAnimMontage.KnifeCutAnimMontage'"));
 	CuttingAnimation = CutBP.Object;
 
-
+	
 }
 
 
@@ -29,9 +29,20 @@ void UFPAnimationManager::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+
 	
+	PlayAnimation(EAnimations::VE_Idle);
+	UE_LOG(LogTemp, Warning, TEXT("UFPAnimationManager::BeginPlay"));
 }
 
+
+void UFPAnimationManager::SetupManager(AStoneAgeColonyCharacter* Player, UWorld* World)
+{
+	this->Player = Player;
+	this->World = World;
+	this->AddToRoot();
+	
+}
 
 // Called every frame
 void UFPAnimationManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

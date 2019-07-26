@@ -47,6 +47,7 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	SaveGameEntity->PlayerExperience = Communicator::GetInstance().PlayerExperience;
 	SaveGameEntity->PlayerGold = Communicator::GetInstance().PlayerGold;
 	SaveGameEntity->test = Communicator::GetInstance().test;
+	SaveGameEntity->BottomBarItems = Communicator::GetInstance().BottomBarItems;
 	SaveGameEntity->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
 	SaveGameEntity->SpawnedGatherableTreeDetails = Communicator::GetInstance().SpawnedGatherableTreeDetails;
 	SaveGameEntity->SpawnedBuildingDetails = Communicator::GetInstance().SpawnedBuildingDetails;

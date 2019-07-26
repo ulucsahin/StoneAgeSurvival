@@ -134,15 +134,16 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 
 	// Initialize Animation Manager
 	AnimationManager = NewObject<UFPAnimationManager>();
-	AnimationManager->Player = this;
-	AnimationManager->World = GetWorld();
-	AnimationManager->PlayAnimation(EAnimations::VE_Idle);
-	AnimationManager->AddToRoot(); // .............
+	AnimationManager->SetupManager(this, GetWorld());
+	//AnimationManager->Player = this;
+	//AnimationManager->World = GetWorld();
+	//AnimationManager->PlayAnimation(EAnimations::VE_Idle);
+	//AnimationManager->AddToRoot(); // .............
 
 	InventoryOn = false;
 	InitializeWidgets();
 
-	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 00"));
+	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 0"));
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -164,6 +165,10 @@ void AStoneAgeColonyCharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
+
+	// Will be visible when player loads or starts game. Currently we are in main menu.
+	HideFirstPersonHands(true);
+
 	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 1"));
 }
 
@@ -722,7 +727,11 @@ void AStoneAgeColonyCharacter::StartBuilding()
 	//ABuilding* test = BuildingManager->StartBuilding();
 }
 
-
+void AStoneAgeColonyCharacter::HideFirstPersonHands(bool Hide)
+{
+	Mesh1P->SetHiddenInGame(Hide, true);
+	AnimationManager->PlayAnimation(EAnimations::VE_Idle);
+}
 
 void AStoneAgeColonyCharacter::Debug()
 {

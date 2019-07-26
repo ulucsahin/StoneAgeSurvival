@@ -25,6 +25,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void InitializeBottomBarItems();
+
+	void RestoreBottomBarItemsFromSave();
 	
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void AddItems();
@@ -40,7 +42,7 @@ public:
 	bool IsItemInBar(int32 ItemID);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Slots")
-	TArray<int> Test;
+	TArray<int> BarItemIDs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Slots")
 	UWrapBox* WrapBox;

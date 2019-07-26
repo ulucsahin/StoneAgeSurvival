@@ -4,6 +4,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/UMG/Public/Blueprint/WidgetTree.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Communicator.h"
 
 UUIBottomBar::UUIBottomBar(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -13,7 +14,7 @@ UUIBottomBar::UUIBottomBar(const FObjectInitializer& ObjectInitializer) : Super(
 	
 	for (int i = 0; i < 8; i++)
 	{
-		Test.Add(i);
+		BarItemIDs.Add(0);
 	}
 
 	SelectedSlot = 0;
@@ -34,11 +35,11 @@ void UUIBottomBar::InitializeBottomBarItems()
 {
 	/* Initialize bar items */
 	int32 Index = 0;
-	for (auto item : Test)//Player->GetInventory())
+	for (auto ID : BarItemIDs)//Player->GetInventory())
 	{
 		//item.key = ItemID, item.value = amount of that item
 		auto BarItem = CreateWidget<UBottomBarItem>((APlayerController*)Player->GetController(), InvItemClass);
-		BarItem->ItemID = 0;// item.Key;
+		BarItem->ItemID = ID; // item.Key;
 		BarItem->SetupBarItem(this, Index);	
 
 		// WrapBox assigned from blueprint
@@ -50,6 +51,20 @@ void UUIBottomBar::InitializeBottomBarItems()
 
 	SelectSlot(0);
 	
+}
+
+void UUIBottomBar::RestoreBottomBarItemsFromSave()
+{
+	int32 Index = 0;
+	for (auto ID : BarItemIDs)//Player->GetInventory())
+	{
+		BarItems[Index]->ItemID = ID; // item.Key;
+		BarItems[Index]->SetupBarItem(this, Index);
+
+		Index++;
+	}
+
+	SelectSlot(0);
 }
 
 void UUIBottomBar::AddItems()
@@ -76,13 +91,20 @@ void UUIBottomBar::SetItemAtIndex(UBottomBarItem* Item)
 
 void UUIBottomBar::Refresh()
 {
+	/* Also registers ItemIDs of baritems to save file */
 	UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::Refresh"));
 	WrapBox->ClearChildren();
+	int i = 0;
 	for (auto Item : BarItems)
 	{
 		Item->Update();
+		BarItemIDs[i] = Item->ItemID;
+		i++;
 	}
 	AddItems();
+
+	// Register current BarItemIDs to save file
+	Communicator::GetInstance().BottomBarItems = BarItemIDs;
 }
 
 void UUIBottomBar::SelectSlot(int32 Index)

@@ -31,6 +31,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void SetupManager(AStoneAgeColonyCharacter* Player, UWorld* World);
 	void PlayAnimation(EAnimations Animation);
 
 	AStoneAgeColonyCharacter* Player;
