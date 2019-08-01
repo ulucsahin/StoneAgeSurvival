@@ -23,6 +23,7 @@ AEnemyCharacter::AEnemyCharacter()
 	PawnSensingComp->LOSHearingThreshold = 1200;
 	FollowRadius = 1500.f;
 
+	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::AEnemyCharacter"));
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +36,12 @@ void AEnemyCharacter::BeginPlay()
 		PawnSensingComp->OnSeePawn.AddDynamic(this, &AEnemyCharacter::OnSeePlayer);
 		PawnSensingComp->OnHearNoise.AddDynamic(this, &AEnemyCharacter::OnHearNoise);
 	}
+
+	// Set MorphManager 
+	MorphManager = NewObject<UMorphManager>();
+	MorphManager->SetupManager(this);
+
+	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::BeginPlay"));
 	
 }
 

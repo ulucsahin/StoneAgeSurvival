@@ -40,7 +40,7 @@ void APeopleSpawner::SpawnCharacter(bool bShouldRegister)
 	AEnemyCharacter* SpawnedActor = GetWorld()->SpawnActor<AEnemyCharacter>(ActorToSpawn, Transform, SpawnParams);
 
 	SpawnCount += 1;
-	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter spawned. SpawnCount: %d"), SpawnCount);
+	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter Spawned. SpawnCount: %d"), SpawnCount);
 
 	// Register spawned actor to Communicator.
 

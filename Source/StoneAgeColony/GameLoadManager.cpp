@@ -91,7 +91,7 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded."));
+	UE_LOG(LogTemp, Warning, TEXT("GameLoader: Game loaded :)."));
 }
 
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "MorphManager.h"
 #include "EnemyCharacter.generated.h"
 
 USTRUCT(BlueprintType)
@@ -35,6 +36,8 @@ public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
 
+	
+
 	UPROPERTY(EditAnywhere, Category = "Behavior")
 	class UBehaviorTree *BotBehavior;
 
@@ -60,6 +63,7 @@ public:
 
 private:
 	float FollowRadius;
+	UMorphManager* MorphManager;
 	
 };
 
