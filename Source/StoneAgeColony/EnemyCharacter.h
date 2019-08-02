@@ -14,6 +14,9 @@ struct FEnemyCharacterDetails
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
 	FTransform Transform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FaceDetails")
+	TMap<FName, float> FaceDetails;
 };
 
 UCLASS()
@@ -36,7 +39,7 @@ public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
 
-	
+	FEnemyCharacterDetails CharDetails;
 
 	UPROPERTY(EditAnywhere, Category = "Behavior")
 	class UBehaviorTree *BotBehavior;

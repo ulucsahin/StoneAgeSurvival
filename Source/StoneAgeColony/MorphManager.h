@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "MorphManager.generated.h"
 
+struct FEnemyCharacterDetails;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class STONEAGECOLONY_API UMorphManager : public UActorComponent
@@ -25,7 +26,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 	void SetupManager(ACharacter* Owner);
+	void RandomizeFace();
+	void LoadFace(FEnemyCharacterDetails* CharacterDetails);
+	//void RegisterFaceDetails();
 
+
+	TMap<FName, float> FaceDetails;
 private:
 	ACharacter* Owner;
 };

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MorphManager.h"
+#include "EnemyCharacter.h"
 
 // Sets default values for this component's properties
 UMorphManager::UMorphManager()
@@ -32,35 +33,28 @@ void UMorphManager::SetupManager(ACharacter* Owner)
 	/* Initial setup when creating new character */
 	
 	this->Owner = Owner;
+	
+	RandomizeFace();
+}
+
+void UMorphManager::RandomizeFace()
+{
+	/* Randomizes face features of owner character. Used when creating new character. */
 	if (Owner)
 	{
 		USkeletalMeshComponent* Mesh = Owner->GetMesh();
 		if (Mesh)
 		{
-			//TMap<FName, float> tMap = animInstance->MorphTargetCurves;
-			Mesh->SetMorphTarget("NoseHeight", 1.f);
-			Mesh->SetMorphTarget("MouthHeight", -1.f);
-			
-			float RandomValue = FMath::FRandRange(-1.f, 1.f);
-
 			USkeletalMesh* SkelMesh = Mesh->SkeletalMesh;
-			
+
 			for (auto x : SkelMesh->MorphTargetIndexMap)
 			{
-				auto asd = x.Key.ToString();
-				
-				float RandomValue = FMath::FRandRange(-1.f, 1.f);
-				Mesh->SetMorphTarget(*asd, RandomValue);
+				auto MorphName = x.Key;
+				float MorphValue = FMath::FRandRange(-0.5f, 0.9f); // we should limit a bit otherwise we have troglodytes
+				Mesh->SetMorphTarget(*MorphName.ToString(), MorphValue);
 
-				UE_LOG(LogTemp, Warning, TEXT("morph name: %s"), *asd);
-				UE_LOG(LogTemp, Warning, TEXT("morph value: %f"), RandomValue);
+				FaceDetails.Emplace(MorphName, MorphValue);
 			}
-			
-			//for (auto x : Mesh->GetMorphTargetCurves())
-			//{
-			//	auto asd = x.Key.ToString();
-			//	UE_LOG(LogTemp, Warning, TEXT("morph name: %s"), *asd);
-			//}
 
 		}
 
@@ -68,3 +62,22 @@ void UMorphManager::SetupManager(ACharacter* Owner)
 
 }
 
+void UMorphManager::LoadFace(FEnemyCharacterDetails* CharacterDetails)
+{
+	/* Loads face features of owner character from save file. */
+	if (Owner)
+	{
+		// Get FaceDetails from save file
+		auto FaceDetailsToLoad = CharacterDetails->FaceDetails;
+		FaceDetails = FaceDetailsToLoad;
+
+		USkeletalMeshComponent* Mesh = Owner->GetMesh();
+		if (Mesh)
+		{
+			for (auto x : FaceDetailsToLoad)
+			{
+				Mesh->SetMorphTarget(*x.Key.ToString(), x.Value);
+			}
+		}
+	}
+}

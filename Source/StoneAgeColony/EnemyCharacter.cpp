@@ -88,11 +88,10 @@ void AEnemyCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location
 }
 
 void AEnemyCharacter::RegisterActorDetailsToSave() 
-{
-	FEnemyCharacterDetails CharDetails;
-	
+{	
 	// Assign details to struct.
 	CharDetails.Transform = GetActorTransform();
+	CharDetails.FaceDetails = MorphManager->FaceDetails;
 
 	// Save details as struct to communicator. Which will be used during saving.
 	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
@@ -105,16 +104,6 @@ void AEnemyCharacter::EmptyCommunicatorDetailsArray()
 	Communicator::GetInstance().SpawnedCharacterDetails.Empty();
 }
 
-//TArray<FEnemyCharacterDetails> AEnemyCharacter::GetCommunicatorDetailsArray()
-//{
-//	return Communicator::GetInstance().SpawnedCharacterDetails;
-//}
-//
-//TSubclassOf<AEnemyCharacter> AEnemyCharacter::GetActorToSpawn()
-//{
-//	return Communicator::GetInstance().EnemyCharacterToSpawn;
-//}
-
 void AEnemyCharacter::SpawnLoadedActors()
 {
 	/* Spawn previously saved characters from savefile. */
@@ -126,6 +115,12 @@ void AEnemyCharacter::SpawnLoadedActors()
 	for (auto Details : Communicator::GetInstance().SpawnedCharacterDetails)
 	{
 		FTransform ActorTransform = Details.Transform;
-		Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
+		auto Spawned = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
+		auto MorphMgr = Spawned->MorphManager;
+		if (MorphMgr)
+		{
+			MorphMgr->LoadFace(&Details);
+		}
+		
 	}
 }
