@@ -740,14 +740,6 @@ void AStoneAgeColonyCharacter::Debug()
 	//GetActorInView<ABuilding>(20.f); // WE NEED THIS LINE OR LINKER ERROR CAUSED BY OPTIONS IN STONEAGECOLONY.BUILD.CS WHICH IS USED FOR FASTER COMPILE TIMES
 	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
 
-	//AEdible* asd = NewObject<AEdible>();
-	//asd->SetupEdibleType("Apple");
-	//asd->test();
-	//asd->Use(this);
-	//BottomBar->SetItemAtIndex(1, nullptr);
-	//BottomBar->SelectPreviousSlot();
-
-	//AnimationManager->PlayAnimation(EAnimations::VE_Idle);
 	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
 
 	Gather();

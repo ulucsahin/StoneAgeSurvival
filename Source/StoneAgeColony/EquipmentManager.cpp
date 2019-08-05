@@ -38,18 +38,10 @@ void UEquipmentManager::SetupManager(AHumanCharacter* Owner)
 
 void UEquipmentManager::EquipItem(UEquipment* Equipment)
 {
-	//if (EquippedItems.Contains(Equipment->EquipmentType))
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Slot already full."));
-	//}
-	//else
-	//{
-		Owner->EquipmentMapping[Equipment->EquipmentType]->SetSkeletalMesh(Equipment->SkeletalMesh);
-		EquippedItems.Emplace(Equipment->EquipmentType, Equipment->ID);
-	//}
-	
-
-	
+	// Equip Item
+	Owner->EquipmentMapping[Equipment->EquipmentType]->SetSkeletalMesh(Equipment->SkeletalMesh);
+	EquippedItems.Emplace(Equipment->EquipmentType, Equipment->ID);
+		
 }
 
 void UEquipmentManager::UnequipItem(EEquipmentSlots ItemSlot)

@@ -5,6 +5,7 @@
 #include "Communicator.h"
 #include "UObject/ConstructorHelpers.h"
 #include "EquipmentManager.h"
+#include "ObjectFactory.h"
 /* AI Include */
 #include "Perception/PawnSensingComponent.h"
 
@@ -94,11 +95,16 @@ void AEnemyCharacter::RegisterActorDetailsToSave()
 	CharDetails.Transform = GetActorTransform();
 	CharDetails.FaceDetails = MorphManager->FaceDetails;
 
-	// Save details as struct to communicator. Which will be used during saving.
-	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
-
 	// Save equipments
 	CharDetails.EquippedItems = EquipmentManager->EquippedItems;
+	for (auto x : CharDetails.EquippedItems)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::RegisterActorDetailsToSave, items: %d"), x.Value);
+	}
+
+
+	// Save details as struct to communicator. Which will be used during saving.
+	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
 
 	UE_LOG(LogTemp, Warning, TEXT("EnemyCharacter added to communicator."));
 }
@@ -122,20 +128,25 @@ void AEnemyCharacter::SpawnLoadedActors()
 		FTransform ActorTransform = Details.Transform;
 		auto Spawned = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
 
-		// Morph Settings
+		// Restore Morph Settings
 		auto MorphMgr = Spawned->MorphManager;
 		if (MorphMgr)
 		{
 			MorphMgr->LoadFace(&Details);
 		}
 
-		// Equipments
+		// Restore Equipments
+		UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors Restore Equipments"));
 		auto EquipManager = Spawned->EquipmentManager;
 		if (EquipManager)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors EquipManager available"));
+			AObjectFactory* Factory = NewObject<AObjectFactory>();
 			for (auto Item : Details.EquippedItems)
 			{
-
+				auto Equipment = Factory->CreateObject<UEquipment>(Item.Value); // Item.Value is item ID
+				EquipManager->EquipItem(Equipment);
+				UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors Item available, ID: %d"), Item.Value);
 			}
 		}
 		

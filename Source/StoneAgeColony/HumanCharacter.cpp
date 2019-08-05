@@ -4,6 +4,7 @@
 #include "Equipment.h"
 #include "EquipmentManager.h"
 #include "Communicator.h"
+#include "ObjectFactory.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 
 // Sets default values
@@ -57,10 +58,10 @@ void AHumanCharacter::BeginPlay()
 	// TEST
 	auto test = NewObject<UEquipment>();
 	test->SetupType("Shoes");
-	EquipmentManager->EquipItem(test);
-	auto test2 = NewObject<UEquipment>();
-	test2->SetupType("Trousers");
-	EquipmentManager->EquipItem(test2);
+	//EquipmentManager->EquipItem(test);
+	//auto test2 = NewObject<UEquipment>();
+	//test2->SetupType("Trousers");
+	//EquipmentManager->EquipItem(test2);
 }
 
 // Called every frame
