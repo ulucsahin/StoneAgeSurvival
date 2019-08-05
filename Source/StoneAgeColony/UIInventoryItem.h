@@ -9,27 +9,25 @@
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "UIInventoryItem.generated.h"
 
-/**
- * 
- */
+// FObjectNameData MOVED TO OBJECTFACTORY.CPP
 
-USTRUCT(BlueprintType)
-struct FObjectNameData : public FTableRowBase
-{
-	/* This class takes objects ID as unique key and Name as object name. Used to retrieve object's name from ID.*/
-	GENERATED_USTRUCT_BODY()
-
-public:
-
-	FObjectNameData() : Name("Default") {}
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
-	//int32 ID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
-	FString Name;
-
-};
+//USTRUCT(BlueprintType)
+//struct FObjectNameData : public FTableRowBase
+//{
+//	/* This class takes objects ID as unique key and Name as object name. Used to retrieve object's name from ID.*/
+//	GENERATED_USTRUCT_BODY()
+//
+//public:
+//
+//	FObjectNameData() : Name("Default") {}
+//
+//	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+//	//int32 ID;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+//	FString Name;
+//
+//};
 
 UCLASS()
 class STONEAGECOLONY_API UUIInventoryItem : public  UUIItemSlot //UUserWidget

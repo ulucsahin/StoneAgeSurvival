@@ -14,6 +14,8 @@
 #include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
 #include "Runtime/CoreUObject/Public/UObject/UObjectBaseUtility.h"
 
+#include "ObjectFactory.h"
+
 // Usable Actors
 #include "UsableActor.h"
 #include "TestGameLoader.h"
@@ -185,29 +187,23 @@ void AStoneAgeColonyGameMode::OnNightEnded() {
 
 void AStoneAgeColonyGameMode::RegisterItemIDs() 
 {
+	AObjectFactory* Factory = NewObject<AObjectFactory>();
+
 	AUsableActor* test = NewObject<AUsableActor>();
 	Communicator::GetInstance().UsableItemIDMap.Add(  0/*AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID*/,	   NewObject<AUsableActor>()); 
 	Communicator::GetInstance().UsableItemIDMap.Add(  ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID,     NewObject<ATestGameLoader>()); 
 	Communicator::GetInstance().UsableItemIDMap.Add(  APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID,	   NewObject<APeopleSpawner>()); 
 	Communicator::GetInstance().UsableItemIDMap.Add(  AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID,			   NewObject<AObjectBed>()); 
-	
 
-	auto tmp = NewObject<AGatherableTree>();
-	tmp->SetupType("GatherableTree");
-	Communicator::GetInstance().UsableItemIDMap.Add(  tmp->ID/*AGatherableTree::StaticClass()->GetDefaultObject<AGatherableTree>()->ID*/,     tmp);
+	auto tmp = Factory->CreateObject<AGatherableTree>(100); //NewObject<AGatherableTree>(); //tmp->SetupType("GatherableTree");
+	Communicator::GetInstance().UsableItemIDMap.Add(tmp->ID, tmp);
 
-
-	auto tmp2 = NewObject<AEdible>();
-	tmp2->SetupType("Apple");
+	auto tmp2 = Factory->CreateObject<AEdible>(200);//NewObject<AEdible>(); //tmp2->SetupType("Apple");
 	Communicator::GetInstance().UsableItemIDMap.Add(tmp2->ID, tmp2);
 
 	for (auto& item : Communicator::GetInstance().UsableItemIDMap)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Class ID: %d,"), item.Value->GetID());
-
 		// Add objects in UsableItemIDMap to RootSet so they will not be garbage collected during gameplay.
 		item.Value->AddToRoot();
 	}
-	//auto testis = NewObject<ABuilding>();
-	//testis->AddToRoot();
 }

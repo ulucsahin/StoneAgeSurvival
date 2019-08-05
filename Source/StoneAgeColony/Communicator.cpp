@@ -40,19 +40,3 @@ void Communicator::SetPlayerLocation(APawn* Player) {
 	// Sets player location in communicator class. Does not actually change players location.
 	PlayerTransform = Player->GetActorTransform();
 }
-
-//void Communicator::SetupAssets()
-//{
-//	/* Sets asset types in UsableItemIDMap array. 
-//	* This can not be done in StoneAgeColonyGameMode.cpp
-//	* because it crashes the editor while opening 
-//	*/
-//
-//	for (auto Pair : UsableItemIDSetupTypes)
-//	{
-//		// key: item id, value: item type
-//
-//		UsableItemIDMap[Pair.Key]->SetupType(Pair.Value);
-//	}
-//
-//}

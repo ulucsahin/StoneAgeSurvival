@@ -27,7 +27,7 @@ void UMorphManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 }
-#include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
+
 void UMorphManager::SetupManager(ACharacter* Owner)
 {
 	/* Initial setup when creating new character */
@@ -62,7 +62,7 @@ void UMorphManager::RandomizeFace()
 
 }
 
-void UMorphManager::LoadFace(FEnemyCharacterDetails* CharacterDetails)
+void UMorphManager::LoadFace(FHumanCharacterDetails* CharacterDetails)
 {
 	/* Loads face features of owner character from save file. */
 	if (Owner)

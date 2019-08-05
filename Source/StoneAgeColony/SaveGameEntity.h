@@ -58,7 +58,7 @@ public:
 	uint32 UserIndex;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
-	TArray<struct FEnemyCharacterDetails> SpawnedCharacterDetails;
+	TArray<struct FHumanCharacterDetails> SpawnedCharacterDetails;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	TArray<struct FGatherableTreeDetails> SpawnedGatherableTreeDetails;

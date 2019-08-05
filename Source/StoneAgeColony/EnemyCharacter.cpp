@@ -4,6 +4,7 @@
 #include "EnemyAI.h"
 #include "Communicator.h"
 #include "UObject/ConstructorHelpers.h"
+#include "EquipmentManager.h"
 /* AI Include */
 #include "Perception/PawnSensingComponent.h"
 
@@ -37,9 +38,7 @@ void AEnemyCharacter::BeginPlay()
 		PawnSensingComp->OnHearNoise.AddDynamic(this, &AEnemyCharacter::OnHearNoise);
 	}
 
-	// Set MorphManager 
-	MorphManager = NewObject<UMorphManager>();
-	MorphManager->SetupManager(this);
+	
 
 	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::BeginPlay"));
 	
@@ -89,12 +88,17 @@ void AEnemyCharacter::OnHearNoise(APawn* PawnInstigator, const FVector& Location
 
 void AEnemyCharacter::RegisterActorDetailsToSave() 
 {	
+	Super::RegisterActorDetailsToSave();
+
 	// Assign details to struct.
 	CharDetails.Transform = GetActorTransform();
 	CharDetails.FaceDetails = MorphManager->FaceDetails;
 
 	// Save details as struct to communicator. Which will be used during saving.
 	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
+
+	// Save equipments
+	CharDetails.EquippedItems = EquipmentManager->EquippedItems;
 
 	UE_LOG(LogTemp, Warning, TEXT("EnemyCharacter added to communicator."));
 }
@@ -106,6 +110,7 @@ void AEnemyCharacter::EmptyCommunicatorDetailsArray()
 
 void AEnemyCharacter::SpawnLoadedActors()
 {
+	
 	/* Spawn previously saved characters from savefile. */
 
 	FActorSpawnParameters SpawnParams;
@@ -116,10 +121,22 @@ void AEnemyCharacter::SpawnLoadedActors()
 	{
 		FTransform ActorTransform = Details.Transform;
 		auto Spawned = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
+
+		// Morph Settings
 		auto MorphMgr = Spawned->MorphManager;
 		if (MorphMgr)
 		{
 			MorphMgr->LoadFace(&Details);
+		}
+
+		// Equipments
+		auto EquipManager = Spawned->EquipmentManager;
+		if (EquipManager)
+		{
+			for (auto Item : Details.EquippedItems)
+			{
+
+			}
 		}
 		
 	}

@@ -3,24 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HumanCharacter.h"
 #include "GameFramework/Character.h"
-#include "MorphManager.h"
 #include "EnemyCharacter.generated.h"
 
-USTRUCT(BlueprintType)
-struct FEnemyCharacterDetails
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
-	FTransform Transform;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FaceDetails")
-	TMap<FName, float> FaceDetails;
-};
+//USTRUCT(BlueprintType)
+//struct FEnemyCharacterDetails
+//{
+//	GENERATED_USTRUCT_BODY()
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+//	FTransform Transform;
+//
+//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FaceDetails")
+//	TMap<FName, float> FaceDetails;
+//};
 
 UCLASS()
-class STONEAGECOLONY_API AEnemyCharacter : public ACharacter
+class STONEAGECOLONY_API AEnemyCharacter : public AHumanCharacter
 {
 	GENERATED_BODY()
 
@@ -39,8 +39,6 @@ public:
 	// Sets default values for this character's properties
 	AEnemyCharacter();
 
-	FEnemyCharacterDetails CharDetails;
-
 	UPROPERTY(EditAnywhere, Category = "Behavior")
 	class UBehaviorTree *BotBehavior;
 
@@ -51,12 +49,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Save-Load Methods
-	void RegisterActorDetailsToSave();
+	virtual void RegisterActorDetailsToSave() override;
 	static void EmptyCommunicatorDetailsArray();
-	//static TArray<FEnemyCharacterDetails> GetCommunicatorDetailsArray();
-	//static TSubclassOf<AEnemyCharacter> GetActorToSpawn();
 	static void SpawnLoadedActors();
-	//static TSubclassOf<AEnemyCharacter> EnemyCharacterBlueprint;
 
 	UPROPERTY(EditAnywhere, Category = "Identification")
 	int ExternalID;
@@ -66,7 +61,7 @@ public:
 
 private:
 	float FollowRadius;
-	UMorphManager* MorphManager;
+	
 	
 };
 

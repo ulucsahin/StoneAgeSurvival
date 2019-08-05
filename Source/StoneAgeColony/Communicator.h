@@ -75,7 +75,7 @@ public:
 	UDataTable* ObjectNameDataTable;
 
 	// Details of objects that should be saved-loaded
-	TArray<FEnemyCharacterDetails>   SpawnedCharacterDetails;
+	TArray<FHumanCharacterDetails>   SpawnedCharacterDetails;
 	TArray<FGatherableTreeDetails>   SpawnedGatherableTreeDetails;
 	TArray<FBuildingDetails>         SpawnedBuildingDetails;
 

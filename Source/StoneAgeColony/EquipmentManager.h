@@ -4,18 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "MorphManager.generated.h"
+#include "HumanCharacter.h"
+#include "Equipment.h"
+#include "EquipmentManager.generated.h"
 
-struct FHumanCharacterDetails;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class STONEAGECOLONY_API UMorphManager : public UActorComponent
+class STONEAGECOLONY_API UEquipmentManager : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UMorphManager();
+	UEquipmentManager();
 
 protected:
 	// Called when the game starts
@@ -24,13 +25,14 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
-	void SetupManager(ACharacter* Owner);
-	void RandomizeFace();
-	void LoadFace(FHumanCharacterDetails* CharacterDetails);
-	//void RegisterFaceDetails();
 
-	TMap<FName, float> FaceDetails;
+	void SetupManager(AHumanCharacter* Owner);
+	void EquipItem(UEquipment* Equipment);
+	void UnequipItem(EEquipmentSlots ItemSlot);
+
+	TMap<EEquipmentSlots, int32> EquippedItems;
 private:
-	ACharacter* Owner;
+	AHumanCharacter* Owner;
+	UEquipment* CurrentEquipment;
+	
 };

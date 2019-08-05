@@ -25,8 +25,10 @@
 #include "UIBottomBar.h"
 #include "UIPlayerInventory.h"
 #include "Edible.h"
+#include "Equipment.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "ObjectFactory.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
@@ -143,7 +145,7 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	InventoryOn = false;
 	InitializeWidgets();
 
-	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 0"));
+	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 00"));
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -749,4 +751,13 @@ void AStoneAgeColonyCharacter::Debug()
 	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
 
 	Gather();
+
+	//auto TestEquipment = NewObject<UEquipment>();
+	//UE_LOG(LogTemp, Warning, TEXT("Equipment Stat000"));
+	//TestEquipment->SetupType("Shoes");
+	//UE_LOG(LogTemp, Warning, TEXT("Equipment Stat000"));
+	//auto xasd = TestEquipment->Stat1;
+	//UE_LOG(LogTemp, Warning, TEXT("Equipment Stat1: %d"), xasd);
+	//AObjectFactory* Factory = NewObject<AObjectFactory>();
+	//auto x = Factory->CreateObject<UEquipment>(1001);
 }

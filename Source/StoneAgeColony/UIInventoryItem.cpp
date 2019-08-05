@@ -53,8 +53,6 @@ void UUIInventoryItem::PlaceItem()
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("UUIInventoryItem::PlaceItem, ID: %d"), ItemID);
-
 	// Calculate location to spawn (in front of player)
 	auto PlayerForwardVector = PlayerCharacter->GetActorForwardVector();
 	auto SpawnLocation = PlayerCharacter->GetActorLocation();
@@ -63,14 +61,10 @@ void UUIInventoryItem::PlaceItem()
 
 	auto ClassToSpawn = Communicator::GetInstance().UsableItemIDMap[ItemID]->GetClass();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Before"));
 	const FString ContextString(TEXT("Spawned Type Context"));
 	auto IDAsString = FString::FromInt(ItemID);
 	auto IDAsFName = FName(*IDAsString);
 	auto ObjectNameData = Communicator::GetInstance().ObjectNameDataTable->FindRow<FObjectNameData>(IDAsFName, ContextString, true);
-
-	UE_LOG(LogTemp, Warning, TEXT("After"));
-	UE_LOG(LogTemp, Warning, TEXT("Object name: %s"), *ObjectNameData->Name);
 
 	auto SpawnedItem = Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, SpawnLocation, FRotator::ZeroRotator);
 	SpawnedItem->SetupType(ObjectNameData->Name);
