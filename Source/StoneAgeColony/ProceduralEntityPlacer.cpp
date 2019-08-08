@@ -13,12 +13,12 @@ AProceduralEntityPlacer::AProceduralEntityPlacer()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Check this again, this should be unnecessary since we already assign items to spawn in editor.
-	static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Uluc/ActiveAssets/GatherableObjects/BP_GatherableTree.BP_GatherableTree'"));
-	
-	if (ItemBlueprint.Object) {
-		MyItemBlueprint = ((UClass*)ItemBlueprint.Object->GeneratedClass);
-	}
+	//// Check this again, this should be unnecessary since we already assign items to spawn in editor.
+	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Uluc/ActiveAssets/GatherableObjects/BP_GatherableTree.BP_GatherableTree'"));
+	//
+	//if (ItemBlueprint.Object) {
+	//	MyItemBlueprint = ((UClass*)ItemBlueprint.Object->GeneratedClass);
+	//}
 
 }
 
@@ -27,12 +27,19 @@ void AProceduralEntityPlacer::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (!ObjectToSpawn)
+	int32 AmountOfItems = ObjectsToSpawn.Num();
+
+	if (AmountOfItems < 1)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ObjectToSpawn is null"));
+		UE_LOG(LogTemp, Warning, TEXT("AProceduralEntityPlacer::BeginPlay ObjectToSpawn is null"));
 	}
 	else
 	{
+		int32 RandomNumber = FMath::FRandRange(0, AmountOfItems);
+		UE_LOG(LogTemp, Warning, TEXT("AProceduralEntityPlacer::BeginPlay RANDOM NUMBER: %d"), RandomNumber);
+		
+		UBlueprint* ObjectToSpawn = ObjectsToSpawn[RandomNumber];
+
 		auto temp = ObjectToSpawn->GeneratedClass;
 		
 		for (int i = 0; i < HowMany; i++)
@@ -42,8 +49,6 @@ void AProceduralEntityPlacer::BeginPlay()
 
 			// Snap spawned object to ground by using line traces.
 			AdjustHeight(DroppedItem);
-
-			//Communicator::GetInstance().SpawnedGatherableTreeDetails
 		}
 
 	}

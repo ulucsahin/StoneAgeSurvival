@@ -31,7 +31,7 @@ public:
 	float AreaRadius;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	UBlueprint* ObjectToSpawn;
+	TArray<UBlueprint*> ObjectsToSpawn;
 
 	TSubclassOf<class AGatherableTree> MyItemBlueprint;
 

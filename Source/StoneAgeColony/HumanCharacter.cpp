@@ -55,10 +55,10 @@ void AHumanCharacter::BeginPlay()
 	EquipmentManager = NewObject<UEquipmentManager>();
 	EquipmentManager->SetupManager(this);
 
-	// TEST
-	auto test = NewObject<UEquipment>();
-	test->SetupType("Shoes");
-	//EquipmentManager->EquipItem(test);
+	// TEST: Equipping
+	//auto test = NewObject<UEquipment>();
+	//test->SetupType("Shoes");
+	////EquipmentManager->EquipItem(test);
 	//auto test2 = NewObject<UEquipment>();
 	//test2->SetupType("Trousers");
 	//EquipmentManager->EquipItem(test2);
