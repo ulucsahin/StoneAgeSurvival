@@ -19,5 +19,6 @@ public:
 
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	
-
+	//UStaticMeshComponent* MeshComp;
+	//UStaticMesh* Mesh;
 };

@@ -6,11 +6,11 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Sets default values for this component's properties
-UEquipment::UEquipment()
+AEquipment::AEquipment(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	//PrimaryComponentTick.bCanEverTick = true;
 
 	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/EquipmentsDataTable.EquipmentsDataTable'"));
 	if (PropertiesDataObject.Succeeded())
@@ -22,9 +22,9 @@ UEquipment::UEquipment()
 
 
 // Called when the game starts
-void UEquipment::BeginPlay()
+void AEquipment::BeginPlay()
 {
-	Super::BeginPlay();
+	//Super::BeginPlay();
 
 	// ...
 	
@@ -32,15 +32,15 @@ void UEquipment::BeginPlay()
 
 
 // Called every frame
-void UEquipment::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+//void UEquipment::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+//{
+//	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+//
+//	// ...
+//}
 
-	// ...
-}
 
-
-void UEquipment::SetupType(FString ItemName)
+void AEquipment::SetupType(FString ItemName)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UEquipment::SetupType"));
 

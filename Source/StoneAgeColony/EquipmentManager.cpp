@@ -36,7 +36,7 @@ void UEquipmentManager::SetupManager(AHumanCharacter* Owner)
 	this->Owner = Owner;
 }
 
-void UEquipmentManager::EquipItem(UEquipment* Equipment)
+void UEquipmentManager::EquipItem(AEquipment* Equipment)
 {
 	// Equip Item
 	Owner->EquipmentMapping[Equipment->EquipmentType]->SetSkeletalMesh(Equipment->SkeletalMesh);

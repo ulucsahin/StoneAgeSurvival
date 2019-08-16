@@ -29,6 +29,7 @@
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "ObjectFactory.h"
+#include "Settlement.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
@@ -743,6 +744,16 @@ void AStoneAgeColonyCharacter::Debug()
 	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
 
 	Gather();
+	//auto asd = GetActorLocation();
+	// Create new settlement
+	ASettlement* Settlement = GetWorld()->SpawnActor<ASettlement>(ASettlement::StaticClass(), GetActorLocation(), FRotator::ZeroRotator);
+	//GetWorld()->SpawnActor<ASettlement>()
+
+
+	//ASettlement* Settlement = NewObject<ASettlement>();
+	//Settlement->Player = this;
+	
+	Settlement->AdjustAreaDisplayerLocation();
 
 	//auto TestEquipment = NewObject<UEquipment>();
 	//UE_LOG(LogTemp, Warning, TEXT("Equipment Stat000"));

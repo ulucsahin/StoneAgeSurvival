@@ -78,7 +78,8 @@ void ATimeOfDayManager::Tick(float DeltaTime)
 		 
 		bool CurrentNightState = MyGameState->GetIsNight();
 
-		//UE_LOG(LogTemp, Warning, TEXT("CurrentNightState :, %s, LastNightState :, %s"), (CurrentNightState ? TEXT("True") : TEXT("False")), (LastNightState ? TEXT("True") : TEXT("False")));
+
+		// day-night or night-day transition
 		if (CurrentNightState != LastNightState)
 		{
 			if (CurrentNightState)
@@ -86,12 +87,15 @@ void ATimeOfDayManager::Tick(float DeltaTime)
 				// Play night started cue (position is irrelevant for non spatialized & attenuated sounds)
 				UGameplayStatics::PlaySoundAtLocation(this, SoundNightStarted, GetActorLocation());
 				TargetSunBrightness = 0.01f;
+
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Night Started"));
 			}
 			else
 			{
 				// Play daytime started cue (position is irrelevant for non spatialized & attenuated sounds)
 				UGameplayStatics::PlaySoundAtLocation(this, SoundNightEnded, GetActorLocation());
 				TargetSunBrightness = OriginalSunBrightness;
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Day Started"));
 			}
 
 			/* Change to a new ambient loop */
@@ -103,7 +107,7 @@ void ATimeOfDayManager::Tick(float DeltaTime)
 		const float LerpSpeed = 0.1f * GetWorldSettings()->GetEffectiveTimeDilation();
 		float CurrentSunBrightness = PrimarySunLight->GetBrightness();
 		float NewSunBrightness = FMath::Lerp(CurrentSunBrightness, TargetSunBrightness, LerpSpeed);
-		PrimarySunLight->SetBrightness(NewSunBrightness);
+		//PrimarySunLight->SetBrightness(NewSunBrightness);
 
 		LastNightState = CurrentNightState;
 	}
@@ -114,11 +118,14 @@ void ATimeOfDayManager::Tick(float DeltaTime)
 
 
 void ATimeOfDayManager::UpdateSkylight() {
+	//UE_LOG(LogTemp, Warning, TEXT("ATimeOfDayManager::UpdateSkylight"));
 	if (SkyLightActor)
 	{
+		//UE_LOG(LogTemp, Warning, TEXT("ATimeOfDayManager::UpdateSkylight  SkyLightActor available"));
 		ASurvivalGameState* MyGameState = Cast<ASurvivalGameState>(GetWorld()->GetGameState());
 		if (MyGameState)
 		{
+			//UE_LOG(LogTemp, Warning, TEXT("ATimeOfDayManager::UpdateSkylight  MyGameState available"));
 			const float MinutesInDay = 24 * 60;
 			/* Map the intensity from 0 - 12 - 24 hours into 0 - 1 - 0 alpha */
 			const float Alpha = FMath::Sin((MyGameState->GetElapsedMinutesCurrentDay() / MinutesInDay) * 3.14);
@@ -135,7 +142,7 @@ void ATimeOfDayManager::UpdateSkylight() {
 				GLog->Log("RequiredCaptureDelta < FMath::Abs(NewIntensity - LastCapturedIntensity)");
 				/* Force re-capture of the sky w/ new intensity */
 				/* Hacky and costly solution to recapturing the sky, official support NYI */
-				SkyLightActor->GetLightComponent()->RecaptureSky();
+				//SkyLightActor->GetLightComponent()->RecaptureSky();  --> HUGE STUTTERING
 				LastCapturedIntensity = NewIntensity;
 			}
 		}

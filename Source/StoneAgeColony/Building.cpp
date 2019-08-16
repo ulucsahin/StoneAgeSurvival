@@ -91,6 +91,8 @@ void ABuilding::SetBuildingMesh(int type)
 
 EBuildTypes ABuilding::GetBuildingType()
 {
+	// Order is important
+
 	// Regular Floor
 	// Regular Wall
 	// Wall with doorway
@@ -131,7 +133,7 @@ void ABuilding::ChangeMesh(int Type=-1)
 void ABuilding::SetBoxComponent(bool Init)
 {
 	
-	UE_LOG(LogTemp, Warning, TEXT("SetBoxComponent why is this called twice?"));
+	UE_LOG(LogTemp, Warning, TEXT("ABuilding::SetBoxComponent why is this called twice?"));
 	if (Init)
 	{
 		Box = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));

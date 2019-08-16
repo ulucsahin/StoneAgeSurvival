@@ -109,15 +109,14 @@ void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 	// CONTINUE FROM HERE
 	// CONTINUE FROM HERE
 	// CONTINUE FROM HERE
+	// what was this ^ ????
 	if (OtherActor != this)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("COLLISION"));
 		if (OtherActor != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("COLLISION1.5"));
+			UE_LOG(LogTemp, Warning, TEXT("AUsableActor::OnOverlapBegin"));
 
 			auto OtherActorClassName = OtherActor->GetClass()->GetFName().ToString();
-			UE_LOG(LogTemp, Warning, TEXT("OtherActorClassName: %s"), *OtherActorClassName);
 
 			// also check for mesh if building, this is to prevent collisions with invisible box components
 			if (OtherActorClassName == "BP_Building_C")
@@ -137,8 +136,6 @@ void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 					OnOverlappingBegin();
 			}
 
-
-			
 		}
 		/*UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
 		if (Mesh != nullptr)

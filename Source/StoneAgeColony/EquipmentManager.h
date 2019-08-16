@@ -27,12 +27,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void SetupManager(AHumanCharacter* Owner);
-	void EquipItem(UEquipment* Equipment);
+	void EquipItem(AEquipment* Equipment);
 	void UnequipItem(EEquipmentSlots ItemSlot);
 
 	TMap<EEquipmentSlots, int32> EquippedItems;
 private:
 	AHumanCharacter* Owner;
-	UEquipment* CurrentEquipment;
+	AEquipment* CurrentEquipment;
 	
 };

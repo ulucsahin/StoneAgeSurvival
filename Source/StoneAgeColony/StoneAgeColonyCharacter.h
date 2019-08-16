@@ -16,6 +16,7 @@ class UBuildingManager;
 class UFPAnimationManager;
 class UUIBottomBar;
 class UUIPlayerInventory;
+class ASettlement;
 
 enum class EPlayerStates : uint8
 {
@@ -148,6 +149,8 @@ public:
 	UUserWidget* CharacterMenuWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MainMenu")
 	UUserWidget* MainMenuWidget;
+
+	ASettlement* Settlement;
 
 	void Debug();
 

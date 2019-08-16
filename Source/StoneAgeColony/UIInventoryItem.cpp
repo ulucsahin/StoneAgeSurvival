@@ -8,6 +8,7 @@
 #include "PickupManager.h"
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
+#include "ObjectFactory.h"
 
 UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -34,6 +35,9 @@ void UUIInventoryItem::Use()
 
 	if (ItemAmount > 0)
 	{
+		//AObjectFactory* Factory = NewObject<AObjectFactory>();
+		//Factory->CreateObject(ItemID);
+
 		Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(PlayerCharacter);
 		PlayerCharacter->Inventory.Emplace(ItemID, PlayerCharacter->Inventory[ItemID] - 1);
 		ItemAmount = PlayerCharacter->Inventory[ItemID];

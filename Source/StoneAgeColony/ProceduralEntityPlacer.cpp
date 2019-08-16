@@ -6,13 +6,14 @@
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Communicator.h"
 #include "MyUtility.h"
+#include "GatherableObject.h"
 
 // Sets default values
 AProceduralEntityPlacer::AProceduralEntityPlacer()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 	//// Check this again, this should be unnecessary since we already assign items to spawn in editor.
 	//static ConstructorHelpers::FObjectFinder<UBlueprint> ItemBlueprint(TEXT("Blueprint'/Game/Uluc/ActiveAssets/GatherableObjects/BP_GatherableTree.BP_GatherableTree'"));
 	//
@@ -36,11 +37,12 @@ void AProceduralEntityPlacer::BeginPlay()
 	else
 	{
 		int32 RandomNumber = FMath::FRandRange(0, AmountOfItems);
-		UE_LOG(LogTemp, Warning, TEXT("AProceduralEntityPlacer::BeginPlay RANDOM NUMBER: %d"), RandomNumber);
 		
 		UBlueprint* ObjectToSpawn = ObjectsToSpawn[RandomNumber];
-
 		auto temp = ObjectToSpawn->GeneratedClass;
+
+		//auto ObjectToSpawn = NewObject<AGatherableObject>();
+
 		
 		for (int i = 0; i < HowMany; i++)
 		{
@@ -49,6 +51,9 @@ void AProceduralEntityPlacer::BeginPlay()
 
 			// Snap spawned object to ground by using line traces.
 			AdjustHeight(DroppedItem);
+
+			// Disable tick
+			DroppedItem->SetActorTickEnabled(false);
 		}
 
 	}
@@ -106,14 +111,13 @@ void AProceduralEntityPlacer::AdjustHeight(AActor* item)
 				HittedObjectName = b->GetName();
 			}
 		}
-
+		//UE_LOG(LogTemp, Warning, TEXT("AProceduralEntityPlacer::AdjustHeight HITTED OBJECT NAME: %s"), *HittedObjectName);
 		// if linetrace hit the landscape
 		if (HittedObjectName == "Landscape")
 		{
 
 			End.Z += TraceLength;
 			TraceLength /= 2;
-			//UE_LOG(LogTemp, Warning, TEXT("TraceLength: %f"), TraceLength);
 
 		}
 		// if linetrace did not hit the landscape
