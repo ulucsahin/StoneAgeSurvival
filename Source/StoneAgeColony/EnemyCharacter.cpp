@@ -3,7 +3,7 @@
 #include "EnemyCharacter.h"
 #include "EnemyAI.h"
 #include "Communicator.h"
-#include "UObject/ConstructorHelpers.h"
+//#include "UObject/ConstructorHelpers.h"
 #include "EquipmentManager.h"
 #include "ObjectFactory.h"
 /* AI Include */

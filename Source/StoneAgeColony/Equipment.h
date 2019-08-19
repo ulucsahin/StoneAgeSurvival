@@ -54,7 +54,7 @@ public:
 
 protected:
 	// Called when the game starts
-	virtual void BeginPlay();// override;
+	//virtual void BeginPlay();// override;
 
 public:	
 	// Called every frame
@@ -65,6 +65,7 @@ public:
 
 	void SetupType(FString);
 
+	int32 GetID() { return ID; };
 
 	// Information from DataTable
 	int32 ID;

@@ -3,6 +3,7 @@
 #include "BottomBarItem.h"
 #include "Communicator.h"
 #include "UIBottomBar.h"
+#include "ObjectFactory.h"
 
 void UBottomBarItem::SetupBarItem(UUIBottomBar* BottomBar, int32 Index)
 {
@@ -27,7 +28,10 @@ void UBottomBarItem::UseBarItem()
 
 	if (BottomBar->Player)
 	{
-		Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(BottomBar->Player);
+		AObjectFactory* Factory = NewObject<AObjectFactory>();
+		auto BarItem = Factory->CreateObjectBetter(ItemID);
+		BarItem->OnUsedFromInventory(BottomBar->Player);
+		//Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(BottomBar->Player);
 		ItemAmount = BottomBar->Player->Inventory[ItemID];
 	}
 	

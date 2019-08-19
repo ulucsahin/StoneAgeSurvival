@@ -57,6 +57,7 @@ public:
 	virtual void OnUsedFromInventory(APawn* InstigatorPawn) override;
 	void test();
 	
+	int32 GetID() { return ID; };
 
 private:
 	FName EdibleType;

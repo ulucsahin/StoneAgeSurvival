@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ObjectBed.h"
-#include "SaveGameEntity.h"
-#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "StoneAgeColonyCharacter.h"
+//#include "SaveGameEntity.h"
+//#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+//#include "StoneAgeColonyCharacter.h"
 #include "Communicator.h"
-#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
+//#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
 #include "GameSaver.h"
 
 AObjectBed::AObjectBed(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

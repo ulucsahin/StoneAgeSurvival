@@ -7,7 +7,7 @@
 #include "EnemyCharacter.h"
 #include "Communicator.h"
 #include "Building.h"
-#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
+//#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
 
 GameSaver::GameSaver()
 {

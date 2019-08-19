@@ -20,26 +20,6 @@ AEquipment::AEquipment(const FObjectInitializer& ObjectInitializer) : Super(Obje
 	}
 }
 
-
-// Called when the game starts
-void AEquipment::BeginPlay()
-{
-	//Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-//void UEquipment::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-//{
-//	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-//
-//	// ...
-//}
-
-
 void AEquipment::SetupType(FString ItemName)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UEquipment::SetupType"));

@@ -55,7 +55,7 @@ public:
 	int test;
 
 	// IDs of usable items in game
-	TMap<int, AUsableActor*> UsableItemIDMap; // how?
+	//TMap<int, AUsableActor*> UsableItemIDMap; // how?
 	//TMap<int, FString> UsableItemIDSetupTypes;
 	
 	// TMap of ID-Amount pairs for items.

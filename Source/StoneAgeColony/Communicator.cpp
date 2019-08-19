@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Communicator.h"
-#include <vector>
 
 void Communicator::Reset() {
 	// Reset all variables.

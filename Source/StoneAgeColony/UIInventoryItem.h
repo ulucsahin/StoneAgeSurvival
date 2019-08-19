@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+//#include "Blueprint/UserWidget.h"
 #include "Runtime/UMG/Public/Components/TextBlock.h"
 #include "UIItemSlot.h"
-#include "Runtime/Engine/Classes/Engine/DataTable.h"
+//#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "UIInventoryItem.generated.h"
 
 // FObjectNameData MOVED TO OBJECTFACTORY.CPP

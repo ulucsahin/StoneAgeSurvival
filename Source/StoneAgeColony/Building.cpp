@@ -3,7 +3,7 @@
 #include "Building.h"
 #include "Communicator.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
-#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+//#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Static Variables
 int ABuilding::LastMeshType;

@@ -1,35 +1,24 @@
 
 #include "StoneAgeColonyCharacter.h"
-#include "StoneAgeColonyProjectile.h"
-#include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/TimelineComponent.h"
 
-#include "Runtime/Engine/Public/TimerManager.h"
-
-#include "GameFramework/InputSettings.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "DrawDebugHelpers.h"
 #include "SurvivalGameInstance.h"
 #include "UsableActor.h"
-#include "Communicator.h"
+
 #include "Building.h"
 #include "BuildingManager.h"
 #include "FPAnimationManager.h"
-#include "UIBottomBar.h"
-#include "UIPlayerInventory.h"
-#include "Edible.h"
-#include "Equipment.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
-#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "ObjectFactory.h"
-#include "Settlement.h"
+
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
@@ -90,11 +79,11 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
 
 	// Create VR Controllers.
-	R_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("R_MotionController"));
-	R_MotionController->MotionSource = FXRMotionControllerBase::RightHandSourceId;
-	R_MotionController->SetupAttachment(RootComponent);
-	L_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("L_MotionController"));
-	L_MotionController->SetupAttachment(RootComponent);
+	//R_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("R_MotionController"));
+	//R_MotionController->MotionSource = FXRMotionControllerBase::RightHandSourceId;
+	//R_MotionController->SetupAttachment(RootComponent);
+	//L_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("L_MotionController"));
+	//L_MotionController->SetupAttachment(RootComponent);
 
 	// Create a gun and attach it to the right-hand VR controller.
 	// Create a gun mesh component
@@ -738,29 +727,23 @@ void AStoneAgeColonyCharacter::HideFirstPersonHands(bool Hide)
 
 void AStoneAgeColonyCharacter::Debug()
 {
-	//GetActorInView<ABuilding>(20.f); // WE NEED THIS LINE OR LINKER ERROR CAUSED BY OPTIONS IN STONEAGECOLONY.BUILD.CS WHICH IS USED FOR FASTER COMPILE TIMES
-	UE_LOG(LogTemp, Warning, TEXT("hehe debugg"));
+	UE_LOG(LogTemp, Warning, TEXT("hehe debugg XD"));
 
 	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
 
 	Gather();
 	//auto asd = GetActorLocation();
 	// Create new settlement
-	ASettlement* Settlement = GetWorld()->SpawnActor<ASettlement>(ASettlement::StaticClass(), GetActorLocation(), FRotator::ZeroRotator);
+	//ASettlement* Settlement = GetWorld()->SpawnActor<ASettlement>(ASettlement::StaticClass(), GetActorLocation(), FRotator::ZeroRotator);
 	//GetWorld()->SpawnActor<ASettlement>()
 
-
+	AObjectFactory* Factory = NewObject<AObjectFactory>();
+	auto x = Factory->CreateObjectBetter(1001);
+	UE_LOG(LogTemp, Warning, TEXT("Factory new object ID: %d"), x->GetID());
+	
 	//ASettlement* Settlement = NewObject<ASettlement>();
 	//Settlement->Player = this;
 	
-	Settlement->AdjustAreaDisplayerLocation();
+	//Settlement->AdjustAreaDisplayerLocation();
 
-	//auto TestEquipment = NewObject<UEquipment>();
-	//UE_LOG(LogTemp, Warning, TEXT("Equipment Stat000"));
-	//TestEquipment->SetupType("Shoes");
-	//UE_LOG(LogTemp, Warning, TEXT("Equipment Stat000"));
-	//auto xasd = TestEquipment->Stat1;
-	//UE_LOG(LogTemp, Warning, TEXT("Equipment Stat1: %d"), xasd);
-	//AObjectFactory* Factory = NewObject<AObjectFactory>();
-	//auto x = Factory->CreateObject<UEquipment>(1001);
 }

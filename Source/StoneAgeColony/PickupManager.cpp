@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PickupManager.h"
-#include "Kismet/GameplayStatics.h"
+//#include "Kismet/GameplayStatics.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 #include "Components/BoxComponent.h"
@@ -48,7 +48,7 @@ bool APickupManager::HandlePickup(AUsableActor* Actor)
 	// if CurrentActor is not pickupable then exit from this function.
 	if (Actor) { if (!Actor->IsPickupable()) { return true; } }
 
-	// If we already have an item and it is not colliding then drop it to where it is. // TODO: snap to ground.
+	// If we already have an item and it is not colliding then drop it to where it is. 
 	if (CurrentActor)
 	{
 		if (!CurrentActor->bOverlapping)
@@ -141,7 +141,7 @@ void APickupManager::PlaceObject()
 	if (!CurrentActor->bOverlapping)
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
-		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll");
+		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll"); // gotta fix this
 		auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
 		Box->DestroyComponent();
 		CurrentActor = nullptr;

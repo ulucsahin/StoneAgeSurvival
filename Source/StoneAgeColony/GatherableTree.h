@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UsableActor.h"
+//#include "UsableActor.h"
 #include "GatherableObject.h"
 #include "GatherableTree.generated.h"
 

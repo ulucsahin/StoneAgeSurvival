@@ -4,6 +4,15 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 
+// Objects that will be spawned by ObjectFactory
+#include "Equipment.h"
+#include "GatherableTree.h"
+#include "TestGameLoader.h"
+#include "PeopleSpawner.h"
+#include "ObjectBed.h"
+#include "Settlement.h"
+#include "Edible.h"
+
 //AObjectFactory* AObjectFactory::instance;
 
 // Sets default values
@@ -21,6 +30,13 @@ AObjectFactory::AObjectFactory()
 		IDtoNameTable = IDtoNameTableObject.Object;
 		
 	}
+
+	//// Edibles Table
+	//static ConstructorHelpers::FObjectFinder<UDataTable> EdiblesTableObject(TEXT("DataTable'/Game/Uluc/DataTables/EdiblesDataTable.EdiblesDataTable'"));
+	//if (EdiblesTableObject.Succeeded())
+	//{
+	//	EdiblesTable = EdiblesTableObject.Object;
+	//}
 
 	//// Equipment Table
 	//static ConstructorHelpers::FObjectFinder<UDataTable> EquipmentTableObject(TEXT("DataTable'/Game/Uluc/DataTables/EquipmentsDataTable.EquipmentsDataTable'"));
@@ -63,17 +79,59 @@ T* AObjectFactory::CreateObject(int32 ObjectID)
 	return CreatedObject;
 }
 
-//// Called when the game starts or when spawned
-//void AObjectFactory::BeginPlay()
-//{
-//	Super::BeginPlay();
-//	
-//}
-//
-//// Called every frame
-//void AObjectFactory::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//
-//}
+AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
+{
+	AUsableActor* ObjectToReturn = nullptr;
+
+	
+	// Get ObjectName from tables
+	FString Tmp = FString::FromInt(ObjectID);
+	FName ObjectID_ = FName(*Tmp);
+	const FString ContextString(TEXT("Object Type Context"));
+	auto Data = IDtoNameTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
+	auto ObjectName = Data->Name;
+
+	// Unique Items, will remove later?
+	if (ObjectID == 0)
+	{
+		ObjectToReturn = NewObject<AUsableActor>();
+	}
+	else if (ObjectID == 1)
+	{
+		ObjectToReturn = NewObject<ATestGameLoader>();
+	}
+	else if (ObjectID == 2)
+	{
+		ObjectToReturn = NewObject<APeopleSpawner>();
+	}
+	else if (ObjectID == 3)
+	{
+		ObjectToReturn = NewObject<AObjectBed>();
+	}
+	// Gatherables (tree, rock, etc.)
+	else if (ObjectID >= 100 && ObjectID <= 199)
+	{
+		ObjectToReturn = NewObject<AGatherableTree>(); // TODO: Gatherable tree for now, will need to change later.
+		//TODO: Will need to seperate materials from sources, for example: gathering trees will yield wood.
+	}
+	// Edibles
+	else if (ObjectID >= 200 && ObjectID <= 299)
+	{
+		ObjectToReturn = NewObject<AEdible>();
+	}
+	// Equipment
+	else if (ObjectID >= 1000 && ObjectID <= 1199)
+	{
+		ObjectToReturn = NewObject<AEquipment>();
+	}
+	// Settlement
+	else if (ObjectID == 10000)
+	{
+		ObjectToReturn = NewObject<ASettlement>();
+	}
+
+	ObjectToReturn->SetupType(ObjectName);
+	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory::CreateObject ObjectName: %s"), *ObjectName);
+	return ObjectToReturn;
+}
 

@@ -33,8 +33,7 @@
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 
-AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
 	// Set world for communicator
 	Communicator::GetInstance().World = GetWorld();
@@ -187,23 +186,28 @@ void AStoneAgeColonyGameMode::OnNightEnded() {
 
 void AStoneAgeColonyGameMode::RegisterItemIDs() 
 {
-	AObjectFactory* Factory = NewObject<AObjectFactory>();
+	// this is retarded
 
-	AUsableActor* test = NewObject<AUsableActor>();
-	Communicator::GetInstance().UsableItemIDMap.Add(  0/*AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID*/,	   NewObject<AUsableActor>()); 
-	Communicator::GetInstance().UsableItemIDMap.Add(  ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID,     NewObject<ATestGameLoader>()); 
-	Communicator::GetInstance().UsableItemIDMap.Add(  APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID,	   NewObject<APeopleSpawner>()); 
-	Communicator::GetInstance().UsableItemIDMap.Add(  AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID,			   NewObject<AObjectBed>()); 
+	//AObjectFactory* Factory = NewObject<AObjectFactory>();
 
-	auto tmp = Factory->CreateObject<AGatherableTree>(100); //NewObject<AGatherableTree>(); //tmp->SetupType("GatherableTree");
-	Communicator::GetInstance().UsableItemIDMap.Add(tmp->ID, tmp);
+	//AUsableActor* test = NewObject<AUsableActor>();
+	//Communicator::GetInstance().UsableItemIDMap.Add(  0/*AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID*/,	   NewObject<AUsableActor>()); 
+	//Communicator::GetInstance().UsableItemIDMap.Add(  ATestGameLoader::StaticClass()->GetDefaultObject<ATestGameLoader>()->ID,     NewObject<ATestGameLoader>()); 
+	//Communicator::GetInstance().UsableItemIDMap.Add(  APeopleSpawner::StaticClass()->GetDefaultObject<APeopleSpawner>()->ID,	   NewObject<APeopleSpawner>()); 
+	//Communicator::GetInstance().UsableItemIDMap.Add(  AObjectBed::StaticClass()->GetDefaultObject<AObjectBed>()->ID,			   NewObject<AObjectBed>()); 
 
-	auto tmp2 = Factory->CreateObject<AEdible>(200);//NewObject<AEdible>(); //tmp2->SetupType("Apple");
-	Communicator::GetInstance().UsableItemIDMap.Add(tmp2->ID, tmp2);
+	//auto tmp = Factory->CreateObject<AGatherableTree>(100); //NewObject<AGatherableTree>(); //tmp->SetupType("GatherableTree");
+	//Communicator::GetInstance().UsableItemIDMap.Add(tmp->ID, tmp);
 
-	for (auto& item : Communicator::GetInstance().UsableItemIDMap)
-	{
-		// Add objects in UsableItemIDMap to RootSet so they will not be garbage collected during gameplay.
-		item.Value->AddToRoot();
-	}
+	//auto tmp2 = Factory->CreateObject<AEdible>(200);//NewObject<AEdible>(); //tmp2->SetupType("Apple");
+	//Communicator::GetInstance().UsableItemIDMap.Add(tmp2->ID, tmp2);
+
+	//ASettlement* tmp3 = NewObject<ASettlement>(); // Factory->CreateObject<ASettlement>(10000);//NewObject<AEdible>(); //tmp2->SetupType("Apple");
+	//Communicator::GetInstance().UsableItemIDMap.Add(tmp3->ID, tmp3);
+
+	//for (auto& item : Communicator::GetInstance().UsableItemIDMap)
+	//{
+	//	// Add objects in UsableItemIDMap to RootSet so they will not be garbage collected during gameplay.
+	//	item.Value->AddToRoot();
+	//}
 }

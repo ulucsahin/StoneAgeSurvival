@@ -28,25 +28,30 @@ protected:
 public:	
 	 //Called every frame
 	//virtual void Tick(float DeltaTime) override;
+	int ID = 10000;
 
 	void AddStructure(AStructure* Structure);
 
-	UFUNCTION()
-	void OnOverlapBeginSettlement(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	//UFUNCTION()
+	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
-	UFUNCTION()
-	void OnOverlapEndSettlement(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	//UFUNCTION()
+	virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 
 	void AdjustAreaDisplayerSize();
 	void AdjustAreaDisplayerLocation();
 
+	
+	virtual int GetID() override;
 	// TEST
 	AStoneAgeColonyCharacter* Player;
 
 private:
+	
 	USceneComponent* SceneComponent;
 	USphereComponent* SettlementArea;
 	UStaticMeshComponent* AreaDisplayer;
+	UStaticMeshComponent* SettlementMesh;
 	UMaterial* AreaDisplayerMaterial;
 	float OriginalAreaDisplayerSize;
 

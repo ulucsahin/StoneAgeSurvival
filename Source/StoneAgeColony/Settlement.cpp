@@ -2,7 +2,7 @@
 
 #include "Settlement.h"
 #include "StoneAgeColonyCharacter.h"
-#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+//#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -10,29 +10,35 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it
 	//PrimaryActorTick.bCanEverTick = true;
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	//
-	//// Setup settlement area
+	
+	// Setup settlement area
 	SettlementArea = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	SettlementArea->SetSphereRadius(AreaRadius);
 	SettlementArea->SetCollisionProfileName("OverlapAll");
 	SettlementArea->SetupAttachment(SceneComponent);
-	SettlementArea->OnComponentBeginOverlap.AddDynamic(this, &ASettlement::OnOverlapBeginSettlement);
-	SettlementArea->OnComponentEndOverlap.AddDynamic(this, &ASettlement::OnOverlapEndSettlement);
+	SettlementArea->OnComponentBeginOverlap.AddDynamic(this, &ASettlement::OnOverlapBegin);
+	SettlementArea->OnComponentEndOverlap.AddDynamic(this, &ASettlement::OnOverlapEnd);
 
-	//// Setup settlement area displayer
-	auto AreaDisplayerMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
-	AreaDisplayerMaterial = LoadObject<UMaterial>(nullptr, TEXT("/Game/Uluc/Settlement/Materials/AreaDisplayer_Mat.AreaDisplayer_Mat"));
-	//AreaDisplayer = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("Mesh"));
-	AreaDisplayer = MeshComp;
-
-	AreaDisplayer->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	AreaDisplayer->SetupAttachment(SceneComponent);
-	AreaDisplayer->SetStaticMesh(AreaDisplayerMesh);
-	AreaDisplayer->SetMaterial(0, AreaDisplayerMaterial);
-	auto AreaDisplayerSize = AreaDisplayer->Bounds.BoxExtent;
-	OriginalAreaDisplayerSize = AreaDisplayerSize.X;
+	// TODO: Area Displayer will be added after settlement is setup. Otherwise creates problems while placing settlement.
+	// Setup settlement area displayer
+	//auto AreaDisplayerMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
+	//AreaDisplayerMaterial = LoadObject<UMaterial>(nullptr, TEXT("/Game/Uluc/Settlement/Materials/AreaDisplayer_Mat.AreaDisplayer_Mat"));
+	//AreaDisplayer = MeshComp; // MeshComp from UsableActor parent class
+	//AreaDisplayer->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//AreaDisplayer->SetupAttachment(SceneComponent);
+	//AreaDisplayer->SetStaticMesh(AreaDisplayerMesh);
+	//AreaDisplayer->SetMaterial(0, AreaDisplayerMaterial);
+	//auto AreaDisplayerSize = AreaDisplayer->Bounds.BoxExtent;
+	//OriginalAreaDisplayerSize = AreaDisplayerSize.X;
 	RootComponent = SceneComponent;
 
+	// Setup main mesh
+	SettlementMesh = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("SettlementMesh"));
+	auto TestSettlementMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/StarterContent/Props/SM_TableRound.SM_TableRound")); // temporary mesh
+	SettlementMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	SettlementMesh->SetupAttachment(RootComponent);
+	SettlementMesh->SetStaticMesh(TestSettlementMesh);
+	
 	// Initialize properties
 	Name = FName(TEXT("Prontera"));
 	PopulationLimit = 10;
@@ -41,8 +47,13 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	BuildingLimit = 10;
 	AreaRadius = 1500.f;
 	
-	AdjustAreaDisplayerSize();
+	//AdjustAreaDisplayerSize();
 
+}
+
+int ASettlement::GetID()
+{
+	return ID;
 }
 
 //// Called when the game starts or when spawned
@@ -71,13 +82,13 @@ void ASettlement::AddStructure(AStructure* Structure)
 	Structures.Add(Structure);
 }
 
-void ASettlement::OnOverlapBeginSettlement(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ASettlement::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("ASettlement::OnOverlapBegin.."));
 }
 
 
-void ASettlement::OnOverlapEndSettlement(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void ASettlement::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	UE_LOG(LogTemp, Warning, TEXT("ASettlement::OnOverlapEnd"));
 }

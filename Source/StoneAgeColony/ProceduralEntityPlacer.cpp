@@ -1,11 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ProceduralEntityPlacer.h"
-#include "Engine/World.h"
-#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
-#include "Runtime/Engine/Public/DrawDebugHelpers.h"
-#include "Communicator.h"
-#include "MyUtility.h"
 #include "GatherableObject.h"
 
 // Sets default values

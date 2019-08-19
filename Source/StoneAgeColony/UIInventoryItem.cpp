@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UIInventoryItem.h"
-#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "StoneAgeColonyCharacter.h"
+//#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+//#include "StoneAgeColonyCharacter.h"
 #include "UsableActor.h"
 #include "Communicator.h"
-#include "PickupManager.h"
-#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
-#include "Runtime/Engine/Classes/Engine/AssetManager.h"
+//#include "PickupManager.h"
+//#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
+//#include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "ObjectFactory.h"
 
 UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -35,10 +35,11 @@ void UUIInventoryItem::Use()
 
 	if (ItemAmount > 0)
 	{
-		//AObjectFactory* Factory = NewObject<AObjectFactory>();
-		//Factory->CreateObject(ItemID);
+		AObjectFactory* Factory = NewObject<AObjectFactory>();
+		auto ItemToUse = Factory->CreateObjectBetter(ItemID);
+		ItemToUse->OnUsedFromInventory(PlayerCharacter);
 
-		Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(PlayerCharacter);
+		//Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(PlayerCharacter);
 		PlayerCharacter->Inventory.Emplace(ItemID, PlayerCharacter->Inventory[ItemID] - 1);
 		ItemAmount = PlayerCharacter->Inventory[ItemID];
 		PlayerCharacter->UIPlayerInventory->Refresh();
@@ -63,17 +64,25 @@ void UUIInventoryItem::PlaceItem()
 	SpawnLocation.X += PlayerForwardVector.X * 150.f;
 	SpawnLocation.Y += PlayerForwardVector.Y * 150.f;
 
-	auto ClassToSpawn = Communicator::GetInstance().UsableItemIDMap[ItemID]->GetClass();
+	AObjectFactory* Factory = NewObject<AObjectFactory>();
+	auto ObjectToPlace = Factory->CreateObjectBetter(ItemID);
+	
+	auto ClassToSpawn = ObjectToPlace->GetClass(); //Communicator::GetInstance().UsableItemIDMap[ItemID]->GetClass();
 	
 	const FString ContextString(TEXT("Spawned Type Context"));
 	auto IDAsString = FString::FromInt(ItemID);
 	auto IDAsFName = FName(*IDAsString);
 	auto ObjectNameData = Communicator::GetInstance().ObjectNameDataTable->FindRow<FObjectNameData>(IDAsFName, ContextString, true);
 
+	//AObjectFactory* Factory = NewObject<AObjectFactory>();
+	//Factory->CreateObject()
+
+
 	auto SpawnedItem = Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, SpawnLocation, FRotator::ZeroRotator);
 	SpawnedItem->SetupType(ObjectNameData->Name);
 	SpawnedItem->SetMeshToDefault();
 
+	// Adjust player inventory since item is used
 	PlayerCharacter->Inventory.Emplace(ItemID, PlayerCharacter->Inventory[ItemID] - 1);
 	ItemAmount = PlayerCharacter->Inventory[ItemID];
 	PlayerCharacter->UIPlayerInventory->Refresh();

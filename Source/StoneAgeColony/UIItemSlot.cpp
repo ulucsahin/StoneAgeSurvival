@@ -3,6 +3,7 @@
 #include "UIItemSlot.h"
 #include "Communicator.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "ObjectFactory.h"
 
 UUIItemSlot::UUIItemSlot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -16,7 +17,12 @@ void UUIItemSlot::SetupInventoryItemCell()
 	if (PlayerCharacter)
 	{
 		// Set texture and amount variables
-		InventoryTexture = Communicator::GetInstance().UsableItemIDMap[ItemID]->InventoryTexture;
+		UE_LOG(LogTemp, Warning, TEXT("UUIItemSlot::SetupInventoryItemCell Item ID %d"), ItemID);
+		//InventoryTexture = Communicator::GetInstance().UsableItemIDMap[ItemID]->InventoryTexture;
+
+		AObjectFactory* Factory = NewObject<AObjectFactory>();
+		auto SlotObject =  Factory->CreateObjectBetter(ItemID);
+		InventoryTexture = SlotObject->InventoryTexture;
 
 		if (PlayerCharacter->Inventory.Contains(ItemID))
 		{

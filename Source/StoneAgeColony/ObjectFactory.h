@@ -6,9 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 
-// Objects that will be spawned by ObjectFactory
-#include "Equipment.h"
-#include "GatherableTree.h"
+
+
 
 #include "ObjectFactory.generated.h"
 
@@ -40,6 +39,7 @@ public:
 	template <typename T>
 	T* CreateObject(int32 ObjectID);
 
+	AUsableActor* CreateObjectBetter(int32 ObjectID);
 	
 private:
 	
@@ -47,6 +47,7 @@ private:
 	//TMap<UClass*, UDataTable*> ClassToTable;
 
 	class UDataTable* IDtoNameTable;
+	//class UDataTable* EdiblesTable;
 	//class UDataTable* EquipmentTable;
 
 

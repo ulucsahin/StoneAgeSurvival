@@ -2,8 +2,8 @@
 
 #include "UIBottomBar.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Runtime/UMG/Public/Blueprint/WidgetTree.h"
-#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+//#include "Runtime/UMG/Public/Blueprint/WidgetTree.h"
+//#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Communicator.h"
 
 UUIBottomBar::UUIBottomBar(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
