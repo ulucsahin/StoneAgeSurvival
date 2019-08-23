@@ -66,39 +66,39 @@ void ACraftingStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 {
 	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 	//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapBegin"));
-	//if (OtherActor != this)
-	//{
-	//	if (OtherActor != nullptr)
-	//	{
-	//		auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
-	//		//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapBegin other actor comp name: %s"), *OtherActorCompName);
-	//		if (OtherActorCompName == "SettlementArea")
-	//		{
-	//			((ASettlement*)OtherActor)->RegisterStructure(this);
-	//			UE_LOG(LogTemp, Warning, TEXT("wwowowowow thats settlemen area bro"));
-	//		}
-	//		
-	//	}
-	//}
+	if (OtherActor != this)
+	{
+		if (OtherActor != nullptr)
+		{
+			auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
+			//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapBegin other actor comp name: %s"), *OtherActorCompName);
+			if (OtherActorCompName == "SettlementArea")
+			{
+				((ASettlement*)OtherActor)->RegisterStructure(this);
+				UE_LOG(LogTemp, Warning, TEXT("wwowowowow thats settlemen area bro "));
+			}
+			
+		}
+	}
 
 }
 
 void ACraftingStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	Super::OnOverlapEnd(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
-	//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd"));;
-	//if (OtherActor != this)
-	//{
-	//	if (OtherActor != nullptr)
-	//	{
-	//		auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
-	//		if (OtherActorCompName == "SettlementArea")
-	//		{
-	//			((ASettlement*)OtherActor)->DeRegisterStructure(this);
-	//			//UE_LOG(LogTemp, Warning, TEXT("just get the fuck outta here man"));
-	//		}
+	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd"));;
+	if (OtherActor != this)
+	{
+		if (OtherActor != nullptr)
+		{
+			auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
+			if (OtherActorCompName == "SettlementArea")
+			{
+				((ASettlement*)OtherActor)->DeRegisterStructure(this);
+				UE_LOG(LogTemp, Warning, TEXT("just get the fuck outta here man"));
+			}
 
 
-	//	}
-	//}
+		}
+	}
 }

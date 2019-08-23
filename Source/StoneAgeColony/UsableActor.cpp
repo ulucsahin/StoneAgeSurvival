@@ -115,13 +115,10 @@ void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 	{
 		if (OtherActor != nullptr)
 		{			
-			// If colliding component is SettlementArea, ignore it.
-			auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
-			if (OtherActorCompName == "SettlementArea")
-			{
-				return;
-			}
-
+			// If colliding component is SettlementArea, ignore it, return.
+			auto OtherActorCompName = OtherComp->GetFName().ToString();
+			if (OtherActorCompName == "SettlementArea") return;
+			
 			// also check for mesh if building, this is to prevent collisions with invisible box components
 			auto OtherActorClassName = OtherActor->GetClass()->GetFName().ToString();
 			if (OtherActorClassName == "BP_Building_C")
@@ -161,21 +158,6 @@ void AUsableActor::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class
 
 			}
 		}
-		/*UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
-		if (Mesh != nullptr)
-		{
-			AActor* Actor = Cast<AActor>(OtherActor);
-			if (OtherActor)
-			{
-				if (OverlappingActors.Contains(OtherActor))
-				{
-					OverlappingActors.Remove(OtherActor);
-					if (OverlappingActors.Array().Num() <= 0)
-						OnOverlappingEnd();
-
-				}
-			}
-		}*/
 	}
 }
 

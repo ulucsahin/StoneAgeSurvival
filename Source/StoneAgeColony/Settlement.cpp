@@ -23,7 +23,10 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	// Setup settlement area displayer
 	auto AreaDisplayerMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
 	AreaDisplayerMaterial = LoadObject<UMaterial>(nullptr, TEXT("/Game/Uluc/Settlement/Materials/AreaDisplayer_Mat.AreaDisplayer_Mat"));
-	AreaDisplayer = MeshComp; // MeshComp from UsableActor parent class
+
+	//AreaDisplayer = MeshComp; 
+	AreaDisplayer = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("SettlementArea")); // MeshComp from UsableActor parent class
+
 	AreaDisplayer->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FString CompName = "SettlementArea";
 	//AreaDisplayer->Rename(*CompName); // CAUSES CRASH AFTER CLOSING AND REOPENING EDITOR
