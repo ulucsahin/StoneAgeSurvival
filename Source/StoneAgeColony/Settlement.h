@@ -41,6 +41,8 @@ public:
 	void AdjustAreaDisplayerSize();
 	void AdjustAreaDisplayerLocation();
 
+	void RegisterStructure(AStructure* Structure);
+	void DeRegisterStructure(AStructure* Structure);
 	
 	virtual int GetID() override;
 	// TEST
@@ -62,7 +64,7 @@ private:
 	int32 Experience;
 	int32 BuildingLimit;
 	float AreaRadius;
-	TArray<AStructure*> Structures;
+	TSet<AStructure*> Structures;
 
 
 };

@@ -127,10 +127,6 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	// Initialize Animation Manager
 	AnimationManager = NewObject<UFPAnimationManager>();
 	AnimationManager->SetupManager(this, GetWorld());
-	//AnimationManager->Player = this;
-	//AnimationManager->World = GetWorld();
-	//AnimationManager->PlayAnimation(EAnimations::VE_Idle);
-	//AnimationManager->AddToRoot(); // .............
 
 	InventoryOn = false;
 	InitializeWidgets();
@@ -450,6 +446,48 @@ void AStoneAgeColonyCharacter::Gather()
 	}
 }
 
+void AStoneAgeColonyCharacter::OpenMenu(const TCHAR* Reference)
+{
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *Data->Menu);
+	
+	// Open CraftingStation Menu
+	FStringClassReference MyWidgetClassRef(Reference);
+	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
+	auto MenuWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
+	MenuWidget->AddToViewport();
+
+	if (PlayerController)
+	{
+		PlayerController->SetInputMode(FInputModeGameAndUI());
+		PlayerController->bShowMouseCursor = true;
+		PlayerController->bEnableClickEvents = true;
+		PlayerController->bEnableMouseOverEvents = true;
+	}
+
+	OpenedMenus.Emplace(MenuWidget);
+}
+
+void AStoneAgeColonyCharacter::CloseAllMenus()
+{
+	for (auto x : OpenedMenus)
+	{
+		x->RemoveFromParent();
+	}
+
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PlayerController)
+	{
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+		PlayerController->bEnableClickEvents = false;
+		PlayerController->bEnableMouseOverEvents = false;
+	}
+
+	InventoryOn = false;
+}
+
 void AStoneAgeColonyCharacter::OpenInventory()
 {	
 	// BE CAREFUL:
@@ -472,7 +510,9 @@ void AStoneAgeColonyCharacter::OpenInventory()
 			PlayerController->bEnableClickEvents = true;
 			PlayerController->bEnableMouseOverEvents = true;
 		}
-		
+
+		OpenedMenus.Emplace(InventoryWidget);
+
 		InventoryOn = true;
 	}
 	else
@@ -738,12 +778,17 @@ void AStoneAgeColonyCharacter::Debug()
 	//GetWorld()->SpawnActor<ASettlement>()
 
 	AObjectFactory* Factory = NewObject<AObjectFactory>();
-	auto x = Factory->CreateObjectBetter(1001);
-	UE_LOG(LogTemp, Warning, TEXT("Factory new object ID: %d"), x->GetID());
+	//auto x = Factory->CreateObjectBetter(1001);
+	//UE_LOG(LogTemp, Warning, TEXT("Factory new object ID: %d"), x->GetID());
+	
+
+	auto CraftingStation = Factory->CreateObjectBetter(400);
+	UE_LOG(LogTemp, Warning, TEXT("Crafting Station ID: %d"), CraftingStation->GetID());
 	
 	//ASettlement* Settlement = NewObject<ASettlement>();
 	//Settlement->Player = this;
 	
 	//Settlement->AdjustAreaDisplayerLocation();
 
+	CloseAllMenus();
 }

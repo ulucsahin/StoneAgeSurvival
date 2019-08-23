@@ -22,8 +22,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	
+protected:
+	UUserWidget* Menu;
 
 private:
 	FName Name;
-	UUserWidget* Menu;
+	
 };

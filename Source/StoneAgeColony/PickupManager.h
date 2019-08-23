@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "UsableActor.h"
 #include "ObjectSnapper.h"
+#include "Components/BoxComponent.h"
 #include "PickupManager.generated.h"
 
 // To prevent circular dependency
@@ -53,6 +54,7 @@ private:
 	FVector ActorInitialLocation;
 	int32 ForwardBuildingOffset;
 	AObjectSnapper* ObjectSnapper;
+	//UBoxComponent* Box;
 	
 
 public:

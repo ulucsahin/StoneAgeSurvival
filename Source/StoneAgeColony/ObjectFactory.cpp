@@ -12,6 +12,7 @@
 #include "ObjectBed.h"
 #include "Settlement.h"
 #include "Edible.h"
+#include "CraftingStation.h"
 
 //AObjectFactory* AObjectFactory::instance;
 
@@ -119,6 +120,11 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	{
 		ObjectToReturn = NewObject<AEdible>();
 	}
+	// Crafting Stations
+	else if (ObjectID >= 400 && ObjectID <= 499)
+	{
+		ObjectToReturn = NewObject<ACraftingStation>();
+	}
 	// Equipment
 	else if (ObjectID >= 1000 && ObjectID <= 1199)
 	{
@@ -130,8 +136,9 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 		ObjectToReturn = NewObject<ASettlement>();
 	}
 
-	ObjectToReturn->SetupType(ObjectName);
 	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory::CreateObject ObjectName: %s"), *ObjectName);
+	ObjectToReturn->SetupType(ObjectName);
+
 	return ObjectToReturn;
 }
 

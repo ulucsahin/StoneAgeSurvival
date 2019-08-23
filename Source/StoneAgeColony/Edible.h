@@ -4,15 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UsableActor.h"
-#include "Runtime/Engine/Classes/Engine/DataTable.h"
-#include "Runtime/Engine/Classes/Engine/Texture2D.h"
-#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
-#include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Edible.generated.h"
-
-/**
- * 
- */
 
 USTRUCT(BlueprintType)
 struct FEdibleData : public FTableRowBase

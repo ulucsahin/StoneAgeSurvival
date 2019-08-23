@@ -3,6 +3,10 @@
 #include "Edible.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Engine/DataTable.h"
+#include "Runtime/Engine/Classes/Engine/Texture2D.h"
+#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
+#include "Runtime/Engine/Classes/Engine/AssetManager.h"
 
 AEdible::AEdible(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

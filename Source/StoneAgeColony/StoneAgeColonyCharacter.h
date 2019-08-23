@@ -83,7 +83,7 @@ public:
 	void UpdateStateDisplay();
 
 	// Inventory, with items to test
-	TMap<int, int> Inventory = { {10000, 1}, {1, 5}, {2,31}, {200,17} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
+	TMap<int, int> Inventory = { {10000, 1}, {400,2} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;
@@ -189,6 +189,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint32 bUsingMotionControllers : 1;
 
+	// Opens Given UI
+	void OpenMenu(const TCHAR* Reference);
+
 private:
 	void HandleFocus();
 
@@ -263,4 +266,9 @@ public:
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	void InteractPickup(AUsableActor* Actor);
+
+	void CloseAllMenus();
+
+	TSet<UUserWidget*> OpenedMenus;
+
 };

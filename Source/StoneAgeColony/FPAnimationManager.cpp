@@ -19,7 +19,6 @@ UFPAnimationManager::UFPAnimationManager()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> CutBP(TEXT("'/Game/Uluc/FirstPerson/uluc_FPSArms/KnifeCutAnim/KnifeCutAnimMontage.KnifeCutAnimMontage'"));
 	CuttingAnimation = CutBP.Object;
 
-	
 }
 
 
@@ -29,7 +28,6 @@ void UFPAnimationManager::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-
 	
 	PlayAnimation(EAnimations::VE_Idle);
 	UE_LOG(LogTemp, Warning, TEXT("UFPAnimationManager::BeginPlay"));
@@ -84,7 +82,7 @@ void UFPAnimationManager::PlayAnimation(EAnimations Animation)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("plaksdfpaskdjfaslkjd"));
+		UE_LOG(LogTemp, Warning, TEXT("sdf"));
 	}
 		
 }

@@ -4,6 +4,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Communicator.h"
+#include "ObjectFactory.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Sets default values
@@ -17,6 +18,7 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 	// Set default mesh, also used as default world model for items dropped through inventory
 	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/SoulCave/Environment/Meshes/Building_Slum/SM_Slums_Trashbag.SM_Slums_Trashbag"));
 	//MeshComp->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/SoulCave/Environment/Meshes/Building_Slum/SM_Slums_Trashbag.SM_Slums_Trashbag")));
+
 	RootComponent = MeshComp;
 
 	// Set InventoryTexture
@@ -103,7 +105,6 @@ void AUsableActor::PrintName()
 
 void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
 	// CONTINUE FROM HERE
 	// CONTINUE FROM HERE
 	// CONTINUE FROM HERE
@@ -113,12 +114,16 @@ void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 	if (OtherActor != this)
 	{
 		if (OtherActor != nullptr)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("AUsableActor::OnOverlapBegin"));
-
-			auto OtherActorClassName = OtherActor->GetClass()->GetFName().ToString();
+		{			
+			// If colliding component is SettlementArea, ignore it.
+			auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
+			if (OtherActorCompName == "SettlementArea")
+			{
+				return;
+			}
 
 			// also check for mesh if building, this is to prevent collisions with invisible box components
+			auto OtherActorClassName = OtherActor->GetClass()->GetFName().ToString();
 			if (OtherActorClassName == "BP_Building_C")
 			{
 				UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
@@ -137,23 +142,7 @@ void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 			}
 
 		}
-		/*UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
-		if (Mesh != nullptr)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("COLLISION2"));
-			auto OtherActorClassName = OtherActor->GetClass()->GetFName();
-			auto asd = OtherActorClassName.ToString();
-			UE_LOG(LogTemp, Warning, TEXT("OtherActorClassName: %s"), *asd);
-
-			AActor* Actor = Cast<AActor>(OtherActor);
-			if (OtherActor != nullptr)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("COLLISION33131"));
-				OverlappingActors.Add(OtherActor);
-				if (!bOverlapping)
-					OnOverlappingBegin();
-			}
-		}*/
+		
 	}
 }
 
@@ -192,16 +181,13 @@ void AUsableActor::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class
 
 void AUsableActor::OnOverlappingBegin()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::OnOverlappingBegin"));
 	bOverlapping = true;
 	SetMaterialToGhost();
 }
 
 void AUsableActor::OnOverlappingEnd()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::OnOverlappingEnd"));
 	bOverlapping = false;
-
 	SetMaterialToOriginal();
 }
 

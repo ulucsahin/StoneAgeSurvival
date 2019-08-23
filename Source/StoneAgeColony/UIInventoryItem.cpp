@@ -74,10 +74,6 @@ void UUIInventoryItem::PlaceItem()
 	auto IDAsFName = FName(*IDAsString);
 	auto ObjectNameData = Communicator::GetInstance().ObjectNameDataTable->FindRow<FObjectNameData>(IDAsFName, ContextString, true);
 
-	//AObjectFactory* Factory = NewObject<AObjectFactory>();
-	//Factory->CreateObject()
-
-
 	auto SpawnedItem = Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, SpawnLocation, FRotator::ZeroRotator);
 	SpawnedItem->SetupType(ObjectNameData->Name);
 	SpawnedItem->SetMeshToDefault();

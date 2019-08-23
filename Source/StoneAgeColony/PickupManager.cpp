@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PickupManager.h"
-//#include "Kismet/GameplayStatics.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
-#include "Components/BoxComponent.h"
+
 
 // Sets default values
 APickupManager::APickupManager()
@@ -19,6 +18,9 @@ APickupManager::APickupManager()
 
 	// Initialize object snapper
 	ObjectSnapper = NewObject<AObjectSnapper>();
+
+	// Initialize Box Component
+	//Box = NewObject<UBoxComponent>(CurrentActor);
 }
 
 // Called when the game starts or when spawned
@@ -78,7 +80,7 @@ bool APickupManager::HandlePickup(AUsableActor* Actor)
 				//CurrentActor->SetActorEnableCollision(false);
 				//CurrentActor->MeshComp->MoveIgnoreActors.Add(Player);
 				CurrentActor->MeshComp->SetCollisionProfileName("OverlapAll");
-				auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
+				//auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
 				
 				World->GetTimerManager().SetTimer(TimerHandle, this, &APickupManager::UpdatePreview, 0.015f, true);
 				return true;
@@ -119,6 +121,9 @@ void APickupManager::SetupBoxComponent()
 	{
 
 		Box = NewObject<UBoxComponent>(CurrentActor);
+		// Collision Box Name, if not done here it causes crashes on second pickup.
+		//FString CompName = "PickupManagerBoxComp";
+		//Box->Rename(*CompName); // rename = crash
 		Box->RegisterComponent();
 		Box->SetBoxExtent(CurrentActor->MeshComp->Bounds.BoxExtent);
 		Box->SetVisibility(true);
@@ -141,14 +146,15 @@ void APickupManager::PlaceObject()
 	if (!CurrentActor->bOverlapping)
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
-		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll"); // gotta fix this
+		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll"); // Gotta fix this, not every item blocks all.
 		auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
 		Box->DestroyComponent();
+		
 		CurrentActor = nullptr;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Cannot place object."));
+		UE_LOG(LogTemp, Warning, TEXT("Cannot place object"));
 	}
 	
 }
@@ -187,7 +193,6 @@ void APickupManager::DecreaseForwardBuildingOffset()
 
 void APickupManager::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("TARRAK1:"));
 	if (OtherActor != CurrentActor)
 	{
 		//UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
@@ -197,10 +202,8 @@ void APickupManager::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, c
 			AActor* Actor = Cast<AActor>(OtherActor);
 			if (Actor != nullptr)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("TARRAK2:"));
 			}
 		}
-		UE_LOG(LogTemp, Warning, TEXT("TARRAK3:"));
 	}
 }
 
