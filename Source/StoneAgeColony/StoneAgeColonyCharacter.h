@@ -190,7 +190,7 @@ public:
 	uint32 bUsingMotionControllers : 1;
 
 	// Opens Given UI
-	void OpenMenu(const TCHAR* Reference);
+	void OpenMenu(FString Reference);
 
 private:
 	void HandleFocus();

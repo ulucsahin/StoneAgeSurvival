@@ -47,7 +47,7 @@ public:
 	virtual int GetID() override;
 	// TEST
 	AStoneAgeColonyCharacter* Player;
-
+	
 private:
 	
 	USceneComponent* SceneComponent;
@@ -65,6 +65,4 @@ private:
 	int32 BuildingLimit;
 	float AreaRadius;
 	TSet<AStructure*> Structures;
-
-
 };

@@ -99,12 +99,18 @@ void ASettlement::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 	auto OtherActorCompName = OtherComp->GetFName().ToString();
 	if (OtherActorCompName == "BoxComponent_0") return; // BoxComponent_0 is created by PickupManager when carrying items.
 
-	UE_LOG(LogTemp, Warning, TEXT("ASettlement::OnOverlapBegin --->  OtherActorClassName: %s"), *OtherActorClassName);
-	UE_LOG(LogTemp, Warning, TEXT("ASettlement::OnOverlapBegin --->  OtherActorCompName: %s"), *OtherActorCompName);
+	//UE_LOG(LogTemp, Warning, TEXT("ASettlement::OnOverlapBegin --->  OtherActorClassName: %s"), *OtherActorClassName);
+	//UE_LOG(LogTemp, Warning, TEXT("ASettlement::OnOverlapBegin --->  OtherActorCompName: %s"), *OtherActorCompName);
 	if (OtherActor != this)
 	{
 		if (OtherActor != nullptr)
 		{
+
+			if (OtherActor->IsA(AStructure::StaticClass()))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("This is a structure woooooooooooooooooo"));
+				RegisterStructure((AStructure*)OtherActor);
+			}
 
 			
 			
@@ -138,29 +144,21 @@ void ASettlement::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 void ASettlement::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	//Super::OnOverlapEnd(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
+	auto OtherActorClassName = OtherActor->GetClass()->GetFName().ToString();
 
-	UE_LOG(LogTemp, Warning, TEXT("ASettlement::OnOverlapEnd"));
+	if (OtherActor != this)
+	{
+		if (OtherActor != nullptr)
+		{
+			if (Structures.Contains((AStructure*)OtherActor))
+			{
+				DeRegisterStructure((AStructure*)OtherActor);
 
 
-	//auto OtherActorClassName = OtherActor->GetClass()->GetFName().ToString();
-	//UE_LOG(LogTemp, Warning, TEXT("exit: OtherActorClassName: %s"), *OtherActorClassName);
-	//if (OtherActor != this)
-	//{
-	//	if (OtherActor != nullptr)
-	//	{
-	//		
-	//		
-	//		//if (OverlappingActors.Contains(OtherActor))
-	//		//{
+			}
+		}
 
-	//		//	OverlappingActors.Remove(OtherActor);
-	//		//	if (OverlappingActors.Array().Num() <= 0)
-	//		//		OnOverlappingEnd();
-
-	//		//}
-	//	}
-
-	//}
+	}
 
 
 

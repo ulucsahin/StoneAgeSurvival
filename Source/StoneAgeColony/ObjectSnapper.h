@@ -25,7 +25,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	float CalculateHeight(AUsableActor*);
-	void SnapToGround(AUsableActor*, UWorld*, FVector);
-	void SnapReverse(AUsableActor*, UWorld*, FVector);
+	void SnapToGround(AUsableActor*, UWorld*, FVector, float Threshold);
+	void SnapReverse(AUsableActor*, UWorld*, FVector, float Threshold);
 
 };

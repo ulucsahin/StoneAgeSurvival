@@ -31,7 +31,7 @@ float AObjectSnapper::CalculateHeight(AUsableActor* Actor)
 	return 0.f;
 }
 
-void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Location)
+void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Location, float Threshold)
 {
 	// Z to change
 	float TotalZ = 0.f;
@@ -56,7 +56,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 	FString HittedObjectName = "";
 	FHitResult OutHit(ForceInit);
 	bool Success = true;
-	while (TraceLength > 1.f || TraceLength < -1.f)
+	while (TraceLength > Threshold || TraceLength < -Threshold)
 	{
 		HittedObjectName = "";
 
@@ -81,7 +81,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 		if (HittedObjectName == "StaticMeshActor")
 		{
 			// Snap reverse almost never gets called. Lots of code duplication too. But just here to prevent bugs.
-			SnapReverse(Actor, World, Location);
+			SnapReverse(Actor, World, Location, Threshold);
 			return;
 		}
 
@@ -111,7 +111,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 		if (iteration > 25)
 		{
 			// Snap reverse almost never gets called. Lots of code duplication too. But just here to prevent bugs.
-			SnapReverse(Actor, World, Location);
+			SnapReverse(Actor, World, Location, Threshold);
 			return;
 		}
 	}
@@ -121,7 +121,7 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 
 }
 
-void AObjectSnapper::SnapReverse(AUsableActor* Actor, UWorld* World, FVector Location)
+void AObjectSnapper::SnapReverse(AUsableActor* Actor, UWorld* World, FVector Location, float Threshold)
 {
 	/* if object is going underground snap it back to surface*/
 		// Z to change
@@ -147,7 +147,7 @@ void AObjectSnapper::SnapReverse(AUsableActor* Actor, UWorld* World, FVector Loc
 	FString HittedObjectName = "";
 	FHitResult OutHit(ForceInit);
 	bool Success = true;
-	while (TraceLength > 5.f || TraceLength < -5.f)
+	while (TraceLength > Threshold || TraceLength < -Threshold)
 	{
 		HittedObjectName = "";
 

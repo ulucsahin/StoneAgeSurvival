@@ -104,7 +104,7 @@ void APickupManager::UpdatePreview()
 	auto PlayerCamera = Player->GetFirstPersonCameraComponent();
 	FVector NewLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * (PlayerActorLocationDifference.Size() + ForwardBuildingOffset));
 	CurrentActor->SetActorLocation(NewLocation);
-	ObjectSnapper->SnapToGround(CurrentActor, World, NewLocation);
+	ObjectSnapper->SnapToGround(CurrentActor, World, NewLocation, 1.f);
 	// We already checked CurrentActor before calling this method
 	
 }
@@ -116,29 +116,44 @@ void APickupManager::PreviewMode(bool IsPreview)
 
 void APickupManager::SetupBoxComponent()
 {
-	auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
-	if (!Box)
+	// IMPORTANT: I TURNED THIS OFF SINCE SNAPPING ALREADY PREVENTS COLLISION MOSTLY. WILL FIX LATER.
+	// DONT FORGET TO UNCOMMENT TWO LINES IN PLACE OBJECT METHOD IF YOU SET TYPE TO 0
+
+	int type = 5; // dont forget to comment-uncomment in PlaceObject method too
+	if (type == 0)
 	{
+		auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
+		if (!Box)
+		{
+			Box = NewObject<UBoxComponent>(CurrentActor);
+			Box->RegisterComponent();
+			Box->SetBoxExtent(CurrentActor->MeshComp->Bounds.BoxExtent);
+			Box->SetVisibility(true);
+			Box->bHiddenInGame = false;
+			Box->SetHiddenInGame(false);
 
-		Box = NewObject<UBoxComponent>(CurrentActor);
-		// Collision Box Name, if not done here it causes crashes on second pickup.
-		//FString CompName = "PickupManagerBoxComp";
-		//Box->Rename(*CompName); // rename = crash
-		Box->RegisterComponent();
-		Box->SetBoxExtent(CurrentActor->MeshComp->Bounds.BoxExtent);
-		Box->SetVisibility(true);
-		Box->bHiddenInGame = false;
-		Box->SetHiddenInGame(false);
+			auto CurrentMesh = (UStaticMeshComponent*)CurrentActor->GetComponentByClass(UStaticMeshComponent::StaticClass());
+			//CurrentMesh->OnComponentBeginOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapBegin); // TODO: it works but collision becomes way too sensitive, fix it.
+			//CurrentMesh->OnComponentEndOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapEnd);
+			Box->AttachTo(CurrentMesh);
+			Box->SetRelativeLocation(FVector(0.f, 0.f, CurrentActor->MeshComp->Bounds.BoxExtent.Z));
+			Box->OnComponentBeginOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapBegin);
+			Box->OnComponentEndOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapEnd);
+			Box->SetCollisionProfileName("OverlapAll");
 
-		//UBoxComponent* Box = CurrentActor->CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
-		auto CurrentMesh = (UStaticMeshComponent*)CurrentActor->GetComponentByClass(UStaticMeshComponent::StaticClass());
-		Box->AttachTo(CurrentMesh);
-		Box->SetRelativeLocation(FVector(0.f, 0.f, CurrentActor->MeshComp->Bounds.BoxExtent.Z));
-		Box->OnComponentBeginOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapBegin);
-		Box->OnComponentEndOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapEnd);
-		Box->SetCollisionProfileName("OverlapAll");
-		
+		}
 	}
+	else if (type == 1)
+	{
+		auto CurrentMesh = (UStaticMeshComponent*)CurrentActor->GetComponentByClass(UStaticMeshComponent::StaticClass());
+		CurrentMesh->OnComponentBeginOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapBegin); // TODO: it works but collision becomes way too sensitive, fix it.
+		CurrentMesh->OnComponentEndOverlap.AddDynamic(CurrentActor, &AUsableActor::OnOverlapEnd);
+	}
+	
+
+	
+
+
 }
 
 void APickupManager::PlaceObject()
@@ -147,8 +162,10 @@ void APickupManager::PlaceObject()
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
 		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll"); // Gotta fix this, not every item blocks all.
-		auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
-		Box->DestroyComponent();
+
+		// IMPORTANT: IF TYPE IS 0 UNCOMMENT THESE 2 LINES.
+		//auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
+		//Box->DestroyComponent();
 		
 		CurrentActor = nullptr;
 	}

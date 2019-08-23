@@ -446,18 +446,15 @@ void AStoneAgeColonyCharacter::Gather()
 	}
 }
 
-void AStoneAgeColonyCharacter::OpenMenu(const TCHAR* Reference)
+void AStoneAgeColonyCharacter::OpenMenu(FString Reference)
 {
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *Data->Menu);
 	
 	// Open CraftingStation Menu
 	FStringClassReference MyWidgetClassRef(Reference);
 	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
 	auto MenuWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
 	MenuWidget->AddToViewport();
-
 	if (PlayerController)
 	{
 		PlayerController->SetInputMode(FInputModeGameAndUI());
@@ -473,9 +470,14 @@ void AStoneAgeColonyCharacter::CloseAllMenus()
 {
 	for (auto x : OpenedMenus)
 	{
-		x->RemoveFromParent();
+		if (x)
+		{	
+			x->RemoveFromParent();  // this causes crash sometimes, gc?
+		}
+		
 	}
-
+	OpenedMenus.Empty();
+	
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PlayerController)
 	{
@@ -484,7 +486,6 @@ void AStoneAgeColonyCharacter::CloseAllMenus()
 		PlayerController->bEnableClickEvents = false;
 		PlayerController->bEnableMouseOverEvents = false;
 	}
-
 	InventoryOn = false;
 }
 
@@ -789,6 +790,6 @@ void AStoneAgeColonyCharacter::Debug()
 	//Settlement->Player = this;
 	
 	//Settlement->AdjustAreaDisplayerLocation();
-
+	GEngine->ForceGarbageCollection();
 	CloseAllMenus();
 }
