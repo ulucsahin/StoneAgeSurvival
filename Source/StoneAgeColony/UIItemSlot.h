@@ -25,6 +25,9 @@ public:
 	int32 ItemAmount = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
+	FString ItemName = "PlaceholderItemName";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Stats")
 	UTexture2D* InventoryTexture;
 
 	UFUNCTION(BlueprintCallable, Category = "Lol")

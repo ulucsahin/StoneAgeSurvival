@@ -53,7 +53,7 @@ private:
 	USceneComponent* SceneComponent;
 	USphereComponent* SettlementArea;
 	UStaticMeshComponent* AreaDisplayer;
-	UStaticMeshComponent* SettlementMesh;
+	//UStaticMeshComponent* SettlementMesh;
 	UMaterial* AreaDisplayerMaterial;
 	float OriginalAreaDisplayerSize;
 

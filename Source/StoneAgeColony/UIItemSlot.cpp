@@ -17,12 +17,13 @@ void UUIItemSlot::SetupInventoryItemCell()
 	if (PlayerCharacter)
 	{
 		// Set texture and amount variables
-		UE_LOG(LogTemp, Warning, TEXT("UUIItemSlot::SetupInventoryItemCell Item ID %d"), ItemID);
+		UE_LOG(LogTemp, Warning, TEXT("UUIItemSlot::SetupInventoryItemCell Item ID: %d"), ItemID);
 		//InventoryTexture = Communicator::GetInstance().UsableItemIDMap[ItemID]->InventoryTexture;
 
 		AObjectFactory* Factory = NewObject<AObjectFactory>();
 		auto SlotObject =  Factory->CreateObjectBetter(ItemID);
 		InventoryTexture = SlotObject->InventoryTexture;
+		ItemName = Factory->GetObjectNameFromID(ItemID);
 
 		if (PlayerCharacter->Inventory.Contains(ItemID))
 		{

@@ -41,13 +41,15 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	OriginalAreaDisplayerSize = AreaDisplayerSize.X;
 	RootComponent = SceneComponent;
 
+
+	MeshComp;
 	// Setup main mesh
-	SettlementMesh = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("SettlementMesh"));
-	auto TestSettlementMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/StarterContent/Props/SM_TableRound.SM_TableRound")); // temporary mesh
-	SettlementMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	SettlementMesh->SetCollisionProfileName("BlockAll");
-	SettlementMesh->SetupAttachment(RootComponent);
-	SettlementMesh->SetStaticMesh(TestSettlementMesh);
+	MeshComp = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("SettlementMesh"));
+	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/StarterContent/Props/SM_TableRound.SM_TableRound")); // temporary mesh
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	MeshComp->SetCollisionProfileName("BlockAll");
+	MeshComp->SetupAttachment(RootComponent);
+	MeshComp->SetStaticMesh(DefaultMesh);
 	
 	// Initialize properties
 	Name = FName(TEXT("Prontera"));
@@ -108,7 +110,7 @@ void ASettlement::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 
 			if (OtherActor->IsA(AStructure::StaticClass()))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("This is a structure woooooooooooooooooo"));
+				UE_LOG(LogTemp, Warning, TEXT("This is a structure"));
 				RegisterStructure((AStructure*)OtherActor);
 			}
 

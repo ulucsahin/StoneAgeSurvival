@@ -49,15 +49,6 @@ AObjectFactory::AObjectFactory()
 
 }
 
-//AObjectFactory* AObjectFactory::GetInstance()
-//{
-//	if (!instance)
-//	{
-//		instance = NewObject<AObjectFactory>();
-//	}
-//	return instance;
-//}
-
 template <typename T>
 T* AObjectFactory::CreateObject(int32 ObjectID)
 {
@@ -125,6 +116,11 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	{
 		ObjectToReturn = NewObject<ACraftingStation>();
 	}
+	// CraftingMaterials
+	else if(ObjectID >= 500 && ObjectID <= 699)
+	{
+		//ObjectToReturn = NewObject<ACraftingMaterial>();
+	}
 	// Equipment
 	else if (ObjectID >= 1000 && ObjectID <= 1199)
 	{
@@ -142,3 +138,14 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	return ObjectToReturn;
 }
 
+FString AObjectFactory::GetObjectNameFromID(int32 ObjectID)
+{
+	// Get ObjectName from tables
+	FString Tmp = FString::FromInt(ObjectID);
+	FName ObjectID_ = FName(*Tmp);
+	const FString ContextString(TEXT("Object Type Context"));
+	auto Data = IDtoNameTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
+	auto ObjectName = Data->Name;
+
+	return ObjectName;
+}

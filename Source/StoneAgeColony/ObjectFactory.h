@@ -5,10 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
-
-
-
-
 #include "ObjectFactory.generated.h"
 
 
@@ -40,6 +36,8 @@ public:
 	T* CreateObject(int32 ObjectID);
 
 	AUsableActor* CreateObjectBetter(int32 ObjectID);
+
+	FString GetObjectNameFromID(int32 ObjectID);
 	
 private:
 	

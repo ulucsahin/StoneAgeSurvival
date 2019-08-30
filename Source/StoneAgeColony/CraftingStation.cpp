@@ -16,7 +16,9 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 	{
 		PropertiesDataTable = PropertiesDataObject.Object;
 	}
-	
+
+	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/MultistoryDungeons/Meshes/Props/Table_Wooden_01.Table_Wooden_01"));
+
 	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::ACraftingStation"));
 }
 
@@ -28,6 +30,12 @@ void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 	//((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(0, 1);
 }
 
+void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
+{
+	((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);
+	MenuOpen = true;
+}
+
 void ACraftingStation::SetupType(FString Type)
 {
 	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::SetupType"));
@@ -36,7 +44,8 @@ void ACraftingStation::SetupType(FString Type)
 	const FString ContextString(TEXT("Edible Type Context"));
 	Data = PropertiesDataTable->FindRow<FCraftingStationData>(CraftingStationType, ContextString, true);
 	ID = Data->ID;
-
+	CraftRequirements = Data->CraftRequirements;
+	CraftableItems = Data->CraftableItems;
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Icon.IsPending())
 	{
@@ -45,22 +54,25 @@ void ACraftingStation::SetupType(FString Type)
 		const FStringAssetReference& IconRef = Data->Icon.ToStringReference();
 		Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(IconRef));
 
+		const FStringAssetReference& MeshRef = Data->Mesh.ToStringReference();
+		Data->Mesh = Cast<UStaticMesh>(AssetMgr.SynchronousLoad(MeshRef));
+
+
+
 		//const FStringAssetReference& MenuRef = Data->Menu.ToStringReference();
 		//Data->Menu = Cast<UTexture2D>(AssetMgr.SynchronousLoad(MenuRef));
 	}
 
 	InventoryTexture = Data->Icon.Get();
+	DefaultMesh = Data->Mesh.Get();
 	//Menu = Data->Menu.Get();
 }
 
 
 
-void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
-{
-	((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);
-	MenuOpen = true;
-}
 
+
+// NOT CALLED, now handled in settlement OnOverlapBegin
 void ACraftingStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
@@ -73,7 +85,7 @@ void ACraftingStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 			if (OtherActorCompName == "SettlementArea")
 			{
 				((ASettlement*)OtherActor)->RegisterStructure(this);
-				UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd ---> RegisterStructure"));
+				UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd ----> RegisterStructure"));
 			}
 			
 		}
@@ -81,6 +93,7 @@ void ACraftingStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 
 }
 
+// NOT CALLED, now handled in settlement OnOverlapEnd
 void ACraftingStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	Super::OnOverlapEnd(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);

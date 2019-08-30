@@ -281,6 +281,9 @@ void AStoneAgeColonyCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	PlayerInputComponent->BindAction("ScrollUp", IE_Pressed, this, &AStoneAgeColonyCharacter::ScrollUp);
 	PlayerInputComponent->BindAction("ScrollDown", IE_Pressed, this, &AStoneAgeColonyCharacter::ScrollDown);
 
+	PlayerInputComponent->BindAction("ShiftScrollUp", IE_Pressed, this, &AStoneAgeColonyCharacter::ShiftScrollUp);
+	PlayerInputComponent->BindAction("ShiftScrollDown", IE_Pressed, this, &AStoneAgeColonyCharacter::ShiftScrollDown);
+
 	PlayerInputComponent->BindAction("RightClick", IE_Pressed, this, &AStoneAgeColonyCharacter::RightClick);
 	PlayerInputComponent->BindAction("ShiftRightClick", IE_Pressed, this, &AStoneAgeColonyCharacter::ShiftRightClick);
 	
@@ -711,6 +714,26 @@ void AStoneAgeColonyCharacter::ScrollDown()
 	}
 }
 
+void AStoneAgeColonyCharacter::ShiftScrollUp()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("ShiftScrollUp"));
+
+	if (PlayerStates == EPlayerStates::VE_Pickup)
+	{
+		PickupManager->IncreaseRotation();
+	}
+}
+
+void AStoneAgeColonyCharacter::ShiftScrollDown()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("ShiftScrollDown"));
+
+	if (PlayerStates == EPlayerStates::VE_Pickup)
+	{
+		PickupManager->DecreaseRotation();
+	}
+}
+
 void AStoneAgeColonyCharacter::RightClick()
 {
 	if (PlayerStates == EPlayerStates::VE_Building)
@@ -769,6 +792,7 @@ void AStoneAgeColonyCharacter::HideFirstPersonHands(bool Hide)
 void AStoneAgeColonyCharacter::Debug()
 {
 	UE_LOG(LogTemp, Warning, TEXT("hehe debugg XD"));
+	UE_LOG(LogTemp, Warning, TEXT("hehe debugg XD32"));
 
 	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
 

@@ -42,6 +42,8 @@ public:
 	void CancelPlacingObject();
 	void IncreaseForwardBuildingOffset();
 	void DecreaseForwardBuildingOffset();
+	void IncreaseRotation();
+	void DecreaseRotation();
 private:
 	AStoneAgeColonyCharacter* Player;
 	UWorld* World;
@@ -52,7 +54,9 @@ private:
 	FTimerHandle TimerHandle;
 	FVector PlayerActorLocationDifference;
 	FVector ActorInitialLocation;
+	FRotator ActorInitialRotation;
 	int32 ForwardBuildingOffset;
+	float RotationOffset;
 	AObjectSnapper* ObjectSnapper;
 	//UBoxComponent* Box;
 	

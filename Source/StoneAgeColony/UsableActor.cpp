@@ -16,9 +16,8 @@ AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : 
 	MeshComp = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("Mesh"));
 
 	// Set default mesh, also used as default world model for items dropped through inventory
-	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/SoulCave/Environment/Meshes/Building_Slum/SM_Slums_Trashbag.SM_Slums_Trashbag"));
+	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/SoulCave/Environment/Meshes/Bricks/SM_Cave_Brick_01e.SM_Cave_Brick_01e"));
 	//MeshComp->SetStaticMesh(LoadObject<UStaticMesh>(nullptr, TEXT("/Game/SoulCave/Environment/Meshes/Building_Slum/SM_Slums_Trashbag.SM_Slums_Trashbag")));
-
 	RootComponent = MeshComp;
 
 	// Set InventoryTexture

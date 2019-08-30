@@ -19,6 +19,8 @@ APickupManager::APickupManager()
 	// Initialize object snapper
 	ObjectSnapper = NewObject<AObjectSnapper>();
 
+
+	RotationOffset = 0.f;
 	// Initialize Box Component
 	//Box = NewObject<UBoxComponent>(CurrentActor);
 }
@@ -76,6 +78,7 @@ bool APickupManager::HandlePickup(AUsableActor* Actor)
 			{
 				SetupBoxComponent();
 				ActorInitialLocation = CurrentActor->GetActorLocation();
+				ActorInitialRotation = CurrentActor->GetActorRotation();
 				PlayerActorLocationDifference = ActorInitialLocation - Player->GetActorLocation();
 				//CurrentActor->SetActorEnableCollision(false);
 				//CurrentActor->MeshComp->MoveIgnoreActors.Add(Player);
@@ -104,6 +107,12 @@ void APickupManager::UpdatePreview()
 	auto PlayerCamera = Player->GetFirstPersonCameraComponent();
 	FVector NewLocation = Player->GetActorLocation() + (PlayerCamera->GetForwardVector() * (PlayerActorLocationDifference.Size() + ForwardBuildingOffset));
 	CurrentActor->SetActorLocation(NewLocation);
+	
+	// Set Rotation
+	auto Rotation = ActorInitialRotation;
+	Rotation.Yaw = ActorInitialRotation.Yaw + RotationOffset;
+	CurrentActor->SetActorRotation(Rotation);
+
 	ObjectSnapper->SnapToGround(CurrentActor, World, NewLocation, 1.f);
 	// We already checked CurrentActor before calling this method
 	
@@ -166,7 +175,8 @@ void APickupManager::PlaceObject()
 		// IMPORTANT: IF TYPE IS 0 UNCOMMENT THESE 2 LINES.
 		//auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());
 		//Box->DestroyComponent();
-		
+
+		RotationOffset = 0.f;
 		CurrentActor = nullptr;
 	}
 	else
@@ -182,6 +192,7 @@ void APickupManager::CancelPlacingObject()
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
 		CurrentActor->SetActorLocation(ActorInitialLocation);
+		CurrentActor->SetActorRotation(ActorInitialRotation);
 		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll");
 		//CurrentActor->SetActorEnableCollision(true);
 		CurrentActor = nullptr;
@@ -207,6 +218,15 @@ void APickupManager::DecreaseForwardBuildingOffset()
 	}
 }
 
+void APickupManager::IncreaseRotation()
+{
+	RotationOffset += 5.f;
+}
+
+void APickupManager::DecreaseRotation()
+{
+	RotationOffset -= 5.f;
+}
 
 void APickupManager::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

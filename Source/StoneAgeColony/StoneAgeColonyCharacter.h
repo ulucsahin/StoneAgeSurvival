@@ -234,6 +234,8 @@ protected:
 
 	void ScrollUp();
 	void ScrollDown();
+	void ShiftScrollUp();
+	void ShiftScrollDown();
 	void RightClick();
 	void ShiftRightClick();
 	void InteractPickup();

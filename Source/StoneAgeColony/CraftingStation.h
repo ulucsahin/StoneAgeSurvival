@@ -18,13 +18,16 @@ public:
 	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	int32 WoodRequirement;
+	TMap<int32, int32> CraftRequirements;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	int32 StoneRequirement;
+	TArray<int32> CraftableItems;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	TAssetPtr<UTexture2D> Icon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	TAssetPtr<UStaticMesh> Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	FString Menu;
@@ -48,13 +51,13 @@ public:
 	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	//TMap<int32, int32> CraftRequirements; //moved to AUsableActor base class
+	TArray<int32> CraftableItems;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 
 private:
 	int32 ID;
-	int32 WoodRequirement;
-	int32 StoneRequirement;
 	FName CraftingStationType;
 	FCraftingStationData* Data;
 

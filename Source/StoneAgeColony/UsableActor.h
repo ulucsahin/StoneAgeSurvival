@@ -91,11 +91,13 @@ public:
 	void SetMeshToDefault();
 
 	bool bOverlapping;
+
+	UStaticMesh* DefaultMesh;
+	TMap<int32, int32> CraftRequirements;
 private:
 	UMaterialInterface* OriginalMaterial;
 	UMaterial* GhostMaterial;
 	UMaterial* CollisionMaterial;
-	UStaticMesh* DefaultMesh;
 	TSet<AActor*> OverlappingActors;
 	bool bIsPickupable = true;
 };
