@@ -4,14 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Runtime/UMG/Public/Components/WrapBox.h"
-#include "Runtime/UMG/Public/Components/VerticalBox.h"
-#include "StoneAgeColonyCharacter.h"
-#include "UIItemSlot.h"
 #include "CraftingStationMenu.generated.h"
 
 class UCraftListButton;
-
+class AStoneAgeColonyCharacter;
+class UTextBlock;
+class UVerticalBox;
 
 UCLASS()
 class STONEAGECOLONY_API UCraftingStationMenu : public UUserWidget
@@ -23,6 +21,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "CraftingItems")
 	UVerticalBox* VerticalBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "CraftingItems")
+	UTextBlock* DescriptionText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "CraftingItems")
+	UTextBlock* RequirementsText;
 
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void RegisterToPlayer(AStoneAgeColonyCharacter* Player);

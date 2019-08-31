@@ -94,6 +94,7 @@ public:
 
 	UStaticMesh* DefaultMesh;
 	TMap<int32, int32> CraftRequirements;
+	FText Description;
 private:
 	UMaterialInterface* OriginalMaterial;
 	UMaterial* GhostMaterial;

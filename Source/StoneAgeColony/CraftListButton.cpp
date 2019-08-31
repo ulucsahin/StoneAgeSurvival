@@ -3,18 +3,37 @@
 #include "CraftListButton.h"
 #include "ObjectFactory.h"
 #include "StoneAgeColonyCharacter.h"
+#include "CraftingStationMenu.h"
+#include "UsableActor.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+
+UCraftListButton::UCraftListButton(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	
+}
+
+void UCraftListButton::CreateRequiredObjects()
+{
+	/* Should be called OnButtonClick and OnButtonHover only. No need to call in other functions. */
+
+	if (Factory == nullptr)
+	{
+		Factory = NewObject<AObjectFactory>();
+	}
+	if (RepresentedItem == nullptr)
+	{
+		RepresentedItem = Factory->CreateObjectBetter(ItemID);
+	}
+	
+}
 
 void UCraftListButton::OnButtonClick()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::OnClick"));
-	UE_LOG(LogTemp, Warning, TEXT("ItemID: %d"), ItemID);
-	UE_LOG(LogTemp, Warning, TEXT("ItemName %s"), *ItemName);
-	UE_LOG(LogTemp, Warning, TEXT("ItemAmount %d"), ItemAmount);
-
+	CreateRequiredObjects();
+	
 	if (CraftingRequirementMet())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Craft item hehe xD"));
+		UE_LOG(LogTemp, Warning, TEXT("Craft item hehe xd"));
 		AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 
 		if (Player)
@@ -23,6 +42,13 @@ void UCraftListButton::OnButtonClick()
 		}
 	}
 
+}
+
+void UCraftListButton::OnButtonHover()
+{
+	CreateRequiredObjects();
+	SetDescriptionText();
+	SetRequirementsText();
 }
 
 bool UCraftListButton::CraftingRequirementMet() 
@@ -36,10 +62,7 @@ bool UCraftListButton::CraftingRequirementMet()
 	{
 		auto PlayerInventory = Player->GetInventory();
 
-		AObjectFactory* Factory = NewObject<AObjectFactory>();
-		auto Item = Factory->CreateObjectBetter(ItemID);
-
-		for (auto Requirement : Item->CraftRequirements)
+		for (auto Requirement : RepresentedItem->CraftRequirements)
 		{
 			int32 RequiredItem = Requirement.Key;
 			int32 RequiredAmount = Requirement.Value;
@@ -64,3 +87,33 @@ bool UCraftListButton::CraftingRequirementMet()
 
 	return RequirementsMet;
 }
+
+void UCraftListButton::SetStationMenu(UCraftingStationMenu* StationMenu)
+{
+	this->BelongingStationMenu = StationMenu;
+}
+
+void UCraftListButton::SetDescriptionText()
+{
+	FText Description = RepresentedItem->Description; //FText::FromString("hehe XD");
+	BelongingStationMenu->DescriptionText->SetText(Description);
+}
+
+void UCraftListButton::SetRequirementsText()
+{
+	FString RepresentedItemName = Factory->GetObjectNameFromID(ItemID);
+
+	FString Requirements = "Required items for crafting " + RepresentedItemName + ":\n";
+	for (auto Requirement : RepresentedItem->CraftRequirements)
+	{
+		int32 RequiredItem = Requirement.Key;
+		FString RequiredAmount = FString::FromInt(Requirement.Value);
+
+		auto RequiredItemName = Factory->GetObjectNameFromID(RequiredItem);
+
+		Requirements.Append(RequiredItemName + ": " + RequiredAmount + "\n");
+	}
+
+	FText Requirements_ = FText::FromString(Requirements);
+	BelongingStationMenu->RequirementsText->SetText(Requirements_);
+} 

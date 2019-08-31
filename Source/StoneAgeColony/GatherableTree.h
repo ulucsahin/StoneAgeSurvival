@@ -25,9 +25,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	int32 GatherID;
 
-	/** Icon to use for Achivement */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	TAssetPtr<UTexture2D> Icon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	FText Description;
 
 };
 

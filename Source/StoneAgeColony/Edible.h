@@ -27,6 +27,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	TAssetPtr<UTexture2D> Icon;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	FText Description;
+
 };
 
 

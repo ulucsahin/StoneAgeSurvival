@@ -5,6 +5,9 @@
 #include "UObject/ConstructorHelpers.h"
 #include "ObjectFactory.h"
 #include "CraftListButton.h"
+#include "StoneAgeColonyCharacter.h"
+#include "Runtime/UMG/Public/Components/VerticalBox.h"
+#include "Runtime/UMG/Public/Components/TextBlock.h"
 
 UCraftingStationMenu::UCraftingStationMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -30,11 +33,12 @@ void UCraftingStationMenu::AddItems(int32 CraftStationID)
 
 		UE_LOG(LogTemp, Warning, TEXT("UCraftingStationMenu::AddItems."));
 		
-		auto BarItem = CreateWidget<UCraftListButton>((APlayerController*)Player->GetController(), CraftMenuItem);
-		BarItem->ItemID = Item;
-		BarItem->SetupInventoryItemCell();
+		auto CraftListButton = CreateWidget<UCraftListButton>((APlayerController*)Player->GetController(), CraftMenuItem);
+		CraftListButton->ItemID = Item;
+		CraftListButton->SetupInventoryItemCell();
+		CraftListButton->SetStationMenu(this);
 
 		// WrapBox assigned from blueprint
-		VerticalBox->AddChild(BarItem);
+		VerticalBox->AddChild(CraftListButton);
 	}
 }

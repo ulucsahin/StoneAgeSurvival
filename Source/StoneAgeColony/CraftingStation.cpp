@@ -46,6 +46,8 @@ void ACraftingStation::SetupType(FString Type)
 	ID = Data->ID;
 	CraftRequirements = Data->CraftRequirements;
 	CraftableItems = Data->CraftableItems;
+	Description = Data->Description;
+
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Icon.IsPending())
 	{
@@ -57,15 +59,10 @@ void ACraftingStation::SetupType(FString Type)
 		const FStringAssetReference& MeshRef = Data->Mesh.ToStringReference();
 		Data->Mesh = Cast<UStaticMesh>(AssetMgr.SynchronousLoad(MeshRef));
 
-
-
-		//const FStringAssetReference& MenuRef = Data->Menu.ToStringReference();
-		//Data->Menu = Cast<UTexture2D>(AssetMgr.SynchronousLoad(MenuRef));
 	}
 
 	InventoryTexture = Data->Icon.Get();
 	DefaultMesh = Data->Mesh.Get();
-	//Menu = Data->Menu.Get();
 }
 
 

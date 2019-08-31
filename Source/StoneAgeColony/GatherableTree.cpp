@@ -38,6 +38,7 @@ void AGatherableTree::SetupType(FString Type)
 	const FString ContextString(TEXT("Gatherable Type Context"));
 	Data = PropertiesDataTable->FindRow<FGatherableData>(Type_, ContextString, true);
 	ID = Data->ID;
+	Description = Data->Description;
 
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Icon.IsPending()) 

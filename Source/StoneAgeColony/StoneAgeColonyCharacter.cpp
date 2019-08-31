@@ -12,6 +12,7 @@
 #include "DrawDebugHelpers.h"
 #include "SurvivalGameInstance.h"
 #include "UsableActor.h"
+#include "PickupManager.h"
 
 #include "Building.h"
 #include "BuildingManager.h"

@@ -30,6 +30,7 @@ void AEdible::SetupType(FString Type)
 	const FString ContextString(TEXT("Edible Type Context"));
 	Data = PropertiesDataTable->FindRow<FEdibleData>(EdibleType, ContextString, true);
 	ID = Data->ID;
+	Description = Data->Description;
 
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Icon.IsPending())

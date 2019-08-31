@@ -6,6 +6,7 @@
 #include "UsableActor.h"
 #include "CraftingMaterial.generated.h"
 
+
 USTRUCT(BlueprintType)
 struct FCraftingMaterialData : public FTableRowBase
 {
@@ -23,6 +24,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	TAssetPtr<UTexture2D> Icon;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	FText Description;
+
 };
 
 
@@ -30,6 +34,6 @@ UCLASS()
 class STONEAGECOLONY_API ACraftingMaterial : public AUsableActor
 {
 	GENERATED_BODY()
-	
 
+	
 };
