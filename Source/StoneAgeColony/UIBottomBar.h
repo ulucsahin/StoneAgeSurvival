@@ -4,14 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "BottomBarItem.h"
-#include "StoneAgeColonyCharacter.h"
-#include "Runtime/UMG/Public/Components/WrapBox.h"
+//#include "BottomBarItem.h"
+//#include "StoneAgeColonyCharacter.h"
+//#include "Runtime/UMG/Public/Components/WrapBox.h"
 #include "UIBottomBar.generated.h"
 
-/**
- * 
- */
+
+class UBottomBarItem;
+class AStoneAgeColonyCharacter;
+class UWrapBox;
+
+
 UCLASS()
 class STONEAGECOLONY_API UUIBottomBar : public UUserWidget
 {

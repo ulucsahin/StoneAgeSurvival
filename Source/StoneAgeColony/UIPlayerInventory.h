@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Runtime/UMG/Public/Components/WrapBox.h"
-#include "UIInventoryItem.h"
-#include "StoneAgeColonyCharacter.h"
+//#include "Runtime/UMG/Public/Components/WrapBox.h"
+//#include "UIInventoryItem.h"
+//#include "StoneAgeColonyCharacter.h"
 #include "UIPlayerInventory.generated.h"
 
+class UWrapBox;
+class UUIInventoryItem;
+class AStoneAgeColonyCharacter;
 /**
  * 
  */

@@ -10,9 +10,14 @@
 #include "Building.h"
 #include "SaveGameEntity.generated.h"
 
-/**
- * 
- */
+//class AEnemyCharacter;
+//class AGatherableTree;
+//class ABuilding;
+//class USurvivalGameInstance;
+//struct FHumanCharacterDetails;
+//struct FGatherableTreeDetails;
+//struct FBuildingDetails;
+
 UCLASS()
 class STONEAGECOLONY_API USaveGameEntity : public USaveGame
 {

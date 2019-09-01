@@ -13,7 +13,7 @@
 #include "Settlement.h"
 #include "Edible.h"
 #include "CraftingStation.h"
-
+#include "UsableActor.h"
 //AObjectFactory* AObjectFactory::instance;
 
 // Sets default values

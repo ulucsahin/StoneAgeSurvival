@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+//#include "GameFramework/Actor.h"
 #include "UsableActor.h"
-#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+//#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "Structure.generated.h"
+
+class UUserWidget;
 
 UCLASS()
 class STONEAGECOLONY_API AStructure : public AUsableActor

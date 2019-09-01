@@ -3,9 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "StoneAgeColonyCharacter.h"
+//#include "StoneAgeColonyCharacter.h"
 #include "Blueprint/UserWidget.h"
 #include "UIItemSlot.generated.h"
+
+class AStoneAgeColonyCharacter;
+
+
 
 /** Base class for all slot objects in user interface such as items in inventory etc.
  * 

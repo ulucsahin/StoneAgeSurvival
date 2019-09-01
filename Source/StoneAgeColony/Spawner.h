@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "EnemyCharacter.h"
+//#include "EnemyCharacter.h"
 #include "Spawner.generated.h"
+
+class AEnemyCharacter;
 
 UCLASS()
 class STONEAGECOLONY_API ASpawner : public AActor

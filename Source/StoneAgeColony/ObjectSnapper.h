@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "UsableActor.h"
+//#include "UsableActor.h"
 #include "ObjectSnapper.generated.h"
+
+class AUsableActor;
 
 UCLASS()
 class STONEAGECOLONY_API AObjectSnapper : public AActor

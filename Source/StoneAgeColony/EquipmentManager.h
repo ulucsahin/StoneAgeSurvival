@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "HumanCharacter.h"
+//#include "HumanCharacter.h"
 #include "Equipment.h"
 #include "EquipmentManager.generated.h"
 
+class AHumanCharacter;
+//class AEquipment;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class STONEAGECOLONY_API UEquipmentManager : public UActorComponent

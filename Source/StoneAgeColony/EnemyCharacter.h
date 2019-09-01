@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "HumanCharacter.h"
-#include "GameFramework/Character.h"
+//#include "GameFramework/Character.h"
 #include "EnemyCharacter.generated.h"
 
 //USTRUCT(BlueprintType)
@@ -18,6 +18,7 @@
 //	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FaceDetails")
 //	TMap<FName, float> FaceDetails;
 //};
+
 
 UCLASS()
 class STONEAGECOLONY_API AEnemyCharacter : public AHumanCharacter

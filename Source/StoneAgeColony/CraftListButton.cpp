@@ -6,6 +6,7 @@
 #include "CraftingStationMenu.h"
 #include "UsableActor.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/UMG/Public/Components/TextBlock.h"
 
 UCraftListButton::UCraftListButton(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

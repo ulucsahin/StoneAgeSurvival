@@ -5,6 +5,10 @@
 #include "SurvivalGameState.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Classes/Components/SkyLightComponent.h"
+#include "Runtime/Engine/Classes/Components/AudioComponent.h"
+#include "Runtime/Engine/Classes/Engine/DirectionalLight.h"
+#include "Runtime/Engine/Classes/Sound/SoundCue.h"
+#include "Runtime/Engine/Classes/Engine/SkyLight.h"
 
 
 // Sets default values

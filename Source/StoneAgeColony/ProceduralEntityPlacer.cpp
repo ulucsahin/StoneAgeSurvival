@@ -2,6 +2,7 @@
 
 #include "ProceduralEntityPlacer.h"
 #include "GatherableObject.h"
+#include "GatherableTree.h"
 
 // Sets default values
 AProceduralEntityPlacer::AProceduralEntityPlacer()

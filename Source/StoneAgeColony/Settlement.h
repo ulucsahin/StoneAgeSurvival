@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "Structure.h"
-#include "Components/SphereComponent.h"
+//#include "GameFramework/Actor.h"
+//#include "Structure.h"
+//#include "Components/SphereComponent.h"
 #include "UsableActor.h"
 #include "Settlement.generated.h"
 
 //
 class AStoneAgeColonyCharacter;
+class AStructure;
+class USphereComponent;
+class AActor;
 
 UCLASS()
 class STONEAGECOLONY_API ASettlement : public AUsableActor

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 //#include "UsableActor.h"
 #include "GatherableObject.h"
+#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "GatherableTree.generated.h"
 
 // Object details

@@ -2,8 +2,9 @@
 
 #include "PickupManager.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Building.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
-
+#include "Runtime/Engine/Classes/Camera/CameraComponent.h"
 
 // Sets default values
 APickupManager::APickupManager()

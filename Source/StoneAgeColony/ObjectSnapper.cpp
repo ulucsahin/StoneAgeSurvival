@@ -2,6 +2,7 @@
 
 #include "ObjectSnapper.h"
 #include "DrawDebugHelpers.h"
+#include "UsableActor.h"
 
 // Sets default values
 AObjectSnapper::AObjectSnapper()

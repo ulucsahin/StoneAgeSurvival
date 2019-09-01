@@ -4,6 +4,7 @@
 //#include "Runtime/Engine/Classes/Engine/World.h"
 #include "Communicator.h"
 #include "StoneAgeColonyCharacter.h"
+#include "EnemyCharacter.h"
 //#include "Spawner.h"
  
 void APeopleSpawner::BeginPlay()

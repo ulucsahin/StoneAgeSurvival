@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GatherableTree.h"
+//#include "GatherableTree.h"
 #include "ProceduralEntityPlacer.generated.h"
+
+class AGatherableTree;
 
 UCLASS()
 class STONEAGECOLONY_API AProceduralEntityPlacer : public AActor

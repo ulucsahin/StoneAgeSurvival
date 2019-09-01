@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "StoneAgeColonyCharacter.h"
+//#include "StoneAgeColonyCharacter.h"
 #include "Building.h"
 #include "BuildingManager.generated.h"
 
+class AStoneAgeColonyCharacter;
+//class ABuilding;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class STONEAGECOLONY_API UBuildingManager : public UActorComponent

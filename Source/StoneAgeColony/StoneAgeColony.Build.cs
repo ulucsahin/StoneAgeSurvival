@@ -7,8 +7,8 @@ public class StoneAgeColony : ModuleRules
 	public StoneAgeColony(ReadOnlyTargetRules Target) : base(Target)
 	{
         // Test for fastening compile times
-        //MinFilesUsingPrecompiledHeaderOverride = 1;
-        //bFasterWithoutUnity = true;
+        MinFilesUsingPrecompiledHeaderOverride = 1;
+        bFasterWithoutUnity = true;
 
 
 

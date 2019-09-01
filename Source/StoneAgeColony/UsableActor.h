@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "UsableActor.generated.h"
 
+class UMaterial;
 
 USTRUCT(BlueprintType)
 struct FUsableActorData : public FTableRowBase

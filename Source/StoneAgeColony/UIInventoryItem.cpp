@@ -8,7 +8,10 @@
 //#include "PickupManager.h"
 //#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 //#include "Runtime/Engine/Classes/Engine/AssetManager.h"
+#include "Runtime/UMG/Public/Components/TextBlock.h"
 #include "ObjectFactory.h"
+#include "StoneAgeColonyCharacter.h"
+#include "UIPlayerInventory.h"
 
 UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

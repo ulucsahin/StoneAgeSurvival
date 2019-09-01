@@ -2,6 +2,9 @@
 
 #include "Settlement.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Structure.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/Actor.h"
 //#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values

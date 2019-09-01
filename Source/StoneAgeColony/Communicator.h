@@ -3,15 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "EnemyCharacter.h"
 #include "GatherableTree.h"
 #include "UsableActor.h"
 #include "Building.h"
 
+//struct FHumanCharacterDetails;
+//struct FGatherableTreeDetails;
+//struct FBuildingDetails;
+//
+//class AEnemyCharacter;
+//class AGatherableTree;
+//class ABuilding;
+//class UDataTable;
 
-/**
- * 
- */
 
 class STONEAGECOLONY_API Communicator
 {

@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+//#include "Blueprint/UserWidget.h"
 #include "UIItemSlot.h"
 #include "BottomBarItem.generated.h"
 
 class UUIBottomBar;
+class UUserWidget;
 
 /**
  * 

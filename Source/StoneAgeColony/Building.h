@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/BoxComponent.h"
+//#include "Components/BoxComponent.h"
 #include "Building.generated.h"
 
+class UBoxComponent;
 
 enum class EBuildTypes : uint8
 {

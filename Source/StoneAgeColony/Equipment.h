@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
+//#include "Components/ActorComponent.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
+#include "UsableActor.h"
 #include "Equipment.generated.h"
+
+
 
 UENUM()
 enum class EEquipmentSlots : uint8

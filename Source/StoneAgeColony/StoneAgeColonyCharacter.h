@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
-#include "Components/SphereComponent.h"
+//#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+//#include "Components/SphereComponent.h"
 #include "StoneAgeColonyCharacter.generated.h"
 
 // forward declare to prevent circular dependency
@@ -17,6 +17,8 @@ class UUIPlayerInventory;
 class ASettlement;
 class AUsableActor;
 class APickupManager;
+class USphereComponent;
+class UUserWidget;
 
 enum class EPlayerStates : uint8
 {

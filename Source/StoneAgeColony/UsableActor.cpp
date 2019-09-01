@@ -6,6 +6,7 @@
 #include "Communicator.h"
 #include "ObjectFactory.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Materials/Material.h"
 
 // Sets default values
 AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

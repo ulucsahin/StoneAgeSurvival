@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UsableActor.h"
-#include "EnemyCharacter.h"
+//#include "EnemyCharacter.h"
 #include "PeopleSpawner.generated.h"
+
+class AEnemyCharacter;
 
 /**
  * 

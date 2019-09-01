@@ -9,6 +9,8 @@
 #include "EnemyCharacter.h"
 #include "MyUtility.h"
 #include "TimerManager.h"
+#include "EnemyAI.h"
+#include "MyUtility.h"
 
 
 EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) {

@@ -4,6 +4,9 @@
 #include "Communicator.h"
 #include "UIBottomBar.h"
 #include "ObjectFactory.h"
+#include "UsableActor.h"
+#include "Blueprint/UserWidget.h"
+#include "StoneAgeColonyCharacter.h"
 
 void UBottomBarItem::SetupBarItem(UUIBottomBar* BottomBar, int32 Index)
 {

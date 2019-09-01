@@ -6,8 +6,10 @@
 //#include "UObject/ConstructorHelpers.h"
 #include "EquipmentManager.h"
 #include "ObjectFactory.h"
+#include "MorphManager.h"
 /* AI Include */
 #include "Perception/PawnSensingComponent.h"
+
 
 // Static variables
 //TSubclassOf<AEnemyCharacter> AEnemyCharacter::EnemyCharacterBlueprint;
@@ -144,7 +146,8 @@ void AEnemyCharacter::SpawnLoadedActors()
 			AObjectFactory* Factory = NewObject<AObjectFactory>();
 			for (auto Item : Details.EquippedItems)
 			{
-				auto Equipment = Factory->CreateObject<AEquipment>(Item.Value); // Item.Value is item ID
+				
+				auto Equipment = (AEquipment*) Factory->CreateObjectBetter(Item.Value); // Item.Value is item ID
 				EquipManager->EquipItem(Equipment);
 				UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors Item available, ID: %d"), Item.Value);
 			}

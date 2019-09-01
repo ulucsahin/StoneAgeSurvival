@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 //#include "Runtime/Engine/Classes/Engine/StaticMeshSocket.h"
 #include "Communicator.h"
+#include "StoneAgeColonyCharacter.h"
 
 // Sets default values for this component's properties
 UBuildingManager::UBuildingManager()
@@ -243,7 +244,7 @@ void UBuildingManager::DecreaseRotationOffset()
 
 void UBuildingManager::ChangeBuildingType()
 {
-	CurrentBuilding->ChangeMesh();
+	CurrentBuilding->ChangeMesh(-1);
 }
 
 TTuple<ABuilding*, FName> UBuildingManager::AttachTo()

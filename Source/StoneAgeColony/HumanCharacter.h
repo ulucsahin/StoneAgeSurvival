@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MorphManager.h"
+//#include "MorphManager.h"
 #include "GameFramework/Character.h"
 #include "Equipment.h"
 #include "HumanCharacter.generated.h"
 
-
 class UEquipmentManager;
+class UMorphManager;
 
 USTRUCT(BlueprintType)
 struct FHumanCharacterDetails

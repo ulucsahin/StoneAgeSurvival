@@ -4,30 +4,12 @@
 
 #include "CoreMinimal.h"
 //#include "Blueprint/UserWidget.h"
-#include "Runtime/UMG/Public/Components/TextBlock.h"
+//#include "Runtime/UMG/Public/Components/TextBlock.h"
 #include "UIItemSlot.h"
 //#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "UIInventoryItem.generated.h"
 
-// FObjectNameData MOVED TO OBJECTFACTORY.CPP
-
-//USTRUCT(BlueprintType)
-//struct FObjectNameData : public FTableRowBase
-//{
-//	/* This class takes objects ID as unique key and Name as object name. Used to retrieve object's name from ID.*/
-//	GENERATED_USTRUCT_BODY()
-//
-//public:
-//
-//	FObjectNameData() : Name("Default") {}
-//
-//	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
-//	//int32 ID;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
-//	FString Name;
-//
-//};
+class UTextBlock;
 
 UCLASS()
 class STONEAGECOLONY_API UUIInventoryItem : public  UUIItemSlot //UUserWidget

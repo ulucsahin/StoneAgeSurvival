@@ -3,6 +3,7 @@
 #include "HumanCharacter.h"
 #include "Equipment.h"
 #include "EquipmentManager.h"
+#include "MorphManager.h"
 //#include "Communicator.h"
 #include "ObjectFactory.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"

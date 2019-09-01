@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Structure.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 
 
 // Called when the game starts or when spawned

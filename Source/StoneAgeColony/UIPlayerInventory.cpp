@@ -3,6 +3,8 @@
 #include "UIPlayerInventory.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/UMG/Public/Components/WrapBox.h"
+#include "UIInventoryItem.h"
+#include "StoneAgeColonyCharacter.h"
 //#include "Runtime/UMG/Public/Blueprint/WidgetTree.h"
 
 UUIPlayerInventory::UUIPlayerInventory(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)

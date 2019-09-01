@@ -19,7 +19,11 @@
 #include "FPAnimationManager.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "ObjectFactory.h"
+#include "Components/SphereComponent.h"
 
+#include "UIPlayerInventory.h"
+#include "UIBottomBar.h"
+#include "BottomBarItem.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 

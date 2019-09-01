@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "EquipmentManager.h"
+#include "HumanCharacter.h"
+#include "Equipment.h"
 
 // Sets default values for this component's properties
 UEquipmentManager::UEquipmentManager()

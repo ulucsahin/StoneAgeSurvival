@@ -3,6 +3,7 @@
 #include "Building.h"
 #include "Communicator.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
+#include "Components/BoxComponent.h"
 //#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 // Static Variables

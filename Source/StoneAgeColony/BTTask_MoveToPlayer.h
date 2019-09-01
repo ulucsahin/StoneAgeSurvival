@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
 #include "MyUtility.h"
-#include "EnemyAI.h"
+//#include "EnemyAI.h"
 #include "BTTask_MoveToPlayer.generated.h"
 
-
+class AEnemyAI;
+//class MyUtility;
 /**
  * 
  */

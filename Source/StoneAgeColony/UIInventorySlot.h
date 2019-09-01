@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UIItemSlot.h"
-#include "Runtime/UMG/Public/Components/TextBlock.h"
+//#include "Runtime/UMG/Public/Components/TextBlock.h"
 #include "UIInventorySlot.generated.h"
 
-/**
- * 
- */
+class UTextBlock;
+
 UCLASS()
 class STONEAGECOLONY_API UUIInventorySlot : public UUIItemSlot
 {

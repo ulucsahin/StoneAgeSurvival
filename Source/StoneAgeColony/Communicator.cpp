@@ -1,6 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Communicator.h"
+#include "EnemyCharacter.h"
+#include "GatherableTree.h"
+#include "Building.h"
+
 
 void Communicator::Reset() {
 	// Reset all variables.

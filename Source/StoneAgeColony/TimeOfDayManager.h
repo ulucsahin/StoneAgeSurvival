@@ -4,11 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Runtime/Engine/Classes/Components/AudioComponent.h"
-#include "Runtime/Engine/Classes/Engine/DirectionalLight.h"
-#include "Runtime/Engine/Classes/Sound/SoundCue.h"
-#include "Runtime/Engine/Classes/Engine/SkyLight.h"
+//#include "Runtime/Engine/Classes/Components/AudioComponent.h"
+//#include "Runtime/Engine/Classes/Engine/DirectionalLight.h"
+//#include "Runtime/Engine/Classes/Sound/SoundCue.h"
+//#include "Runtime/Engine/Classes/Engine/SkyLight.h"
 #include "TimeOfDayManager.generated.h"
+
+class UAudioComponent;
+class ADirectionalLight;
+class USoundCue;
+class ASkyLight;
 
 
 UCLASS()

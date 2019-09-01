@@ -3,7 +3,9 @@
 #include "UIItemSlot.h"
 #include "Communicator.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "StoneAgeColonyCharacter.h"
 #include "ObjectFactory.h"
+#include "UsableActor.h"
 
 UUIItemSlot::UUIItemSlot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {

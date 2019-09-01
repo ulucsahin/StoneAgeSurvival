@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "GameLoadManager.h"
+//#include "GameLoadManager.h"
 #include "UIMainMenu.generated.h"
+
+class AGameLoadManager;
 
 /**
  * 

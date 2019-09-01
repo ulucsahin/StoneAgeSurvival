@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Structure.h"
+#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "CraftingStation.generated.h"
 
 USTRUCT(BlueprintType)

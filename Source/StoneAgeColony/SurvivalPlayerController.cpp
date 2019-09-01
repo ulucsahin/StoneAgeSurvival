@@ -2,6 +2,7 @@
 
 #include "SurvivalPlayerController.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "SurvivalWidget.h"
 
 void ASurvivalPlayerController::BeginPlayingState()
 {

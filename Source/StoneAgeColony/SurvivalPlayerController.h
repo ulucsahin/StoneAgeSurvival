@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "SurvivalWidget.h"
+//#include "SurvivalWidget.h"
 
 #include "SurvivalPlayerController.generated.h"
+
+
+class USurvivalWidget;
 
 /**
  * 
