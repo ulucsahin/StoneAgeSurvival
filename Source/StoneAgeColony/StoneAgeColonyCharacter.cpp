@@ -608,6 +608,12 @@ TMap<int, int> AStoneAgeColonyCharacter::GetInventory()
 	return Inventory;
 }
 
+// we cannot(?) return TMap pointer, so instead we are accessing inventory from here when we want to increase number of item in player inventory from another class
+void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amount)
+{
+	Inventory.Emplace(ItemID, Inventory[ItemID] - Amount);
+}
+
 void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 {
 	/*ItemToAdd is ID of item that we want to add to inventory.*/

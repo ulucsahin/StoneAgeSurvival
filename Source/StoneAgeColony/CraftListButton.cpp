@@ -10,7 +10,7 @@
 
 UCraftListButton::UCraftListButton(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	
+	CraftAmount = 1;// TODO: Craft how many?
 }
 
 void UCraftListButton::CreateRequiredObjects()
@@ -31,15 +31,31 @@ void UCraftListButton::CreateRequiredObjects()
 void UCraftListButton::OnButtonClick()
 {
 	CreateRequiredObjects();
-	
+	UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::OnButtonClick ?????????"));
 	if (CraftingRequirementMet())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Craft item hehe xd"));
+		UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::OnButtonClick Craft item hehe xd"));
 		AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 
 		if (Player)
 		{
-			Player->AddToInventory(ItemID, 1); // TODO: Craft how many?
+			auto PlayerInventory = Player->GetInventory();
+
+			int a = 1;
+			// Consume items from player inventory
+			for (auto Requirement : RepresentedItem->CraftRequirements)
+			{
+				int32 UsedItemID = Requirement.Key;
+				int32 ConsumedAmount = Requirement.Value * CraftAmount;
+				UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::OnButtonClick UsedItemID %d"), UsedItemID);
+				UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::OnButtonClick ConsumedAmount %d"), ConsumedAmount);
+				UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::OnButtonClick Player Has: %d"), PlayerInventory[UsedItemID]);
+				//PlayerInventory.Emplace(UsedItemID, PlayerInventory[UsedItemID] - ConsumedAmount);
+				Player->ConsumeItemFromInventory(UsedItemID, ConsumedAmount);
+				UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::OnButtonClick Player Has: %d"), PlayerInventory[UsedItemID]);
+			}
+
+			Player->AddToInventory(ItemID, CraftAmount);
 		}
 	}
 
@@ -66,12 +82,21 @@ bool UCraftListButton::CraftingRequirementMet()
 		for (auto Requirement : RepresentedItem->CraftRequirements)
 		{
 			int32 RequiredItem = Requirement.Key;
-			int32 RequiredAmount = Requirement.Value;
+			int32 RequiredAmount = Requirement.Value * CraftAmount;
 			
+			//UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::CraftingRequirementMet RequiredItem: %d"), RequiredItem);
+			//UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::CraftingRequirementMet Required Amount: %d"), RequiredAmount);
+			
+			for (auto asd : PlayerInventory)
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::CraftingRequirementMet Player Items: %d Amount: %d"), asd.Key, asd.Value);
+			}
+
 			// if player don't have enough of this item
 			if (PlayerInventory.Contains(RequiredItem))
 			{
-				if (PlayerInventory[RequiredItem] >= RequiredAmount)
+				//UE_LOG(LogTemp, Warning, TEXT("UCraftListButton::CraftingRequirementMet Player has: %d"), PlayerInventory[RequiredItem]);
+				if (PlayerInventory[RequiredItem] < RequiredAmount)
 				{
 					RequirementsMet = false;
 					break;

@@ -39,6 +39,7 @@ private:
 	TMap<int32, int32> RequiredItems; // Item ID, Item Amount map. amount of item required with id.
 	AUsableActor* RepresentedItem;
 	AObjectFactory* Factory;
+	int32 CraftAmount;
 
 };
 

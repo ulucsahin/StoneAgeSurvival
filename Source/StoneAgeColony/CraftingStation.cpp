@@ -66,9 +66,6 @@ void ACraftingStation::SetupType(FString Type)
 }
 
 
-
-
-
 // NOT CALLED, now handled in settlement OnOverlapBegin
 void ACraftingStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {

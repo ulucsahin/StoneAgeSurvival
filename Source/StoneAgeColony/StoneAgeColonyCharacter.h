@@ -143,6 +143,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	TMap<int, int> GetInventory();
 
+	void ConsumeItemFromInventory(int32 ItemID, int32 Amount);
+
 	//UFUNCTION(BlueprintPure, Category = "Inventory")
 	//AUsableActor* GetInventoryItem(int InventoryItemIndex);
 
