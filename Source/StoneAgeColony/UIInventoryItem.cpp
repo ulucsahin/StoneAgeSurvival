@@ -78,7 +78,7 @@ void UUIInventoryItem::PlaceItem()
 	auto ObjectNameData = Communicator::GetInstance().ObjectNameDataTable->FindRow<FObjectNameData>(IDAsFName, ContextString, true);
 
 	auto SpawnedItem = Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, SpawnLocation, FRotator::ZeroRotator);
-	SpawnedItem->SetupType(ObjectNameData->Name);
+	SpawnedItem->SetupType(ObjectNameData->Name_);
 	SpawnedItem->SetMeshToDefault();
 
 	// Adjust player inventory since item is used

@@ -42,7 +42,7 @@ class STONEAGECOLONY_API AEdible : public AUsableActor
 public:
 	AEdible(const FObjectInitializer& ObjectInitializer);
 
-	class UDataTable* PropertiesDataTable;
+	//class UDataTable* PropertiesDataTable; already in AUsableActor base class
 
 	int32 ID;
 

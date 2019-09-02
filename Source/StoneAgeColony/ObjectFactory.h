@@ -19,7 +19,7 @@ public:
 	FObjectNameData() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
-	FString Name;
+	FString Name_;
 
 };
 

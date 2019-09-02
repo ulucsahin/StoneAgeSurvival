@@ -23,7 +23,6 @@ AEdible::AEdible(const FObjectInitializer& ObjectInitializer) : Super(ObjectInit
 
 void AEdible::SetupType(FString Type)
 {
-
 	UE_LOG(LogTemp, Warning, TEXT("AEdible::SetupType"));
 	EdibleType = FName(*Type);
 

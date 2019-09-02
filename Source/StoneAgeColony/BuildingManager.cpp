@@ -214,7 +214,7 @@ void UBuildingManager::IncreaseForwardBuildingOffset()
 		ForwardBuildingOffset += 400;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("ForwardBuildingOffset: %d"), ForwardBuildingOffset);
+	UE_LOG(LogTemp, Warning, TEXT("ForwardBuildingOffset:: %d"), ForwardBuildingOffset);
 
 }
 void UBuildingManager::DecreaseForwardBuildingOffset()
@@ -224,7 +224,7 @@ void UBuildingManager::DecreaseForwardBuildingOffset()
 		ForwardBuildingOffset -= 400;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("ForwardBuildingOffset: %d"), ForwardBuildingOffset);
+	UE_LOG(LogTemp, Warning, TEXT("ForwardBuildingOffset: xD %d"), ForwardBuildingOffset);
 }
 
 void UBuildingManager::IncreaseRotationOffset()

@@ -14,6 +14,7 @@
 #include "Edible.h"
 #include "CraftingStation.h"
 #include "UsableActor.h"
+#include "CraftingMaterial.h"
 //AObjectFactory* AObjectFactory::instance;
 
 // Sets default values
@@ -81,7 +82,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	FName ObjectID_ = FName(*Tmp);
 	const FString ContextString(TEXT("Object Type Context"));
 	auto Data = IDtoNameTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
-	auto ObjectName = Data->Name;
+	auto ObjectName = Data->Name_;
 
 	// Unique Items, will remove later?
 	if (ObjectID == 0)
@@ -119,7 +120,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	// CraftingMaterials
 	else if(ObjectID >= 500 && ObjectID <= 699)
 	{
-		//ObjectToReturn = NewObject<ACraftingMaterial>();
+		ObjectToReturn = NewObject<ACraftingMaterial>();
 	}
 	// Equipment
 	else if (ObjectID >= 1000 && ObjectID <= 1199)
@@ -145,7 +146,7 @@ FString AObjectFactory::GetObjectNameFromID(int32 ObjectID)
 	FName ObjectID_ = FName(*Tmp);
 	const FString ContextString(TEXT("Object Type Context"));
 	auto Data = IDtoNameTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
-	auto ObjectName = Data->Name;
+	auto ObjectName = Data->Name_;
 
 	return ObjectName;
 }

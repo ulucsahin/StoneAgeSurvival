@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 //#include "GatherableTree.h"
+//#include "Runtime/Core/Public/Templates/Tuple.h"
 #include "ProceduralEntityPlacer.generated.h"
 
 class AGatherableTree;
@@ -34,6 +35,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	TArray<UBlueprint*> ObjectsToSpawn;
+
+	// This is seperate array because TTuple is not supported by UPROPERTY...
+	UPROPERTY(EditAnywhere, Category = "Spawn")
+	TArray<FString> ObjectsToSpawnName;
 
 	TSubclassOf<class AGatherableTree> MyItemBlueprint;
 

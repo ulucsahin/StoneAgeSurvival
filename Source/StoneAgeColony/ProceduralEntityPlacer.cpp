@@ -35,6 +35,12 @@ void AProceduralEntityPlacer::BeginPlay()
 		int32 RandomNumber = FMath::FRandRange(0, AmountOfItems);
 		
 		UBlueprint* ObjectToSpawn = ObjectsToSpawn[RandomNumber];
+		FString ObjectName = "None";
+		if (ObjectsToSpawnName.Num() > 0)
+		{
+			ObjectName = ObjectsToSpawnName[RandomNumber];
+		}
+		
 		auto temp = ObjectToSpawn->GeneratedClass;
 
 		//auto ObjectToSpawn = NewObject<AGatherableObject>();
@@ -44,6 +50,10 @@ void AProceduralEntityPlacer::BeginPlay()
 		{
 			//AGatherableTree* DroppedItem = GetWorld()->SpawnActor<AGatherableTree>(MyItemBlueprint, this->GetActorLocation(), FRotator::ZeroRotator);
 			AActor* DroppedItem = GetWorld()->SpawnActor<AActor>(temp, this->GetActorLocation(), FRotator::ZeroRotator);
+			if (ObjectName != "None")
+			{
+				((AUsableActor*)DroppedItem)->SetupType("GatherableTree");
+			}
 
 			// Snap spawned object to ground by using line traces.
 			AdjustHeight(DroppedItem);

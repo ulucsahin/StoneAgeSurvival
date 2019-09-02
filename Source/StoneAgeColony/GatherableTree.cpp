@@ -39,6 +39,7 @@ void AGatherableTree::SetupType(FString Type)
 	Data = PropertiesDataTable->FindRow<FGatherableData>(Type_, ContextString, true);
 	ID = Data->ID;
 	Description = Data->Description;
+	GatherID = Data->GatherID;
 
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Icon.IsPending()) 
@@ -60,8 +61,6 @@ void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 
 void AGatherableTree::OnGathered(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::OnGathered"));
-
 	float GatherTime = Communicator::GetInstance().World->GetTimeSeconds();
 
 	// Put harvesting on a cooldown
@@ -73,7 +72,9 @@ void AGatherableTree::OnGathered(APawn* InstigatorPawn)
 		UE_LOG(LogTemp, Warning, TEXT("Tree Harvested at %f , remaining wood: %d"), GatherTime, WoodAmount);
 		LastGatherTime = GatherTime;
 		int AmountToAdd = 10;
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID, AmountToAdd);
+
+		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::OnGathered GatherID: %d"), GatherID);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(GatherID, AmountToAdd);
 	}
 }
 

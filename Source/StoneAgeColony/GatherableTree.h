@@ -68,6 +68,7 @@ public:
 	static void EmptyCommunicatorDetailsArray();
 	static void SpawnLoadedActors();
 
+	int32 GatherID;
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnUsed(APawn* InstigatorPawn) override;

@@ -28,6 +28,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	FText Description;
 
+	
 };
 
 
@@ -36,5 +37,11 @@ class STONEAGECOLONY_API ACraftingMaterial : public AUsableActor
 {
 	GENERATED_BODY()
 
-	
+public:
+	ACraftingMaterial(const FObjectInitializer& ObjectInitializer);
+	virtual void SetupType(FString Name) override;
+	int32 ID;
+private:
+	FName MaterialType;
+	FCraftingMaterialData* Data;
 };

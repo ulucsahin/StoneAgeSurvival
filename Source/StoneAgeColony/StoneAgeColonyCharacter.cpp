@@ -796,29 +796,8 @@ void AStoneAgeColonyCharacter::HideFirstPersonHands(bool Hide)
 
 void AStoneAgeColonyCharacter::Debug()
 {
-	UE_LOG(LogTemp, Warning, TEXT("hehe debugg XD"));
-	UE_LOG(LogTemp, Warning, TEXT("hehe debugg XD32"));
-
 	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
-
 	Gather();
-	//auto asd = GetActorLocation();
-	// Create new settlement
-	//ASettlement* Settlement = GetWorld()->SpawnActor<ASettlement>(ASettlement::StaticClass(), GetActorLocation(), FRotator::ZeroRotator);
-	//GetWorld()->SpawnActor<ASettlement>()
-
-	AObjectFactory* Factory = NewObject<AObjectFactory>();
-	//auto x = Factory->CreateObjectBetter(1001);
-	//UE_LOG(LogTemp, Warning, TEXT("Factory new object ID: %d"), x->GetID());
-	
-
-	auto CraftingStation = Factory->CreateObjectBetter(400);
-	UE_LOG(LogTemp, Warning, TEXT("Crafting Station ID: %d"), CraftingStation->GetID());
-	
-	//ASettlement* Settlement = NewObject<ASettlement>();
-	//Settlement->Player = this;
-	
-	//Settlement->AdjustAreaDisplayerLocation();
 	GEngine->ForceGarbageCollection();
 	CloseAllMenus();
 }
