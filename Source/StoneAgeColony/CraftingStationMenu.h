@@ -3,16 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+//#include "Blueprint/UserWidget.h"
+#include "SurvivalWidget.h"
+#include "Runtime/Engine/Classes/Components/TimelineComponent.h"
 #include "CraftingStationMenu.generated.h"
 
+class AUsableActor;
 class UCraftListButton;
 class AStoneAgeColonyCharacter;
 class UTextBlock;
 class UVerticalBox;
+class UProgressBar;
+class UTimelineComponent;
+class UCurveFloat;
+//class FOnTimelineFloat;
+//class FOnTimelineEvent;
 
 UCLASS()
-class STONEAGECOLONY_API UCraftingStationMenu : public UUserWidget
+class STONEAGECOLONY_API UCraftingStationMenu : public USurvivalWidget
 {
 	GENERATED_BODY()
 	
@@ -28,6 +36,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "CraftingItems")
 	UTextBlock* RequirementsText;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "CraftingItems")
+	UProgressBar* CraftingProgressBar;
+
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void RegisterToPlayer(AStoneAgeColonyCharacter* Player);
 
@@ -37,5 +48,27 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void AddItems(int32 CraftStationID);
 
+	void ReceiveInformationFromButton(AUsableActor* RepresentedItem, int32 ItemID);
+
+	bool CraftingRequirementsMet();
+
+	void StartCrafting(float CraftingTime);
+
+	UFUNCTION()
+	void StartUpdatingProgressBar(float CraftingTime);
+
+	UFUNCTION() // ufunction needed for timer
+	void UpdateProgressBar(float CraftingTime, float UpdateFrequency);
+
+	UFUNCTION(BlueprintCallable, Category = "Lol") 
+	void CloseMenu();
+
+	AUsableActor* CurrentItem;
+	int32 CurrentItemID;
+	int32 CraftAmount;
 	TSubclassOf<UCraftListButton> CraftMenuItem;
+	UTimelineComponent* CraftProgressTimeline;
+	FTimerHandle TimerHandle;
+	bool CurrentlyCrafting;
+	float CraftingBarProgress;
 };

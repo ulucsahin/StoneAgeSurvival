@@ -24,6 +24,7 @@
 #include "UIPlayerInventory.h"
 #include "UIBottomBar.h"
 #include "BottomBarItem.h"
+#include "SurvivalWidget.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
@@ -374,13 +375,13 @@ void AStoneAgeColonyCharacter::InitializeWidgets()
 
 	// Inventory Menu
 	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
-	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
-	InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
+	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
+	InventoryWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
 
 	// Character Menu 
 	FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
-	UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<UUserWidget>();
-	CharacterMenuWidget = CreateWidget<UUserWidget>(PlayerController, CharacterMenuWidgtClass);
+	UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<USurvivalWidget>();
+	CharacterMenuWidget = CreateWidget<USurvivalWidget>(PlayerController, CharacterMenuWidgtClass);
 
 }
 
@@ -454,15 +455,16 @@ void AStoneAgeColonyCharacter::Gather()
 	}
 }
 
-void AStoneAgeColonyCharacter::OpenMenu(FString Reference)
+USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference)
 {
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	
 	// Open CraftingStation Menu
 	FStringClassReference MyWidgetClassRef(Reference);
-	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
-	auto MenuWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
+	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
+	auto MenuWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
 	MenuWidget->AddToViewport();
+	MenuWidget->IsActive = true;
 	if (PlayerController)
 	{
 		PlayerController->SetInputMode(FInputModeGameAndUI());
@@ -472,6 +474,8 @@ void AStoneAgeColonyCharacter::OpenMenu(FString Reference)
 	}
 
 	OpenedMenus.Emplace(MenuWidget);
+
+	return MenuWidget;
 }
 
 void AStoneAgeColonyCharacter::CloseAllMenus()
@@ -480,7 +484,8 @@ void AStoneAgeColonyCharacter::CloseAllMenus()
 	{
 		if (x)
 		{	
-			x->RemoveFromParent();  // this causes crash sometimes, gc?
+			x->IsActive = false;
+			x->RemoveFromParent();
 		}
 		
 	}
@@ -501,7 +506,7 @@ void AStoneAgeColonyCharacter::OpenInventory()
 {	
 	// BE CAREFUL:
 	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
-	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OpenInventoryy"));
+	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OpenInventory"));
 
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
@@ -509,8 +514,8 @@ void AStoneAgeColonyCharacter::OpenInventory()
 	{
 		// Open Inventory
 		FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
-		UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUserWidget>();
-		InventoryWidget = CreateWidget<UUserWidget>(PlayerController, MyWidgetClass);
+		UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
+		InventoryWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
 		InventoryWidget->AddToViewport();
 		if (PlayerController)
 		{
@@ -550,8 +555,8 @@ void AStoneAgeColonyCharacter::OpenCharacterMenu()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Character menu opened."));
 		FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
-		UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<UUserWidget>();
-		CharacterMenuWidget = CreateWidget<UUserWidget>(PlayerController, CharacterMenuWidgtClass);
+		UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<USurvivalWidget>();
+		CharacterMenuWidget = CreateWidget<USurvivalWidget>(PlayerController, CharacterMenuWidgtClass);
 		CharacterMenuWidget->AddToViewport();
 		PlayerController->SetInputMode(FInputModeGameAndUI());
 		PlayerController->bShowMouseCursor = true;
@@ -611,14 +616,26 @@ TMap<int, int> AStoneAgeColonyCharacter::GetInventory()
 // we cannot(?) return TMap pointer, so instead we are accessing inventory from here when we want to increase number of item in player inventory from another class
 void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amount)
 {
-	Inventory.Emplace(ItemID, Inventory[ItemID] - Amount);
+	if (Inventory.Contains(ItemID))
+	{
+		Inventory.Emplace(ItemID, Inventory[ItemID] - Amount);
+
+		if (BottomBar)
+		{
+			BottomBar->Refresh();
+		}
+
+		if (UIPlayerInventory)
+		{
+			UIPlayerInventory->Refresh();
+		}
+	}
+	
 }
 
 void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 {
 	/*ItemToAdd is ID of item that we want to add to inventory.*/
-
-	//Inventory.Add(ItemToAdd);
 
 	// if we have atleast one instance of ItemToAdd in inventory
 	if (!Inventory.Contains(ItemToAdd))

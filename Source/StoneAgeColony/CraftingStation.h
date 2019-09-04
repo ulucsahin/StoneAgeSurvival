@@ -7,6 +7,8 @@
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "CraftingStation.generated.h"
 
+class USurvivalWidget;
+
 USTRUCT(BlueprintType)
 struct FCraftingStationData : public FTableRowBase
 {
@@ -58,6 +60,9 @@ public:
 
 	//TMap<int32, int32> CraftRequirements; //moved to AUsableActor base class
 	TArray<int32> CraftableItems;
+
+	UPROPERTY()
+	USurvivalWidget* Menu;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 
@@ -65,6 +70,5 @@ private:
 	int32 ID;
 	FName CraftingStationType;
 	FCraftingStationData* Data;
-
 	bool MenuOpen;
 };

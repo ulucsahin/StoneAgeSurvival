@@ -27,8 +27,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ButtonMouseEvents")
 	void OnButtonHover();
 
-	bool CraftingRequirementMet();
-
 	void SetStationMenu(UCraftingStationMenu* StationMenu);
 
 	void SetDescriptionText();
@@ -37,9 +35,12 @@ public:
 private:
 	UCraftingStationMenu* BelongingStationMenu;
 	TMap<int32, int32> RequiredItems; // Item ID, Item Amount map. amount of item required with id.
+
+	UPROPERTY() // gc collects if not uproperty
 	AUsableActor* RepresentedItem;
+
+	UPROPERTY() // gc collects if not uproperty
 	AObjectFactory* Factory;
-	int32 CraftAmount;
 
 };
 

@@ -19,6 +19,7 @@ class AUsableActor;
 class APickupManager;
 class USphereComponent;
 class UUserWidget;
+class USurvivalWidget;
 
 enum class EPlayerStates : uint8
 {
@@ -149,8 +150,8 @@ public:
 	//AUsableActor* GetInventoryItem(int InventoryItemIndex);
 
 	// UI Variables
-	UUserWidget* InventoryWidget;
-	UUserWidget* CharacterMenuWidget;
+	USurvivalWidget* InventoryWidget;
+	USurvivalWidget* CharacterMenuWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MainMenu")
 	UUserWidget* MainMenuWidget;
 
@@ -194,7 +195,7 @@ public:
 	uint32 bUsingMotionControllers : 1;
 
 	// Opens Given UI
-	void OpenMenu(FString Reference);
+	USurvivalWidget* OpenMenu(FString Reference);
 
 private:
 	void HandleFocus();
@@ -275,6 +276,6 @@ public:
 
 	void CloseAllMenus();
 
-	TSet<UUserWidget*> OpenedMenus;
+	TSet<USurvivalWidget*> OpenedMenus;
 
 };

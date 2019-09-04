@@ -31,6 +31,7 @@ void ACraftingMaterial::SetupType(FString Name)
 	ID = Data->ID;
 	Description = Data->Description;
 	CraftRequirements = Data->CraftRequirements;
+	YieldAmount = Data->YieldAmount;
 
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Icon.IsPending())

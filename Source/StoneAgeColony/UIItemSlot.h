@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 //#include "StoneAgeColonyCharacter.h"
-#include "Blueprint/UserWidget.h"
+#include "SurvivalWidget.h"
+//#include "Blueprint/UserWidget.h"
 #include "UIItemSlot.generated.h"
 
 class AStoneAgeColonyCharacter;
@@ -15,7 +16,7 @@ class AStoneAgeColonyCharacter;
  * 
  */
 UCLASS()
-class STONEAGECOLONY_API UUIItemSlot : public UUserWidget
+class STONEAGECOLONY_API UUIItemSlot : public USurvivalWidget
 {
 	GENERATED_BODY()
 	

@@ -96,6 +96,7 @@ public:
 	UStaticMesh* DefaultMesh;
 	TMap<int32, int32> CraftRequirements;
 	FText Description;
+	int32 YieldAmount = 1; // How many of this item will be produced when crafted.
 private:
 	UMaterialInterface* OriginalMaterial;
 	UMaterial* GhostMaterial;

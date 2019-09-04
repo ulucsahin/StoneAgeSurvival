@@ -19,6 +19,7 @@ class STONEAGECOLONY_API USurvivalWidget : public UUserWidget
 	
 	virtual void NativeConstruct() override;
 
-	UPROPERTY()
-	UButton* ExampleButton;
+
+public:
+	bool IsActive;
 };

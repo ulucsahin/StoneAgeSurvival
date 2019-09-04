@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+//#include "Blueprint/UserWidget.h"
+#include "SurvivalWidget.h"
 //#include "Runtime/UMG/Public/Components/WrapBox.h"
 //#include "UIInventoryItem.h"
 //#include "StoneAgeColonyCharacter.h"
@@ -16,7 +17,7 @@ class AStoneAgeColonyCharacter;
  * 
  */
 UCLASS()
-class STONEAGECOLONY_API UUIPlayerInventory : public UUserWidget
+class STONEAGECOLONY_API UUIPlayerInventory : public USurvivalWidget
 {
 	GENERATED_BODY()
 	

@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "SurvivalWidget.h"
 
 ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -18,22 +19,28 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 	}
 
 	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/MultistoryDungeons/Meshes/Props/Table_Wooden_01.Table_Wooden_01"));
-
-	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::ACraftingStation"));
 }
 
 void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Im a crafting station"));
-
-	OpenMenu(InstigatorPawn); // CURRENTLY CRASHES
-	//((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(0, 1);
+	OpenMenu(InstigatorPawn);
 }
 
 void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 {
-	((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);
-	MenuOpen = true;
+	if (!Menu)
+	{
+		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);
+		MenuOpen = true;
+	}
+	else
+	{
+		if (!Menu->IsActive)
+		{
+			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);
+			MenuOpen = true;
+		}
+	}
 }
 
 void ACraftingStation::SetupType(FString Type)
@@ -102,7 +109,6 @@ void ACraftingStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, c
 				((ASettlement*)OtherActor)->DeRegisterStructure(this);
 				UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd ---> DeRegisterStructure"));
 			}
-
 
 		}
 	}
