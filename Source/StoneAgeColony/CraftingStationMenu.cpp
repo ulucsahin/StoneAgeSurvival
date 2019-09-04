@@ -64,20 +64,7 @@ void UCraftingStationMenu::ReceiveInformationFromButton(AUsableActor* Represente
 		this->CurrentItemID = ItemID;
 		if (CraftingRequirementsMet())
 		{
-			if (Player)
-			{
-				auto PlayerInventory = Player->GetInventory();
-
-				// Consume items from player inventory
-				for (auto Requirement : RepresentedItem->CraftRequirements)
-				{
-					int32 UsedItemID = Requirement.Key;
-					int32 ConsumedAmount = Requirement.Value * CraftAmount;
-					Player->ConsumeItemFromInventory(UsedItemID, ConsumedAmount);
-				}
-
-				StartCrafting(5.f); // Crafting time should be different for items.
-			}
+			StartCrafting(5.f); // Crafting time should be different for items.
 		}
 	}
 	
@@ -145,12 +132,29 @@ void UCraftingStationMenu::UpdateProgressBar(float CraftingTime, float UpdateFre
 	// Crafting Completed
 	if (CraftingBarProgress >= 1.f)
 	{
+		CraftingProgressBar->SetVisibility(ESlateVisibility::Hidden);
 		CraftingBarProgress = 0.f;
 		CraftingProgressBar->SetPercent(0.f);
-		CraftingProgressBar->SetVisibility(ESlateVisibility::Hidden);
-		Player->AddToInventory(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
 		CurrentlyCrafting = false;
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
+		// Consume items from player inventory after crafting is finished.
+		if (Player)
+		{
+			auto PlayerInventory = Player->GetInventory();
+
+			// Consume items from player inventory
+			for (auto Requirement : CurrentItem->CraftRequirements)
+			{
+				int32 UsedItemID = Requirement.Key;
+				int32 ConsumedAmount = Requirement.Value * CraftAmount;
+				Player->ConsumeItemFromInventory(UsedItemID, ConsumedAmount);
+			}
+
+			// Add crafted items to player inventory
+			Player->AddToInventory(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
+		}
+
 	}
 
 }
