@@ -7,3 +7,10 @@ void USurvivalWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 }
+
+
+void USurvivalWidget::CloseMenu()
+{
+	IsActive = false;
+	RemoveFromParent();
+}

@@ -60,8 +60,10 @@ public:
 	UFUNCTION() // ufunction needed for timer
 	void UpdateProgressBar(float CraftingTime, float UpdateFrequency);
 
+	void StopCrafting();
+
 	UFUNCTION(BlueprintCallable, Category = "Lol") 
-	void CloseMenu();
+	virtual void CloseMenu() override;
 
 	AUsableActor* CurrentItem;
 	int32 CurrentItemID;

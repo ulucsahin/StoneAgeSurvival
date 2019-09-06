@@ -39,7 +39,9 @@ void UCraftingStationMenu::AddItems(int32 CraftStationID)
 {
 	AObjectFactory* Factory = NewObject<AObjectFactory>();
 	auto BelongingStationInstance = (ACraftingStation*) Factory->CreateObjectBetter(CraftStationID);
-		
+	
+	UE_LOG(LogTemp, Warning, TEXT("UCraftingStationMenu::AddItems CraftStationID %d"), CraftStationID);
+
 	for (int32 Item : BelongingStationInstance->CraftableItems)
 	{
 
@@ -132,11 +134,7 @@ void UCraftingStationMenu::UpdateProgressBar(float CraftingTime, float UpdateFre
 	// Crafting Completed
 	if (CraftingBarProgress >= 1.f)
 	{
-		CraftingProgressBar->SetVisibility(ESlateVisibility::Hidden);
-		CraftingBarProgress = 0.f;
-		CraftingProgressBar->SetPercent(0.f);
-		CurrentlyCrafting = false;
-		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+		StopCrafting();
 
 		// Consume items from player inventory after crafting is finished.
 		if (Player)
@@ -159,9 +157,18 @@ void UCraftingStationMenu::UpdateProgressBar(float CraftingTime, float UpdateFre
 
 }
 
-// Called in BP
+void UCraftingStationMenu::StopCrafting()
+{
+	CraftingProgressBar->SetVisibility(ESlateVisibility::Hidden);
+	CraftingBarProgress = 0.f;
+	CraftingProgressBar->SetPercent(0.f);
+	CurrentlyCrafting = false;
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+}
+
 void UCraftingStationMenu::CloseMenu()
 {
+	StopCrafting();
 	IsActive = false;
 	RemoveFromParent();
 

@@ -28,6 +28,7 @@ void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 
 void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 {
+	/* Prevents opening multiple of same menus */
 	if (!Menu)
 	{
 		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);

@@ -457,6 +457,8 @@ void AStoneAgeColonyCharacter::Gather()
 
 USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference)
 {
+	/* Adds menu to viewport by using String Reference */
+
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	
 	// Open CraftingStation Menu
@@ -484,8 +486,7 @@ void AStoneAgeColonyCharacter::CloseAllMenus()
 	{
 		if (x)
 		{	
-			x->IsActive = false;
-			x->RemoveFromParent();
+			x->CloseMenu();
 		}
 		
 	}
@@ -506,7 +507,7 @@ void AStoneAgeColonyCharacter::OpenInventory()
 {	
 	// BE CAREFUL:
 	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
-	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OpenInventory"));
+	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter:::OpenInventory"));
 
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 

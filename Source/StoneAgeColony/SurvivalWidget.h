@@ -21,5 +21,6 @@ class STONEAGECOLONY_API USurvivalWidget : public UUserWidget
 
 
 public:
+	virtual void CloseMenu();
 	bool IsActive;
 };
