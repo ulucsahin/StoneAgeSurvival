@@ -16,6 +16,7 @@ class UVerticalBox;
 class UProgressBar;
 class UTimelineComponent;
 class UCurveFloat;
+
 //class FOnTimelineFloat;
 //class FOnTimelineEvent;
 
@@ -42,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void RegisterToPlayer(AStoneAgeColonyCharacter* Player);
 
+	UFUNCTION(BlueprintCallable, Category = "Lol")
+	void InitialSetup();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Player")
 	AStoneAgeColonyCharacter* Player;
 
@@ -50,17 +54,10 @@ public:
 
 	void ReceiveInformationFromButton(AUsableActor* RepresentedItem, int32 ItemID);
 
-	bool CraftingRequirementsMet();
-
-	void StartCrafting(float CraftingTime);
-
-	UFUNCTION()
-	void StartUpdatingProgressBar(float CraftingTime);
-
 	UFUNCTION() // ufunction needed for timer
-	void UpdateProgressBar(float CraftingTime, float UpdateFrequency);
+	void UpdateProgressBar(float Percent);
 
-	void StopCrafting();
+	void SetProgressBarVisibility(bool Visibility);
 
 	UFUNCTION(BlueprintCallable, Category = "Lol") 
 	virtual void CloseMenu() override;

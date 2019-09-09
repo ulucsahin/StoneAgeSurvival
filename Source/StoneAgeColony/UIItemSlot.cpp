@@ -19,7 +19,7 @@ void UUIItemSlot::SetupInventoryItemCell()
 	if (PlayerCharacter)
 	{
 		// Set texture and amount variables
-		UE_LOG(LogTemp, Warning, TEXT("UUIItemSlot::SetupInventoryItemCell Item ID: %d"), ItemID);
+		//UE_LOG(LogTemp, Warning, TEXT("UUIItemSlot::SetupInventoryItemCell Item ID: %d"), ItemID);
 		//InventoryTexture = Communicator::GetInstance().UsableItemIDMap[ItemID]->InventoryTexture;
 
 		AObjectFactory* Factory = NewObject<AObjectFactory>();

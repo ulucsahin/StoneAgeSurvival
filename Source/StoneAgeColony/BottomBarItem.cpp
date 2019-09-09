@@ -27,7 +27,7 @@ void UBottomBarItem::NotifyBottomBar()
 
 void UBottomBarItem::UseBarItem()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UBottomBarItem::UseBarItemm"));
+	//UE_LOG(LogTemp, Warning, TEXT("UBottomBarItem::UseBarItemm"));
 
 	if (BottomBar->Player)
 	{

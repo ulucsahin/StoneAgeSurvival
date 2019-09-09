@@ -30,7 +30,7 @@ void UUIBottomBar::RegisterToPlayer(AStoneAgeColonyCharacter* Player)
 	this->Player = Player;
 	Player->BottomBar = this;
 
-	UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::RegisterToPlayerxD"));
+	//UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::RegisterToPlayerxD"));
 }
 
 // Called in blueprint
@@ -95,7 +95,7 @@ void UUIBottomBar::SetItemAtIndex(UBottomBarItem* Item)
 void UUIBottomBar::Refresh()
 {
 	/* Also registers ItemIDs of baritems to save file */
-	UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::Refresh"));
+	//UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::Refresh"));
 	WrapBox->ClearChildren();
 	int i = 0;
 	for (auto Item : BarItems)

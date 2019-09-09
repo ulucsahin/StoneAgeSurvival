@@ -42,7 +42,7 @@ void AUsableActor::BeginPlay()
 {
 	Super::BeginPlay();
 	//Communicator::GetInstance().UsableItemIDMap.Add(AUsableActor::StaticClass()->GetDefaultObject<AUsableActor>()->ID, AUsableActor::StaticClass());
-	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::BeginPlay"));
+	//UE_LOG(LogTemp, Warning, TEXT("AUsableActor::BeginPlay"));
 }
 
 // Called every frame
@@ -54,7 +54,7 @@ void AUsableActor::Tick(float DeltaTime)
 void AUsableActor::SetupType(FString Type)
 {
 	/* Will be implemented by required child classes. */
-	UE_LOG(LogTemp, Warning, TEXT("AUsableActor::SetupType"));
+	//UE_LOG(LogTemp, Warning, TEXT("AUsableActor::SetupType"));
 }
 
 void AUsableActor::OnBeginFocus(){
@@ -79,27 +79,27 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn)
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PLAYER CHARACTER IS NULL IN AUsableActor::OnUsed"));
+		//UE_LOG(LogTemp, Warning, TEXT("PLAYER CHARACTER IS NULL IN AUsableActor::OnUsed"));
 	}
 	
 }
 
 void AUsableActor::OnUsedFromInventory(APawn* InstigatorPawn)
 {
-	GLog->Log("AUsableActor::OnUsedFromInventory");
+	//GLog->Log("AUsableActor::OnUsedFromInventory");
 }
 
 void AUsableActor::OnGathered(APawn* InstigatorPawn)
 {
 	/* Overridden by gatherable objects */
 
-	UE_LOG(LogTemp, Warning, TEXT("Item is not gatherable."));
+	//UE_LOG(LogTemp, Warning, TEXT("Item is not gatherable."));
 }
 
 
 void AUsableActor::PrintName() 
 {
-	UE_LOG(LogTemp, Warning, TEXT("IM USABLE ACTOR XD"));
+	//UE_LOG(LogTemp, Warning, TEXT("IM USABLE ACTOR XD"));
 }
 
 

@@ -68,7 +68,6 @@ T* AObjectFactory::CreateObject(int32 ObjectID)
 	T* CreatedObject = NewObject<T>();
 	CreatedObject->SetupType(ObjectName);
 	
-	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory::CreateObject ObjectName: %s"), *ObjectName);
 	return CreatedObject;
 }
 
@@ -133,7 +132,6 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 		ObjectToReturn = NewObject<ASettlement>();
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory::CreateObject ObjectName: %s"), *ObjectName);
 	ObjectToReturn->SetupType(ObjectName);
 
 	return ObjectToReturn;

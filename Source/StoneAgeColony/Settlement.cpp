@@ -45,10 +45,9 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	RootComponent = SceneComponent;
 
 
-	MeshComp;
 	// Setup main mesh
 	MeshComp = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("SettlementMesh"));
-	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/StarterContent/Props/SM_TableRound.SM_TableRound")); // temporary mesh
+	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Uluc/Settlement/SettlementBase/SettlementBase.SettlementBase")); // temporary mesh
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	MeshComp->SetCollisionProfileName("BlockAll");
 	MeshComp->SetupAttachment(RootComponent);
@@ -113,7 +112,6 @@ void ASettlement::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 
 			if (OtherActor->IsA(AStructure::StaticClass()))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("This is a structure"));
 				RegisterStructure((AStructure*)OtherActor);
 			}
 
@@ -175,13 +173,10 @@ void ASettlement::AdjustAreaDisplayerSize()
 	
 	float Ratio = AreaRadius / OriginalAreaDisplayerSize;
 
-	UE_LOG(LogTemp, Warning, TEXT("ASettlement::AdjustAreaDisplayerSize ratio: %f"), Ratio);
-
 	AreaDisplayer->SetWorldScale3D(FVector(Ratio, Ratio, Ratio));
 	AreaDisplayer->SetRelativeScale3D(FVector(Ratio, Ratio, Ratio));
 
 	auto asd = AreaDisplayer->Bounds.BoxExtent;
-	UE_LOG(LogTemp, Warning, TEXT("SIZE: %f %f %f"), asd.X, asd.Y, asd.Z);
 }
 
 void ASettlement::AdjustAreaDisplayerLocation()

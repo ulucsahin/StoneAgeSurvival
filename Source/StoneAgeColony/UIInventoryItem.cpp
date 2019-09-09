@@ -20,7 +20,7 @@ UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) 
 
 void UUIInventoryItem::OnClick()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Inventory Item Clicked, ID: %d"), ItemID);
+	//UE_LOG(LogTemp, Warning, TEXT("Inventory Item Clicked, ID: %d"), ItemID);
 	
 }
 
@@ -34,7 +34,7 @@ void UUIInventoryItem::SetupInventoryItemCell()
 void UUIInventoryItem::Use()
 {
 	//AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	UE_LOG(LogTemp, Warning, TEXT("UUIInventoryItem::Use, ID: %d"), ItemID);
+	//UE_LOG(LogTemp, Warning, TEXT("UUIInventoryItem::Use, ID: %d"), ItemID);
 
 	if (ItemAmount > 0)
 	{
@@ -48,7 +48,7 @@ void UUIInventoryItem::Use()
 		PlayerCharacter->UIPlayerInventory->Refresh();
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("UUIInventoryItem::Use, ItemAmount: %d"), ItemAmount);
+	//UE_LOG(LogTemp, Warning, TEXT("UUIInventoryItem::Use, ItemAmount: %d"), ItemAmount);
 }
 
 void UUIInventoryItem::PlaceItem()

@@ -136,8 +136,6 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 
 	InventoryOn = false;
 	InitializeWidgets();
-
-	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 00"));
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -163,7 +161,6 @@ void AStoneAgeColonyCharacter::BeginPlay()
 	// Will be visible when player loads or starts game. Currently we are in main menu.
 	HideFirstPersonHands(true);
 
-	UE_LOG(LogTemp, Warning, TEXT("CHARACTER 1"));
 }
 
 void AStoneAgeColonyCharacter::Tick(float DeltaTime) {
@@ -410,26 +407,9 @@ T* AStoneAgeColonyCharacter::GetActorInView(float Range)
 	FHitResult Hit(ForceInit);
 	GetWorld()->LineTraceSingleByChannel(Hit, TraceStart, TraceEnd, ECC_Visibility, TraceParams);
 
-	// log
-	if (debug)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Camera: , %f, %f, %f"), CamLoc.X, CamLoc.Y, CamLoc.Z);
-		UE_LOG(LogTemp, Warning, TEXT("TraceEnd:, %f, %f, %f"), TraceEnd.X, TraceEnd.Y, TraceEnd.Z);
-
-		bool isHit = ActorLineTraceSingle(Hit, TraceStart, TraceEnd, ECC_WorldStatic, TraceParams);
-		UE_LOG(LogTemp, Warning, TEXT("HitResult:, %s"), isHit ? TEXT("true") : TEXT("False"));
-	}
-
 	/* Uncomment this to visualize your line during gameplay. */
 	//DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Red, true, 1.0f);
 	
-	//auto test = Cast<ABuilding>(Hit.GetActor());
-	//if (test)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Building xD"));
-	//}
-
-
 	return Cast<T>(Hit.GetActor());
 }
 
@@ -455,7 +435,7 @@ void AStoneAgeColonyCharacter::Gather()
 	}
 }
 
-USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference)
+USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructure* OwnerStructure)
 {
 	/* Adds menu to viewport by using String Reference */
 
@@ -465,8 +445,16 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference)
 	FStringClassReference MyWidgetClassRef(Reference);
 	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
 	auto MenuWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
+
+	if (OwnerStructure)
+	{
+		MenuWidget->OwnerStructure = OwnerStructure;
+	}
+
 	MenuWidget->AddToViewport();
 	MenuWidget->IsActive = true;
+
+
 	if (PlayerController)
 	{
 		PlayerController->SetInputMode(FInputModeGameAndUI());
@@ -507,7 +495,6 @@ void AStoneAgeColonyCharacter::OpenInventory()
 {	
 	// BE CAREFUL:
 	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
-	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter:::OpenInventory"));
 
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 
@@ -641,12 +628,10 @@ void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 	// if we have atleast one instance of ItemToAdd in inventory
 	if (!Inventory.Contains(ItemToAdd))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Item not in inventory"));
 		Inventory.Add(ItemToAdd, AmountToAdd);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Item already in inventory"));
 		Inventory.Emplace(ItemToAdd, Inventory[ItemToAdd] + AmountToAdd);
 	}
 
@@ -659,30 +644,20 @@ void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 	{
 		UIPlayerInventory->Refresh();
 	}
-	
-	//for (auto item : Inventory)
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("InventoryVersion3 item: %d, amount: %d"), item.Key, item.Value);
-	//}
-	
+		
 }
 
 // Called on key press
 void AStoneAgeColonyCharacter::ChangeState()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Change State."));
-
 	if (PlayerStates == EPlayerStates::VE_Building)
 	{
 		ChangeState(EPlayerStates::VE_Combat);
-		UE_LOG(LogTemp, Warning, TEXT("New State: %s"), TEXT("Combat"));
 	}
 	else if (PlayerStates == EPlayerStates::VE_Combat)
 	{
 		ChangeState(EPlayerStates::VE_Building);
-		UE_LOG(LogTemp, Warning, TEXT("New State: %s"), TEXT("Building"));
 	}
-	
 
 }
 
@@ -745,8 +720,6 @@ void AStoneAgeColonyCharacter::ScrollDown()
 
 void AStoneAgeColonyCharacter::ShiftScrollUp()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("ShiftScrollUp"));
-
 	if (PlayerStates == EPlayerStates::VE_Pickup)
 	{
 		PickupManager->IncreaseRotation();
@@ -755,8 +728,6 @@ void AStoneAgeColonyCharacter::ShiftScrollUp()
 
 void AStoneAgeColonyCharacter::ShiftScrollDown()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("ShiftScrollDown"));
-
 	if (PlayerStates == EPlayerStates::VE_Pickup)
 	{
 		PickupManager->DecreaseRotation();
@@ -790,8 +761,6 @@ void AStoneAgeColonyCharacter::InteractPickup()
 
 void AStoneAgeColonyCharacter::InteractPickup(AUsableActor* Actor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pickup Actor"));
-
 	// Don't do it while in building mode
 	if (PlayerStates != EPlayerStates::VE_Building)
 	{

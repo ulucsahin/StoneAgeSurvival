@@ -9,6 +9,8 @@
 #include "SurvivalWidget.generated.h"
 
 class UButton;
+class AStructure;
+
 /**
  * 
  */
@@ -23,4 +25,5 @@ class STONEAGECOLONY_API USurvivalWidget : public UUserWidget
 public:
 	virtual void CloseMenu();
 	bool IsActive;
+	AStructure* OwnerStructure;
 };

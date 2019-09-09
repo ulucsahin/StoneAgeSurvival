@@ -32,7 +32,6 @@ void AGatherableTree::BeginPlay()
 
 void AGatherableTree::SetupType(FString Type)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::SetupType"));
 	auto Type_ = FName(*Type);
 
 	const FString ContextString(TEXT("Gatherable Type Context"));

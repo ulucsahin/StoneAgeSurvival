@@ -22,11 +22,9 @@ ACraftingMaterial::ACraftingMaterial(const FObjectInitializer& ObjectInitializer
 
 void ACraftingMaterial::SetupType(FString Name)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ACraftingMaterial::SetupType"));
 	MaterialType = FName(*Name);
 
 	const FString ContextString(TEXT("Edible Type Context"));
-	UE_LOG(LogTemp, Warning, TEXT("ACraftingMaterial::SetupType Material Type: %s"), *Name);
 	Data = PropertiesDataTable->FindRow<FCraftingMaterialData>(MaterialType, ContextString, true);
 	ID = Data->ID;
 	Description = Data->Description;

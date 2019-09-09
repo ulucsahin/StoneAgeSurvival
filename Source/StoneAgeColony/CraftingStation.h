@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "Structure.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
+//#include "Runtime/Engine/Classes/Engine/StaticMeshActor.h"
 #include "CraftingStation.generated.h"
 
 class USurvivalWidget;
+class AStoneAgeColonyCharacter;
 
 USTRUCT(BlueprintType)
 struct FCraftingStationData : public FTableRowBase
@@ -63,12 +65,31 @@ public:
 
 	UPROPERTY()
 	USurvivalWidget* Menu;
+
+	void StartCrafting(float CraftingTime);
+
+	UFUNCTION() // ufunction needed for timer
+	void CraftingStep(float CraftingTime, float UpdateFrequency); // update progress bar of CraftingStationMenu
+
+	void StopCrafting();
+
+	bool CraftingRequirementsMet();
+
+	UPROPERTY()
+	AUsableActor* CurrentItem;
+
+	int32 CurrentItemID;
+	bool CurrentlyCrafting;
+	int32 CraftAmount;
+	float CraftingProgress;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 
 private:
+	AStoneAgeColonyCharacter* Player;
 	int32 ID;
 	FName CraftingStationType;
 	FCraftingStationData* Data;
 	bool MenuOpen;
+	FTimerHandle TimerHandle;
 };

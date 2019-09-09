@@ -8,7 +8,11 @@
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "SurvivalWidget.h"
+#include "Runtime/Engine/Public/TimerManager.h"
+#include "CraftingStationMenu.h"
+#include "StoneAgeColonyCharacter.h"
 
 ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -18,27 +22,43 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 		PropertiesDataTable = PropertiesDataObject.Object;
 	}
 
-	DefaultMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/MultistoryDungeons/Meshes/Props/Table_Wooden_01.Table_Wooden_01"));
+	CraftAmount = 1; // TODO: craft how many?
 }
 
 void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 {
+	Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	OpenMenu(InstigatorPawn);
 }
 
 void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 {
 	/* Prevents opening multiple of same menus */
+
+	// Data->Menu is empty if this station has no menu.
+	if (Data->Menu == "")
+	{
+		return;
+	}
+
+
+	// Checks if menu is already open or not.
 	if (!Menu)
 	{
-		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);
+		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this);
+
+		// Set bar visible if currently crafting
+		((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting);
 		MenuOpen = true;
 	}
 	else
 	{
 		if (!Menu->IsActive)
 		{
-			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu);
+			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this);
+
+			// Set bar visible if currently crafting
+			((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting);
 			MenuOpen = true;
 		}
 	}
@@ -46,7 +66,6 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 
 void ACraftingStation::SetupType(FString Type)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::SetupType"));
 	CraftingStationType = FName(*Type);
 	
 	const FString ContextString(TEXT("Edible Type Context"));
@@ -66,7 +85,6 @@ void ACraftingStation::SetupType(FString Type)
 
 		const FStringAssetReference& MeshRef = Data->Mesh.ToStringReference();
 		Data->Mesh = Cast<UStaticMesh>(AssetMgr.SynchronousLoad(MeshRef));
-
 	}
 
 	InventoryTexture = Data->Icon.Get();
@@ -91,6 +109,7 @@ void ACraftingStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp,
 			}
 			
 		}
+
 	}
 
 }
@@ -108,9 +127,103 @@ void ACraftingStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, c
 			if (OtherActorCompName == "SettlementArea")
 			{
 				((ASettlement*)OtherActor)->DeRegisterStructure(this);
-				UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd ---> DeRegisterStructure"));
+				UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd--> DeRegisterStructure"));
 			}
 
 		}
+
 	}
+
+}
+
+
+void ACraftingStation::StartCrafting(float CraftingTime)
+{
+	((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(true);
+	FTimerDelegate TimerDel;
+
+	//Binding the function with specific values
+	float UpdateFrequency = 0.1f;
+	TimerDel.BindUFunction(this, FName("CraftingStep"), CraftingTime, UpdateFrequency);
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.1f, true);
+
+	CurrentlyCrafting = true;
+
+}
+
+void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
+{
+	CraftingProgress += 1 / CraftingTime * UpdateFrequency;
+	((UCraftingStationMenu*)Menu)->UpdateProgressBar(CraftingProgress);
+	
+	// Crafting Completed
+	if (CraftingProgress >= 1.f)
+	{
+		StopCrafting();
+
+		// Consume items from player inventory after crafting is finished.
+		if (Player)
+		{
+			auto PlayerInventory = Player->GetInventory();
+
+			// Consume items from player inventory
+			for (auto Requirement : CurrentItem->CraftRequirements)
+			{
+				int32 UsedItemID = Requirement.Key;
+				int32 ConsumedAmount = Requirement.Value * CraftAmount;
+				Player->ConsumeItemFromInventory(UsedItemID, ConsumedAmount);
+			
+			}
+
+			// Add crafted items to player inventory
+			Player->AddToInventory(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
+			
+		}
+
+	}
+}
+
+void ACraftingStation::StopCrafting()
+{
+	((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(false);
+	CraftingProgress = 0.f;
+	CurrentlyCrafting = false;
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+}
+
+bool ACraftingStation::CraftingRequirementsMet()
+{
+	/* Checks if required items are in player inventory for crafting the item of this button. */
+
+	bool RequirementsMet = true;
+
+	if (Player)
+	{
+		auto PlayerInventory = Player->GetInventory();
+
+		for (auto Requirement : CurrentItem->CraftRequirements)
+		{
+			int32 RequiredItem = Requirement.Key;
+			int32 RequiredAmount = Requirement.Value * CraftAmount;
+
+			// if player don't have enough of this item
+			if (PlayerInventory.Contains(RequiredItem))
+			{
+				if (PlayerInventory[RequiredItem] < RequiredAmount)
+				{
+					RequirementsMet = false;
+					break;
+				}
+			}
+			else
+			{
+				RequirementsMet = false;
+			}
+
+		}
+
+	}
+
+	return RequirementsMet;
 }

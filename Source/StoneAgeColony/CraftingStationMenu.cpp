@@ -7,6 +7,8 @@
 #include "ObjectFactory.h"
 #include "CraftListButton.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Structure.h"
+#include "CraftingStation.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Runtime/UMG/Public/Components/VerticalBox.h"
 #include "Runtime/UMG/Public/Components/TextBlock.h"
@@ -30,23 +32,20 @@ UCraftingStationMenu::UCraftingStationMenu(const FObjectInitializer& ObjectIniti
 void UCraftingStationMenu::RegisterToPlayer(AStoneAgeColonyCharacter* Player)
 {
 	this->Player = Player;
+}
 
+void UCraftingStationMenu::InitialSetup()
+{
+	// Get most recent information from belonging structure 
+	UpdateProgressBar(((ACraftingStation*)OwnerStructure)->CraftingProgress);
 	CraftingProgressBar->SetVisibility(ESlateVisibility::Hidden);
 }
 
 // Called in blueprint
 void UCraftingStationMenu::AddItems(int32 CraftStationID)
 {
-	AObjectFactory* Factory = NewObject<AObjectFactory>();
-	auto BelongingStationInstance = (ACraftingStation*) Factory->CreateObjectBetter(CraftStationID);
-	
-	UE_LOG(LogTemp, Warning, TEXT("UCraftingStationMenu::AddItems CraftStationID %d"), CraftStationID);
-
-	for (int32 Item : BelongingStationInstance->CraftableItems)
+	for (int32 Item : ((ACraftingStation*)OwnerStructure)->CraftableItems)
 	{
-
-		UE_LOG(LogTemp, Warning, TEXT("UCraftingStationMenu::AddItems"));
-		
 		auto CraftListButton = CreateWidget<UCraftListButton>((APlayerController*)Player->GetController(), CraftMenuItem);
 		CraftListButton->ItemID = Item;
 		CraftListButton->SetupInventoryItemCell();
@@ -59,116 +58,43 @@ void UCraftingStationMenu::AddItems(int32 CraftStationID)
 
 void UCraftingStationMenu::ReceiveInformationFromButton(AUsableActor* RepresentedItem, int32 ItemID)
 {
+	// wtf are those casts
+
 	// do nothing if currently crafting
-	if(!CurrentlyCrafting)
+	if(!((ACraftingStation*)OwnerStructure)->CurrentlyCrafting)
 	{
-		this->CurrentItem = RepresentedItem;
-		this->CurrentItemID = ItemID;
-		if (CraftingRequirementsMet())
+		((ACraftingStation*)OwnerStructure)->CurrentItem = RepresentedItem;
+		((ACraftingStation*)OwnerStructure)->CurrentItemID = ItemID;
+		/*this->CurrentItem = RepresentedItem;
+		this->CurrentItemID = ItemID;*/
+		if (((ACraftingStation*)OwnerStructure)->CraftingRequirementsMet())
 		{
-			StartCrafting(5.f); // Crafting time should be different for items.
+			((ACraftingStation*)OwnerStructure)->StartCrafting(5.f); // Crafting time should be different for items.
 		}
 	}
 	
 }
 
-bool UCraftingStationMenu::CraftingRequirementsMet()
+void UCraftingStationMenu::UpdateProgressBar(float Percent)
 {
-	/* Checks if required items are in player inventory for crafting the item of this button. */
+	CraftingProgressBar->SetPercent(Percent);
+}
 
-	bool RequirementsMet = true;
-
-	if (Player)
+void UCraftingStationMenu::SetProgressBarVisibility(bool Visibility)
+{
+	if (Visibility == false)
 	{
-		auto PlayerInventory = Player->GetInventory();
-
-		for (auto Requirement : CurrentItem->CraftRequirements)
-		{
-			int32 RequiredItem = Requirement.Key;
-			int32 RequiredAmount = Requirement.Value * CraftAmount;
-
-			// if player don't have enough of this item
-			if (PlayerInventory.Contains(RequiredItem))
-			{
-				if (PlayerInventory[RequiredItem] < RequiredAmount)
-				{
-					RequirementsMet = false;
-					break;
-				}
-			}
-			else
-			{
-				RequirementsMet = false;
-			}
-
-		}
-
+		CraftingProgressBar->SetVisibility(ESlateVisibility::Hidden);
 	}
-
-	return RequirementsMet;
-}
-
-void UCraftingStationMenu::StartCrafting(float CraftingTime)
-{
-	StartUpdatingProgressBar(CraftingTime);
-	CraftingProgressBar->SetVisibility(ESlateVisibility::Visible);
-	CurrentlyCrafting = true;
-}
-
-void UCraftingStationMenu::StartUpdatingProgressBar(float CraftingTime)
-{
-	FTimerDelegate TimerDel;
-
-	//Binding the function with specific values
-	float UpdateFrequency = 0.1f;
-	TimerDel.BindUFunction(this, FName("UpdateProgressBar"), CraftingTime, UpdateFrequency);
-	
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.1f, true);
-}
-
-void UCraftingStationMenu::UpdateProgressBar(float CraftingTime, float UpdateFrequency)
-{
-	CraftingBarProgress += 1 / CraftingTime * UpdateFrequency;
-	CraftingProgressBar->SetPercent(CraftingBarProgress);
-	
-	// Crafting Completed
-	if (CraftingBarProgress >= 1.f)
+	else
 	{
-		StopCrafting();
-
-		// Consume items from player inventory after crafting is finished.
-		if (Player)
-		{
-			auto PlayerInventory = Player->GetInventory();
-
-			// Consume items from player inventory
-			for (auto Requirement : CurrentItem->CraftRequirements)
-			{
-				int32 UsedItemID = Requirement.Key;
-				int32 ConsumedAmount = Requirement.Value * CraftAmount;
-				Player->ConsumeItemFromInventory(UsedItemID, ConsumedAmount);
-			}
-
-			// Add crafted items to player inventory
-			Player->AddToInventory(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
-		}
-
+		CraftingProgressBar->SetVisibility(ESlateVisibility::Visible);
 	}
-
-}
-
-void UCraftingStationMenu::StopCrafting()
-{
-	CraftingProgressBar->SetVisibility(ESlateVisibility::Hidden);
-	CraftingBarProgress = 0.f;
-	CraftingProgressBar->SetPercent(0.f);
-	CurrentlyCrafting = false;
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 }
 
 void UCraftingStationMenu::CloseMenu()
 {
-	StopCrafting();
+	//StopCrafting();
 	IsActive = false;
 	RemoveFromParent();
 
