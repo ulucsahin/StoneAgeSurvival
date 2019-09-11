@@ -24,13 +24,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	int32 Stamina;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	TAssetPtr<UTexture2D> Icon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	FText Description;
-
 };
 
 

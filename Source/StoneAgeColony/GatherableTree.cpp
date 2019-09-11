@@ -37,19 +37,19 @@ void AGatherableTree::SetupType(FString Type)
 	const FString ContextString(TEXT("Gatherable Type Context"));
 	Data = PropertiesDataTable->FindRow<FGatherableData>(Type_, ContextString, true);
 	ID = Data->ID;
-	Description = Data->Description;
+	//Description = Data->Description;
 	GatherID = Data->GatherID;
 
-	// Required for loading icon from TAssetPtr with Get()
-	if (Data->Icon.IsPending()) 
-	{
-		UAssetManager* tmp = NewObject<UAssetManager>();
-		FStreamableManager& AssetMgr = tmp->GetStreamableManager();//UAssetManager::GetStreamableManager();
-		const FStringAssetReference& AssetRef = Data->Icon.ToStringReference();
-		Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(AssetRef));
-	}
+	//// Required for loading icon from TAssetPtr with Get()
+	//if (Data->Icon.IsPending()) 
+	//{
+	//	UAssetManager* tmp = NewObject<UAssetManager>();
+	//	FStreamableManager& AssetMgr = tmp->GetStreamableManager();//UAssetManager::GetStreamableManager();
+	//	const FStringAssetReference& AssetRef = Data->Icon.ToStringReference();
+	//	Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(AssetRef));
+	//}
 
-	InventoryTexture = Data->Icon.Get();
+	//InventoryTexture = Data->Icon.Get();
 }
 
 void AGatherableTree::OnUsed(APawn* InstigatorPawn)

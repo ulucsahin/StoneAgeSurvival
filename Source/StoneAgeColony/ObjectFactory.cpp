@@ -15,6 +15,9 @@
 #include "CraftingStation.h"
 #include "UsableActor.h"
 #include "CraftingMaterial.h"
+#include "Runtime/Engine/Classes/Engine/Texture2D.h"
+#include "Runtime/Engine/Classes/Engine/StreamableManager.h"
+#include "Runtime/Engine/Classes/Engine/AssetManager.h"
 //AObjectFactory* AObjectFactory::instance;
 
 // Sets default values
@@ -23,30 +26,13 @@ AObjectFactory::AObjectFactory()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	//this->AddToRoot();
-
 	// ID to Name Table
-	static ConstructorHelpers::FObjectFinder<UDataTable> IDtoNameTableObject(TEXT("DataTable'/Game/Uluc/DataTables/ObjectNameDataTable.ObjectNameDataTable'"));
-	if (IDtoNameTableObject.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UDataTable> CommonPropertiesTableObject(TEXT("DataTable'/Game/Uluc/DataTables/ObjectsCommonPropertiesDataTable.ObjectsCommonPropertiesDataTable'"));
+	if (CommonPropertiesTableObject.Succeeded())
 	{
-		IDtoNameTable = IDtoNameTableObject.Object;
+		CommonPropertiesTable = CommonPropertiesTableObject.Object;
 		
 	}
-
-	//// Edibles Table
-	//static ConstructorHelpers::FObjectFinder<UDataTable> EdiblesTableObject(TEXT("DataTable'/Game/Uluc/DataTables/EdiblesDataTable.EdiblesDataTable'"));
-	//if (EdiblesTableObject.Succeeded())
-	//{
-	//	EdiblesTable = EdiblesTableObject.Object;
-	//}
-
-	//// Equipment Table
-	//static ConstructorHelpers::FObjectFinder<UDataTable> EquipmentTableObject(TEXT("DataTable'/Game/Uluc/DataTables/EquipmentsDataTable.EquipmentsDataTable'"));
-	//if (EquipmentTableObject.Succeeded())
-	//{
-	//	UDataTable* EquipmentTable = EquipmentTableObject.Object;
-	//	ClassToTable.Emplace(UEquipment::StaticClass(), EquipmentTable);
-	//}
 
 }
 
@@ -59,7 +45,7 @@ T* AObjectFactory::CreateObject(int32 ObjectID)
 
 	// Get ObjectName from tables
 	const FString ContextString(TEXT("Object Type Context"));
-	auto Data = IDtoNameTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
+	auto Data = CommonPropertiesTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
 	auto ObjectName = Data->Name;
 
 	//auto RelevantTable = ClassToTable[T::StaticClass()];
@@ -80,7 +66,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	FString Tmp = FString::FromInt(ObjectID);
 	FName ObjectID_ = FName(*Tmp);
 	const FString ContextString(TEXT("Object Type Context"));
-	auto Data = IDtoNameTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
+	auto Data = CommonPropertiesTable->FindRow<FObjectCommonPropertiesData>(ObjectID_, ContextString, true);
 	auto ObjectName = Data->Name_;
 
 	// Unique Items, will remove later?
@@ -131,7 +117,22 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	{
 		ObjectToReturn = NewObject<ASettlement>();
 	}
+	
 
+	// Set common properties of created object
+	ObjectToReturn->Description = Data->Description;
+	ObjectToReturn->CraftRequirements = Data->CraftRequirements;
+	
+	if (Data->Icon.IsPending())
+	{
+		UAssetManager* tmp = NewObject<UAssetManager>();
+		FStreamableManager& AssetMgr = tmp->GetStreamableManager(); //UAssetManager::GetStreamableManager();
+		const FStringAssetReference& IconRef = Data->Icon.ToStringReference();
+		Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(IconRef));
+	}
+	ObjectToReturn->InventoryTexture = Data->Icon.Get();
+
+	// Set non-common properties of created object
 	ObjectToReturn->SetupType(ObjectName);
 
 	return ObjectToReturn;
@@ -143,7 +144,7 @@ FString AObjectFactory::GetObjectNameFromID(int32 ObjectID)
 	FString Tmp = FString::FromInt(ObjectID);
 	FName ObjectID_ = FName(*Tmp);
 	const FString ContextString(TEXT("Object Type Context"));
-	auto Data = IDtoNameTable->FindRow<FObjectNameData>(ObjectID_, ContextString, true);
+	auto Data = CommonPropertiesTable->FindRow<FObjectCommonPropertiesData>(ObjectID_, ContextString, true);
 	auto ObjectName = Data->Name_;
 
 	return ObjectName;

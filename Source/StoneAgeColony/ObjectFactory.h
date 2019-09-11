@@ -10,16 +10,25 @@
 class AUsableActor;
 
 USTRUCT(BlueprintType)
-struct FObjectNameData : public FTableRowBase
+struct FObjectCommonPropertiesData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
 
-	FObjectNameData() {}
+	FObjectCommonPropertiesData() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
 	FString Name_;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	TAssetPtr<UTexture2D> Icon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	FText Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	TMap<int32, int32> CraftRequirements;
 
 };
 
@@ -45,7 +54,7 @@ private:
 	//static AObjectFactory* instance; // Singleton instance
 	//TMap<UClass*, UDataTable*> ClassToTable;
 
-	class UDataTable* IDtoNameTable;
+	class UDataTable* CommonPropertiesTable;
 	//class UDataTable* EdiblesTable;
 	//class UDataTable* EquipmentTable;
 

@@ -46,14 +46,6 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 	static ConstructorHelpers::FClassFinder<ABuilding> BPClass3(TEXT("/Game/Uluc/BuildingSystem/Blueprints/BP_Building"));
 	Communicator::GetInstance().BuildingBlueprint = BPClass3.Class;
 
-	// Set Communicator ItemID-Name Table
-	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/ObjectNameDataTable.ObjectNameDataTable'"));
-	if (PropertiesDataObject.Succeeded())
-	{
-		Communicator::GetInstance().ObjectNameDataTable = PropertiesDataObject.Object;
-	}
-
-
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPersonCPP/Blueprints/FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;

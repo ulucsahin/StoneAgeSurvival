@@ -438,7 +438,7 @@ void AStoneAgeColonyCharacter::Gather()
 USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructure* OwnerStructure)
 {
 	/* Adds menu to viewport by using String Reference */
-
+	//UE_LOG(LogTemp, Warning, TEXT("OpenMenu asdasda"));
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	
 	// Open CraftingStation Menu

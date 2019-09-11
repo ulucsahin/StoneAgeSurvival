@@ -73,12 +73,10 @@ void UUIInventoryItem::PlaceItem()
 	auto ClassToSpawn = ObjectToPlace->GetClass(); //Communicator::GetInstance().UsableItemIDMap[ItemID]->GetClass();
 	
 	const FString ContextString(TEXT("Spawned Type Context"));
-	auto IDAsString = FString::FromInt(ItemID);
-	auto IDAsFName = FName(*IDAsString);
-	auto ObjectNameData = Communicator::GetInstance().ObjectNameDataTable->FindRow<FObjectNameData>(IDAsFName, ContextString, true);
 
 	auto SpawnedItem = Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, SpawnLocation, FRotator::ZeroRotator);
-	SpawnedItem->SetupType(ObjectNameData->Name_);
+	auto ObjectName = Factory->GetObjectNameFromID(ItemID);
+	SpawnedItem->SetupType(ObjectName);
 	SpawnedItem->SetMeshToDefault();
 
 	// Adjust player inventory since item is used

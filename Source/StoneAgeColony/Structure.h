@@ -9,6 +9,7 @@
 #include "Structure.generated.h"
 
 class UUserWidget;
+class USurvivalWidget;
 
 UCLASS()
 class STONEAGECOLONY_API AStructure : public AUsableActor
@@ -24,7 +25,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UUserWidget* Menu;
+	//UUserWidget* Menu;
+
+	UPROPERTY()
+	USurvivalWidget* Menu;
 
 private:
 	FName Name;

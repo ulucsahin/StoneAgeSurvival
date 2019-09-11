@@ -16,7 +16,9 @@
 
 ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/CraftingStationsDataTable.CraftingStationsDataTable'"));
+
+	
+	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/StructuresDataTable.StructuresDataTable'"));
 	if (PropertiesDataObject.Succeeded())
 	{
 		PropertiesDataTable = PropertiesDataObject.Object;
@@ -40,7 +42,6 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	{
 		return;
 	}
-
 
 	// Checks if menu is already open or not.
 	if (!Menu)
@@ -69,25 +70,19 @@ void ACraftingStation::SetupType(FString Type)
 	CraftingStationType = FName(*Type);
 	
 	const FString ContextString(TEXT("Edible Type Context"));
-	Data = PropertiesDataTable->FindRow<FCraftingStationData>(CraftingStationType, ContextString, true);
+	Data = PropertiesDataTable->FindRow<FStructureData>(CraftingStationType, ContextString, true);
 	ID = Data->ID;
-	CraftRequirements = Data->CraftRequirements;
 	CraftableItems = Data->CraftableItems;
-	Description = Data->Description;
 
 	// Required for loading icon from TAssetPtr with Get()
-	if (Data->Icon.IsPending())
+	if (Data->Mesh.IsPending())
 	{
 		UAssetManager* tmp = NewObject<UAssetManager>();
 		FStreamableManager& AssetMgr = tmp->GetStreamableManager(); //UAssetManager::GetStreamableManager();
-		const FStringAssetReference& IconRef = Data->Icon.ToStringReference();
-		Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(IconRef));
-
 		const FStringAssetReference& MeshRef = Data->Mesh.ToStringReference();
 		Data->Mesh = Cast<UStaticMesh>(AssetMgr.SynchronousLoad(MeshRef));
 	}
 
-	InventoryTexture = Data->Icon.Get();
 	DefaultMesh = Data->Mesh.Get();
 }
 

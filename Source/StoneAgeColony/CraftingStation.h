@@ -12,33 +12,24 @@ class USurvivalWidget;
 class AStoneAgeColonyCharacter;
 
 USTRUCT(BlueprintType)
-struct FCraftingStationData : public FTableRowBase
+struct FStructureData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FCraftingStationData() {}
+	FStructureData() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	TMap<int32, int32> CraftRequirements;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	TArray<int32> CraftableItems;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	TAssetPtr<UTexture2D> Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	TAssetPtr<UStaticMesh> Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	FString Menu;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	FText Description;
 
 };
 
@@ -60,11 +51,7 @@ public:
 	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	//TMap<int32, int32> CraftRequirements; //moved to AUsableActor base class
 	TArray<int32> CraftableItems;
-
-	UPROPERTY()
-	USurvivalWidget* Menu;
 
 	void StartCrafting(float CraftingTime);
 
@@ -89,7 +76,7 @@ private:
 	AStoneAgeColonyCharacter* Player;
 	int32 ID;
 	FName CraftingStationType;
-	FCraftingStationData* Data;
+	FStructureData* Data;
 	bool MenuOpen;
 	FTimerHandle TimerHandle;
 };

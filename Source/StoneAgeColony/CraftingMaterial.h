@@ -20,18 +20,7 @@ public:
 	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	TMap<int32, int32> CraftRequirements;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	int32 YieldAmount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	TAssetPtr<UTexture2D> Icon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
-	FText Description;
-
-	
 };
 
 
