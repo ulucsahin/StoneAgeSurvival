@@ -5,6 +5,7 @@
 #include "Structure.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
+#include "SurvivalWidget.h"
 //#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -54,7 +55,7 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	MeshComp->SetStaticMesh(DefaultMesh);
 	
 	// Initialize properties
-	Name = FName(TEXT("Prontera"));
+	Name = "Prontera";
 	PopulationLimit = 10;
 	Level = 1;
 	Experience = 0;
@@ -63,6 +64,8 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	
 	AdjustAreaDisplayerSize();
 	AdjustAreaDisplayerLocation();
+
+	MenuRef = "/Game/Uluc/Settlement/SettlementBase/MenuAssets/SettlementMenu.SettlementMenu_C";
 }
 
 int ASettlement::GetID()
@@ -70,26 +73,35 @@ int ASettlement::GetID()
 	return ID;
 }
 
-//// Called when the game starts or when spawned
-//void ASettlement::BeginPlay()
-//{
-//	Super::BeginPlay();
-//
-//	//// TEST
-//	//AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-//	//if (Player)
-//	//{
-//	//	Player->Settlement = this;
-//	//	UE_LOG(LogTemp, Warning, TEXT("Player available."));
-//	//}
-//}
-//
-//// Called every frame
-//void ASettlement::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//
-//}
+void ASettlement::OnUsed(APawn* InstigatorPawn)
+{
+	UE_LOG(LogTemp, Warning, TEXT("im a setlmennto"));
+	OpenMenu(InstigatorPawn);
+}
+
+void ASettlement::OpenMenu(APawn* InstigatorPawn)
+{
+	/* Prevents opening multiple of same menus */
+
+	// Data->Menu is empty if this station has no menu.
+	if (MenuRef == "")
+	{
+		return;
+	}
+
+	// Checks if menu is already open or not.
+	if (!Menu)
+	{
+		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(MenuRef, this, this);
+	}
+	else
+	{
+		if (!Menu->IsActive)
+		{
+			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(MenuRef, this, this);
+		}
+	}
+}
 
 void ASettlement::AddStructure(AStructure* Structure)
 {
@@ -115,31 +127,9 @@ void ASettlement::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, clas
 				RegisterStructure((AStructure*)OtherActor);
 			}
 
-			
-			
-			//// also check for mesh if building, this is to prevent collisions with invisible box components
-			//if (OtherActorClassName == "BP_Building_C")
-			//{
-			//	UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
-			//	if (Mesh != nullptr)
-			//	{
-			//		OverlappingActors.Add(OtherActor);
-			//		if (!bOverlapping)
-			//			OnOverlappingBegin();
-			//	}
-			//}
-			//else
-			//{
-			//	OverlappingActors.Add(OtherActor);
-			//	if (!bOverlapping)
-			//		OnOverlappingBegin();
-			//}
-
 		}
 
 	}
-
-
 
 }
 
@@ -157,13 +147,10 @@ void ASettlement::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class 
 			{
 				DeRegisterStructure((AStructure*)OtherActor);
 
-
 			}
 		}
 
 	}
-
-
 
 }
 
@@ -175,8 +162,6 @@ void ASettlement::AdjustAreaDisplayerSize()
 
 	AreaDisplayer->SetWorldScale3D(FVector(Ratio, Ratio, Ratio));
 	AreaDisplayer->SetRelativeScale3D(FVector(Ratio, Ratio, Ratio));
-
-	auto asd = AreaDisplayer->Bounds.BoxExtent;
 }
 
 void ASettlement::AdjustAreaDisplayerLocation()

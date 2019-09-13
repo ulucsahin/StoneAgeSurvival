@@ -43,8 +43,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void RegisterToPlayer(AStoneAgeColonyCharacter* Player);
 
-	UFUNCTION(BlueprintCallable, Category = "Lol")
-	void InitialSetup();
+	virtual void InitialSetup() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Player")
 	AStoneAgeColonyCharacter* Player;
@@ -59,7 +58,6 @@ public:
 
 	void SetProgressBarVisibility(bool Visibility);
 
-	UFUNCTION(BlueprintCallable, Category = "Lol") 
 	virtual void CloseMenu() override;
 
 	AUsableActor* CurrentItem;

@@ -13,6 +13,7 @@
 #include "Settlement.h"
 #include "Edible.h"
 #include "CraftingStation.h"
+#include "House.h"
 #include "UsableActor.h"
 #include "CraftingMaterial.h"
 #include "Runtime/Engine/Classes/Engine/Texture2D.h"
@@ -98,9 +99,14 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 		ObjectToReturn = NewObject<AEdible>();
 	}
 	// Crafting Stations
-	else if (ObjectID >= 400 && ObjectID <= 499)
+	else if (ObjectID >= 400 && ObjectID <= 489)
 	{
 		ObjectToReturn = NewObject<ACraftingStation>();
+	}
+	// Houses
+	else if (ObjectID >= 490 && ObjectID <= 499)
+	{
+		ObjectToReturn = NewObject<AHouse>();
 	}
 	// CraftingMaterials
 	else if(ObjectID >= 500 && ObjectID <= 699)
@@ -118,7 +124,6 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 		ObjectToReturn = NewObject<ASettlement>();
 	}
 	
-
 	// Set common properties of created object
 	ObjectToReturn->Description = Data->Description;
 	ObjectToReturn->CraftRequirements = Data->CraftRequirements;

@@ -21,6 +21,7 @@ class USphereComponent;
 class UUserWidget;
 class USurvivalWidget;
 class AStructure;
+class ASettlement;
 
 enum class EPlayerStates : uint8
 {
@@ -87,7 +88,7 @@ public:
 	void UpdateStateDisplay();
 
 	// Inventory, with items to test
-	TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {450, 5}, {506, 25} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
+	TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {450, 5}, {506, 25}, {490,2} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;
@@ -196,7 +197,7 @@ public:
 	uint32 bUsingMotionControllers : 1;
 
 	// Opens Given UI
-	USurvivalWidget* OpenMenu(FString Reference, AStructure* OwnerStructure);
+	USurvivalWidget* OpenMenu(FString Reference, AStructure* OwnerStructure, ASettlement* OwnerSettlement);
 
 private:
 	void HandleFocus();

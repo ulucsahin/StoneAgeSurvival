@@ -6,6 +6,7 @@
 //#include "GameFramework/Actor.h"
 #include "UsableActor.h"
 //#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "Structure.generated.h"
 
 class UUserWidget;
@@ -32,5 +33,6 @@ protected:
 
 private:
 	FName Name;
+	FTableRowBase* Data;
 	
 };

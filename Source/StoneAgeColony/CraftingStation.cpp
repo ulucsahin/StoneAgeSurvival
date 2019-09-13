@@ -16,8 +16,6 @@
 
 ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-
-	
 	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/StructuresDataTable.StructuresDataTable'"));
 	if (PropertiesDataObject.Succeeded())
 	{
@@ -46,17 +44,17 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	// Checks if menu is already open or not.
 	if (!Menu)
 	{
-		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this);
+		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, nullptr); //owner settlement is null for now
 
 		// Set bar visible if currently crafting
-		((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting);
+		((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting); 
 		MenuOpen = true;
 	}
 	else
 	{
 		if (!Menu->IsActive)
 		{
-			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this);
+			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, nullptr); //owner settlement is null for now
 
 			// Set bar visible if currently crafting
 			((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting);

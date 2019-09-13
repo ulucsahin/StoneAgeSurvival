@@ -6,7 +6,8 @@
 //#include "GameFramework/Actor.h"
 //#include "Structure.h"
 //#include "Components/SphereComponent.h"
-#include "UsableActor.h"
+//#include "UsableActor.h"
+#include "Structure.h"
 #include "Settlement.generated.h"
 
 //
@@ -16,7 +17,7 @@ class USphereComponent;
 class AActor;
 
 UCLASS()
-class STONEAGECOLONY_API ASettlement : public AUsableActor
+class STONEAGECOLONY_API ASettlement : public AStructure
 {
 	GENERATED_BODY()
 	
@@ -26,7 +27,7 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
-	//virtual void BeginPlay() override;
+	// virtual void BeginPlay() override;
 
 public:	
 	 //Called every frame
@@ -48,9 +49,20 @@ public:
 	void DeRegisterStructure(AStructure* Structure);
 	
 	virtual int GetID() override;
-	// TEST
-	AStoneAgeColonyCharacter* Player;
 	
+	// Public Properties
+	AStoneAgeColonyCharacter* Player;
+	FString Name;
+	int32 PopulationLimit;
+	int32 Level;
+	int32 Experience;
+	int32 BuildingLimit;
+	float AreaRadius;
+	TSet<AStructure*> Structures;
+
+	void OpenMenu(APawn* InstigatorPawn);
+protected:
+	virtual void OnUsed(APawn* InstigatorPawn) override;
 private:
 	
 	USceneComponent* SceneComponent;
@@ -60,12 +72,6 @@ private:
 	UMaterial* AreaDisplayerMaterial;
 	float OriginalAreaDisplayerSize;
 
-	// Properties
-	FName Name;
-	int32 PopulationLimit;
-	int32 Level;
-	int32 Experience;
-	int32 BuildingLimit;
-	float AreaRadius;
-	TSet<AStructure*> Structures;
+	// Private Properties
+	FString MenuRef;
 };

@@ -435,7 +435,7 @@ void AStoneAgeColonyCharacter::Gather()
 	}
 }
 
-USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructure* OwnerStructure)
+USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructure* OwnerStructure, ASettlement* OwnerSettlement)
 {
 	/* Adds menu to viewport by using String Reference */
 	//UE_LOG(LogTemp, Warning, TEXT("OpenMenu asdasda"));
@@ -449,6 +449,7 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructur
 	if (OwnerStructure)
 	{
 		MenuWidget->OwnerStructure = OwnerStructure;
+		MenuWidget->OwnerSettlement = OwnerSettlement; // TODO::this may be null for now, each structure will have a pointer to owner settlement later on.
 	}
 
 	MenuWidget->AddToViewport();

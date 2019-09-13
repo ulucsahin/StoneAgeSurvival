@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Structure.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
-//#include "Runtime/Engine/Classes/Engine/StaticMeshActor.h"
 #include "CraftingStation.generated.h"
 
 class USurvivalWidget;

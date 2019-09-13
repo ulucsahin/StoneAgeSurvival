@@ -2,6 +2,7 @@
 
 #include "Structure.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "StoneAgeColonyCharacter.h"
 
 
 // Called when the game starts or when spawned

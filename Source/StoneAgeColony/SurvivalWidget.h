@@ -10,6 +10,7 @@
 
 class UButton;
 class AStructure;
+class ASettlement;
 
 /**
  * 
@@ -23,7 +24,14 @@ class STONEAGECOLONY_API USurvivalWidget : public UUserWidget
 
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Lol")
 	virtual void CloseMenu();
+
+	UFUNCTION(BlueprintCallable, Category = "Lol")
+	virtual void InitialSetup();
+
 	bool IsActive;
 	AStructure* OwnerStructure;
+	ASettlement* OwnerSettlement; 
+
 };
