@@ -62,7 +62,6 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 {
 	AUsableActor* ObjectToReturn = nullptr;
 
-	
 	// Get ObjectName from tables
 	FString Tmp = FString::FromInt(ObjectID);
 	FName ObjectID_ = FName(*Tmp);

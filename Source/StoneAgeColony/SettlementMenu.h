@@ -27,5 +27,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Cpp")
 	UTextBlock* SettlementStatsText;
 
+	UFUNCTION(BlueprintCallable, Category = "SettlementAreaDisplayer")
+	void ToggleAreaDisplayer();
+
+	UFUNCTION(BlueprintCallable, Category = "SettlementAreaDisplayer")
+	void MakeActive();
+
+	void SetSettlementStatsText();
+
 	virtual void InitialSetup() override;
 };

@@ -12,15 +12,41 @@ void USettlementMenu::InitialSetup()
 		auto SettlementName = OwnerSettlement->Name;
 		SettlementNameText->SetText(FText::FromString(SettlementName));
 
-		// Set SettlementStats TextBox text
-		FString SettlementStats = "";
-		SettlementStats += "Population Limit: " + FString::FromInt(OwnerSettlement->PopulationLimit);
-		SettlementStats += "\nLevel: " + FString::FromInt(OwnerSettlement->Level);
-		SettlementStats += "\nExperience: " + FString::FromInt(OwnerSettlement->Experience);
-		SettlementStats += "\nBuildingLimit: " + FString::FromInt(OwnerSettlement->BuildingLimit);
-		SettlementStats += "\nNumber of Structures: " + FString::FromInt(OwnerSettlement->Structures.Num());
-		SettlementStatsText->SetText(FText::FromString(SettlementStats));
+		SetSettlementStatsText();
 	}
 	
-		
+}
+
+void USettlementMenu::ToggleAreaDisplayer()
+{
+	OwnerSettlement->ToggleAreaDisplayer();
+	SetSettlementStatsText();
+}
+
+void USettlementMenu::MakeActive()
+{
+	OwnerSettlement->MakeActiveSettlement();
+	SetSettlementStatsText();
+}
+
+void USettlementMenu::SetSettlementStatsText()
+{
+	// Set SettlementStats TextBox text
+	FString SettlementStats = "";
+	SettlementStats += "Population Limit: " + FString::FromInt(OwnerSettlement->PopulationLimit);
+	SettlementStats += "\nLevel: " + FString::FromInt(OwnerSettlement->Level);
+	SettlementStats += "\nExperience: " + FString::FromInt(OwnerSettlement->Experience);
+	SettlementStats += "\nBuildingLimit: " + FString::FromInt(OwnerSettlement->BuildingLimit);
+	SettlementStats += "\nNumber of Structures: " + FString::FromInt(OwnerSettlement->Structures.Num());
+
+	if (OwnerSettlement->IsActiveSettlement)
+	{
+		SettlementStats += "\nThis settlement is currently active.";
+	}
+	else
+	{
+		SettlementStats += "\nThis settlement is currently deactivated.";
+	}
+
+	SettlementStatsText->SetText(FText::FromString(SettlementStats));
 }

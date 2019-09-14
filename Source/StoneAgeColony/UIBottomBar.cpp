@@ -53,7 +53,8 @@ void UUIBottomBar::InitializeBottomBarItems()
 	}
 
 	SelectSlot(0);
-	
+
+	Refresh();
 }
 
 void UUIBottomBar::RestoreBottomBarItemsFromSave()

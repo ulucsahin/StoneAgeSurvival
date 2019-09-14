@@ -6,7 +6,9 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/Actor.h"
 #include "SurvivalWidget.h"
-//#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "House.h"
+#include "CraftingStation.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -56,7 +58,7 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	
 	// Initialize properties
 	Name = "Prontera";
-	PopulationLimit = 10;
+	PopulationLimit = 3;
 	Level = 1;
 	Experience = 0;
 	BuildingLimit = 10;
@@ -68,6 +70,11 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	MenuRef = "/Game/Uluc/Settlement/SettlementBase/MenuAssets/SettlementMenu.SettlementMenu_C";
 }
 
+void ASettlement::BeginPlay()
+{
+	MakeActiveSettlement();
+}
+
 int ASettlement::GetID()
 {
 	return ID;
@@ -75,7 +82,6 @@ int ASettlement::GetID()
 
 void ASettlement::OnUsed(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("im a setlmennto"));
 	OpenMenu(InstigatorPawn);
 }
 
@@ -172,12 +178,49 @@ void ASettlement::AdjustAreaDisplayerLocation()
 
 void ASettlement::RegisterStructure(AStructure* Structure)
 {
+	Structure->OwnerSettlement = this;
 	Structures.Add(Structure);
+	UpdateStats();
 	UE_LOG(LogTemp, Warning, TEXT("ASettlement::RegisterStructure Structure Amount: %d"), Structures.Num());
 }
 
 void ASettlement::DeRegisterStructure(AStructure* Structure)
 {
+	Structure->OwnerSettlement = nullptr;
 	Structures.Remove(Structure);
+	UpdateStats();
 	UE_LOG(LogTemp, Warning, TEXT("ASettlement::DeregisterStructure Structure Amount: %d"), Structures.Num());
+}
+
+void ASettlement::UpdateStats()
+{
+	PopulationLimit = 3; // Default value is 3 without any houses.
+	for (auto Structure : Structures)
+	{
+		if (Structure->IsA(AHouse::StaticClass()))
+		{
+			PopulationLimit += ((AHouse*)Structure)->Capacity;
+		}
+	}
+}
+
+void ASettlement::MakeActiveSettlement()
+{
+	IsActiveSettlement = true; // TODO: need a way to determine which settlement is active when game loaded.
+	auto Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	Player->ActiveSettlement = this;
+
+	// TODO: need to set other settlements deactive
+}
+
+void ASettlement::ToggleAreaDisplayer()
+{
+	if (AreaDisplayer->IsVisible())
+	{
+		AreaDisplayer->SetVisibility(false);
+	}
+	else
+	{
+		AreaDisplayer->SetVisibility(true);
+	}
 }

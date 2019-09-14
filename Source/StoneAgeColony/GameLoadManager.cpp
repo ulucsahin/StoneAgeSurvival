@@ -14,6 +14,7 @@
 //#include "Runtime/Engine/Classes/Engine/World.h"
 #include "StoneAgeColonyCharacter.h"
 #include "SurvivalGameState.h"
+#include "Structure.h"
 
 // Sets default values
 AGameLoadManager::AGameLoadManager()
@@ -53,6 +54,7 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 		DestroyActors<AEnemyCharacter>();
 		DestroyActors<AGatherableTree>();
 		DestroyActors<ABuilding>();
+		//DestroyActors<AStructure>();
 
 		// Load varibles to communicator (update with loaded variables).
 		Communicator::GetInstance().test = SaveGameEntityLoad->test;

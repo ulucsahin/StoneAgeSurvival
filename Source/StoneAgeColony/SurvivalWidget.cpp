@@ -28,5 +28,6 @@ void USurvivalWidget::CloseMenu()
 		PlayerController->bShowMouseCursor = false;
 		PlayerController->bEnableClickEvents = false;
 		PlayerController->bEnableMouseOverEvents = false;
+		
 	}
 }

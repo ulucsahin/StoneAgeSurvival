@@ -44,7 +44,7 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	// Checks if menu is already open or not.
 	if (!Menu)
 	{
-		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, nullptr); //owner settlement is null for now
+		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, OwnerSettlement);
 
 		// Set bar visible if currently crafting
 		((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting); 
@@ -54,7 +54,7 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	{
 		if (!Menu->IsActive)
 		{
-			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, nullptr); //owner settlement is null for now
+			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, OwnerSettlement); 
 
 			// Set bar visible if currently crafting
 			((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting);

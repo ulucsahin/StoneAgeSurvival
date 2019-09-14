@@ -34,14 +34,14 @@ void AHouse::OpenMenu(APawn* InstigatorPawn)
 	// Checks if menu is already open or not.
 	if (!Menu)
 	{
-		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, nullptr); //owner settlement is null for now
+		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, OwnerSettlement);
 		
 	}
 	else
 	{
 		if (!Menu->IsActive)
 		{
-			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, nullptr); //owner settlement is null for now
+			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, OwnerSettlement);
 		}
 	}
 }

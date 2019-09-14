@@ -36,6 +36,8 @@ public:
 
 	void AddStructure(AStructure* Structure);
 
+	virtual void BeginPlay() override;
+
 	//UFUNCTION()
 	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
@@ -49,18 +51,24 @@ public:
 	void DeRegisterStructure(AStructure* Structure);
 	
 	virtual int GetID() override;
+
+	void UpdateStats();
 	
 	// Public Properties
 	AStoneAgeColonyCharacter* Player;
 	FString Name;
 	int32 PopulationLimit;
+	int32 CurrentPopulation = 1; // TODO: will be changed when we can hire people to our settlement.
 	int32 Level;
 	int32 Experience;
 	int32 BuildingLimit;
 	float AreaRadius;
+	bool IsActiveSettlement;
 	TSet<AStructure*> Structures;
 
 	void OpenMenu(APawn* InstigatorPawn);
+	void MakeActiveSettlement();
+	void ToggleAreaDisplayer();
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 private:

@@ -21,7 +21,6 @@ class USphereComponent;
 class UUserWidget;
 class USurvivalWidget;
 class AStructure;
-class ASettlement;
 
 enum class EPlayerStates : uint8
 {
@@ -135,10 +134,10 @@ public:
 	float GetStamina();
 
 	UFUNCTION(BlueprintPure, Category = "Stats")
-	int GetGold();
+	FString GetSettlementBuildingCount();
 
 	UFUNCTION(BlueprintPure, Category = "Stats")
-	int GetExperience();
+	FString GetSettlementPopulation();
 
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	int GetLevel();
@@ -157,7 +156,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MainMenu")
 	UUserWidget* MainMenuWidget;
 
-	ASettlement* Settlement;
+	ASettlement* ActiveSettlement;
 
 	void Debug();
 
@@ -278,6 +277,7 @@ public:
 
 	void CloseAllMenus();
 
+	UPROPERTY()
 	TSet<USurvivalWidget*> OpenedMenus;
 
 };

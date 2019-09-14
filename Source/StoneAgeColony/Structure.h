@@ -11,6 +11,7 @@
 
 class UUserWidget;
 class USurvivalWidget;
+class ASettlement;
 
 UCLASS()
 class STONEAGECOLONY_API AStructure : public AUsableActor
@@ -25,12 +26,19 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Save-Load methods
+	//void RegisterActorDetailsToSave();
+	static void EmptyCommunicatorDetailsArray();
+	//static void SpawnLoadedActors();
+
+
+	ASettlement* OwnerSettlement;
 protected:
 	//UUserWidget* Menu;
 
 	UPROPERTY()
 	USurvivalWidget* Menu;
-
+	
 private:
 	FName Name;
 	FTableRowBase* Data;

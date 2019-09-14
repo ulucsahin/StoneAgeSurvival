@@ -21,10 +21,13 @@
 #include "ObjectFactory.h"
 #include "Components/SphereComponent.h"
 
+#include "Settlement.h"
+
 #include "UIPlayerInventory.h"
 #include "UIBottomBar.h"
 #include "BottomBarItem.h"
 #include "SurvivalWidget.h"
+
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
@@ -133,6 +136,7 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	// Initialize Animation Manager
 	AnimationManager = NewObject<UFPAnimationManager>();
 	AnimationManager->SetupManager(this, GetWorld());
+	AnimationManager->AddToRoot(); // stupid gc
 
 	InventoryOn = false;
 	InitializeWidgets();
@@ -576,14 +580,36 @@ float AStoneAgeColonyCharacter::GetStamina()
 	return Stamina;
 }
 
-int AStoneAgeColonyCharacter::GetGold()
+// Function for UI
+FString AStoneAgeColonyCharacter::GetSettlementBuildingCount()
 {
-	return Gold;
+	FString Result = "";
+	if (ActiveSettlement)
+	{
+		Result += FString::FromInt(ActiveSettlement->Structures.Num()) + "/" + FString::FromInt(ActiveSettlement->BuildingLimit);
+	}
+	else
+	{
+		Result = "-";
+	}
+
+	return Result;
 }
 
-int AStoneAgeColonyCharacter::GetExperience()
+// Function for UI
+FString AStoneAgeColonyCharacter::GetSettlementPopulation()
 {
-	return Experience;
+	FString Result = "";
+	if (ActiveSettlement)
+	{
+		Result += FString::FromInt(ActiveSettlement->CurrentPopulation) + "/" + FString::FromInt(ActiveSettlement->PopulationLimit);
+	}
+	else
+	{
+		Result = "-";
+	}
+	
+	return Result;
 }
 
 int AStoneAgeColonyCharacter::GetLevel()
@@ -790,8 +816,8 @@ void AStoneAgeColonyCharacter::HideFirstPersonHands(bool Hide)
 
 void AStoneAgeColonyCharacter::Debug()
 {
-	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
 	Gather();
 	GEngine->ForceGarbageCollection();
-	CloseAllMenus();
+	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
+	CloseAllMenus(); // sometimes crashes?
 }

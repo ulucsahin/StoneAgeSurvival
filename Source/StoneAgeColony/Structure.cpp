@@ -23,3 +23,8 @@ void AStructure::OnUsed(APawn* InstigatorPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Im a structure"));
 }
+
+void AStructure::EmptyCommunicatorDetailsArray()
+{
+	// to be implemented
+}
