@@ -16,6 +16,49 @@ class AStructure;
 class USphereComponent;
 class AActor;
 
+
+// Save details
+USTRUCT(BlueprintType)
+struct FSettlementDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	int32 PopulationLimit;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	int32 CurrentPopulation = 1; // TODO: will be changed when we can hire people to our settlement.
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	int32 Experience;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	int32 BuildingLimit;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	float AreaRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	bool AreaDisplayOn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Properties")
+	bool IsActiveSettlement;
+
+};
+
+
 UCLASS()
 class STONEAGECOLONY_API ASettlement : public AStructure
 {
@@ -64,11 +107,19 @@ public:
 	int32 BuildingLimit;
 	float AreaRadius;
 	bool IsActiveSettlement;
+	bool AreaDisplayOn;
 	TSet<AStructure*> Structures;
 
 	void OpenMenu(APawn* InstigatorPawn);
 	void MakeActiveSettlement();
 	void ToggleAreaDisplayer();
+
+	// Save-Load Methods
+	virtual void RegisterActorDetailsToSave() override;
+	virtual void EmptyCommunicatorDetailsArray() override;
+	virtual void SpawnLoadedActors() override;
+	void AfterLoadSetup();
+
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 private:

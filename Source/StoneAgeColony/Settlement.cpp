@@ -8,6 +8,8 @@
 #include "SurvivalWidget.h"
 #include "House.h"
 #include "CraftingStation.h"
+#include "Communicator.h"
+#include "ObjectFactory.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -40,7 +42,7 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	AreaDisplayer->SetupAttachment(SceneComponent);
 	AreaDisplayer->SetStaticMesh(AreaDisplayerMesh);
 	AreaDisplayer->SetMaterial(0, AreaDisplayerMaterial);
-	AreaDisplayer->SetVisibility(true);
+	AreaDisplayer->SetVisibility(false);
 	AreaDisplayer->OnComponentBeginOverlap.AddDynamic(this, &ASettlement::OnOverlapBegin);
 	AreaDisplayer->OnComponentEndOverlap.AddDynamic(this, &ASettlement::OnOverlapEnd);
 	auto AreaDisplayerSize = AreaDisplayer->Bounds.BoxExtent;
@@ -218,9 +220,73 @@ void ASettlement::ToggleAreaDisplayer()
 	if (AreaDisplayer->IsVisible())
 	{
 		AreaDisplayer->SetVisibility(false);
+		AreaDisplayOn = false;
 	}
 	else
 	{
 		AreaDisplayer->SetVisibility(true);
+		AreaDisplayOn = true;
 	}
+}
+
+
+// Save-Load methods
+void ASettlement::RegisterActorDetailsToSave()
+{
+	FSettlementDetails SettlementDetails;
+
+	// Assign details to struct.
+	SettlementDetails.ID = ID;
+	SettlementDetails.Transform = GetActorTransform();
+	SettlementDetails.Name = Name;
+	SettlementDetails.CurrentPopulation = CurrentPopulation;
+	SettlementDetails.Level = Level;
+	SettlementDetails.Experience = Experience;
+	SettlementDetails.BuildingLimit = BuildingLimit;
+	SettlementDetails.AreaRadius = AreaRadius;
+	SettlementDetails.AreaDisplayOn = AreaDisplayOn;
+	SettlementDetails.IsActiveSettlement = IsActiveSettlement;
+
+	// Save details as struct to communicator. Which will be used during saving.
+	Communicator::GetInstance().SpawnedSettlementDetails.Add(SettlementDetails);
+}
+
+void ASettlement::EmptyCommunicatorDetailsArray()
+{
+	Communicator::GetInstance().SpawnedSettlementDetails.Empty();
+}
+
+void ASettlement::SpawnLoadedActors()
+{
+	/* Spawn previously saved characters from savefile. */
+
+	FActorSpawnParameters SpawnParams;
+
+	static AObjectFactory* Factory = NewObject<AObjectFactory>();
+	
+	// Iterate over array and saved spawn actors.
+	for (auto Details : Communicator::GetInstance().SpawnedSettlementDetails)
+	{
+		auto ObjectToPlace = Factory->CreateObjectBetter(ID);
+		auto ClassToSpawn = ObjectToPlace->GetClass();
+
+		FTransform ActorTransform = Details.Transform;
+		ASettlement* SpawnedItem = (ASettlement*)Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, ActorTransform, SpawnParams);
+		SpawnedItem->Name = Details.Name;
+		SpawnedItem->CurrentPopulation = Details.CurrentPopulation;
+		SpawnedItem->Level = Details.Level;
+		SpawnedItem->Experience = Details.Experience;
+		SpawnedItem->BuildingLimit = Details.BuildingLimit;
+		SpawnedItem->AreaRadius = Details.AreaRadius;
+		SpawnedItem->AreaDisplayOn = Details.AreaDisplayOn;
+		SpawnedItem->IsActiveSettlement = Details.IsActiveSettlement;
+
+		SpawnedItem->AfterLoadSetup();
+		
+	}
+}
+
+void ASettlement::AfterLoadSetup()
+{
+	AreaDisplayer->SetVisibility(AreaDisplayOn);
 }

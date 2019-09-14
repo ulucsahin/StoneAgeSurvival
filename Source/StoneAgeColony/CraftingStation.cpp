@@ -13,6 +13,8 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "CraftingStationMenu.h"
 #include "StoneAgeColonyCharacter.h"
+#include "ObjectFactory.h"
+#include "Communicator.h"
 
 ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -219,4 +221,42 @@ bool ACraftingStation::CraftingRequirementsMet()
 	}
 
 	return RequirementsMet;
+}
+
+
+void ACraftingStation::RegisterActorDetailsToSave()
+{
+	FCraftingStationDetails Details;
+	
+	Details.ID = ID;
+	Details.Transform = GetActorTransform();
+
+	Communicator::GetInstance().SpawnedCraftingStationDetails.Add(Details);
+}
+
+void ACraftingStation::EmptyCommunicatorDetailsArray()
+{
+	Communicator::GetInstance().SpawnedCraftingStationDetails.Empty();
+}
+
+void ACraftingStation::SpawnLoadedActors()
+{
+	/* Spawn previously saved characters from savefile. */
+	FActorSpawnParameters SpawnParams;
+
+	static AObjectFactory* Factory = NewObject<AObjectFactory>();
+
+	// Iterate over array and saved spawn actors.
+	for (auto Details : Communicator::GetInstance().SpawnedCraftingStationDetails)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::SpawnLoadedActors ID: %d"), Details.ID);
+		auto ObjectToPlace = Factory->CreateObjectBetter(Details.ID);
+		auto ClassToSpawn = ObjectToPlace->GetClass();
+
+		FTransform ActorTransform = Details.Transform;
+		ACraftingStation* SpawnedItem = (ACraftingStation*)Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, ActorTransform, SpawnParams);
+		
+		SpawnedItem->SetupType(Factory->GetObjectNameFromID(Details.ID));
+		SpawnedItem->SetMeshToDefault();
+	}
 }

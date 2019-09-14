@@ -13,6 +13,20 @@ class UUserWidget;
 class USurvivalWidget;
 class ASettlement;
 
+
+// Save details
+USTRUCT(BlueprintType)
+struct FStructureDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	int32 ItemID;
+};
+
 UCLASS()
 class STONEAGECOLONY_API AStructure : public AUsableActor
 {
@@ -27,10 +41,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Save-Load methods
-	//void RegisterActorDetailsToSave();
-	static void EmptyCommunicatorDetailsArray();
-	//static void SpawnLoadedActors();
-
+	virtual void RegisterActorDetailsToSave();
+	virtual void EmptyCommunicatorDetailsArray();
+	virtual void SpawnLoadedActors();
 
 	ASettlement* OwnerSettlement;
 protected:

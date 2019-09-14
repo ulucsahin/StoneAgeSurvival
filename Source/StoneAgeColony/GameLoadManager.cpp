@@ -15,6 +15,9 @@
 #include "StoneAgeColonyCharacter.h"
 #include "SurvivalGameState.h"
 #include "Structure.h"
+#include "Settlement.h"
+#include "CraftingStation.h"
+#include "House.h"
 
 // Sets default values
 AGameLoadManager::AGameLoadManager()
@@ -42,25 +45,29 @@ void AGameLoadManager::Tick(float DeltaTime)
 void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 {
 	/* This method handles everything about loading game from a savefile. */
-	UE_LOG(LogTemp, Warning, TEXT("GameLoader 1"));
+
 	// LOAD SYSTEM
 	USaveGameEntity* SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::CreateSaveGameObject(USaveGameEntity::StaticClass()));
 	SaveGameEntityLoad = Cast<USaveGameEntity>(UGameplayStatics::LoadGameFromSlot(SaveGameEntityLoad->SaveSlotName, SaveGameEntityLoad->UserIndex));
-	UE_LOG(LogTemp, Warning, TEXT("GameLoader 2"));
+
 	if (SaveGameEntityLoad)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GameLoader 3"));
 		// Destroy existing characters that should be deleted before loading.
 		DestroyActors<AEnemyCharacter>();
 		DestroyActors<AGatherableTree>();
 		DestroyActors<ABuilding>();
-		//DestroyActors<AStructure>();
+		DestroyActors<ASettlement>();
+		DestroyActors<ACraftingStation>();
+		DestroyActors<AHouse>();
 
 		// Load varibles to communicator (update with loaded variables).
 		Communicator::GetInstance().test = SaveGameEntityLoad->test;
 		Communicator::GetInstance().SpawnedCharacterDetails = SaveGameEntityLoad->SpawnedCharacterDetails;
 		Communicator::GetInstance().SpawnedGatherableTreeDetails = SaveGameEntityLoad->SpawnedGatherableTreeDetails;
 		Communicator::GetInstance().SpawnedBuildingDetails = SaveGameEntityLoad->SpawnedBuildingDetails;
+		Communicator::GetInstance().SpawnedSettlementDetails = SaveGameEntityLoad->SpawnedSettlementDetails;
+		Communicator::GetInstance().SpawnedCraftingStationDetails = SaveGameEntityLoad->SpawnedCraftingStationDetails;
+		Communicator::GetInstance().SpawnedHouseDetails = SaveGameEntityLoad->SpawnedHouseDetails;
 		Communicator::GetInstance().PlayerTransform = SaveGameEntityLoad->PlayerTransform;
 		Communicator::GetInstance().PlayerRotation = SaveGameEntityLoad->PlayerRotation;
 		Communicator::GetInstance().PlayerHealth = SaveGameEntityLoad->PlayerHealth;
@@ -89,6 +96,9 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 		SpawnLoadedActors<AEnemyCharacter>();
 		SpawnLoadedActors<AGatherableTree>();
 		SpawnLoadedActors<ABuilding>();
+		SpawnLoadedActors<ACraftingStation>();
+		SpawnLoadedActors<ASettlement>();
+		SpawnLoadedActors<AHouse>();
 
 	}
 
@@ -100,7 +110,8 @@ template <typename T>
 void AGameLoadManager::SpawnLoadedActors()
 {
 	/* Spawn previously saved characters from savefile. */
-	T::SpawnLoadedActors();
+	T::StaticClass()->GetDefaultObject<T>()->SpawnLoadedActors();
+	//T::SpawnLoadedActors();
 }
 
 
@@ -127,7 +138,8 @@ void AGameLoadManager::DestroyActors()
 	}
 
 	// Empty communicator since we deleted all characters.
-	T::EmptyCommunicatorDetailsArray();
+	//T::EmptyCommunicatorDetailsArray();
+	T::StaticClass()->GetDefaultObject<T>()->EmptyCommunicatorDetailsArray();
 }
 
 

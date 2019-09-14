@@ -10,6 +10,21 @@
 class USurvivalWidget;
 class AStoneAgeColonyCharacter;
 
+
+// Save details
+USTRUCT(BlueprintType)
+struct FCraftingStationDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+
+};
+
 USTRUCT(BlueprintType)
 struct FStructureData : public FTableRowBase
 {
@@ -63,6 +78,12 @@ public:
 
 	UPROPERTY()
 	AUsableActor* CurrentItem;
+
+	// Save-Load Methods
+	virtual void RegisterActorDetailsToSave() override;
+	virtual void EmptyCommunicatorDetailsArray() override;
+	virtual void SpawnLoadedActors() override;
+
 
 	int32 CurrentItemID;
 	bool CurrentlyCrafting;

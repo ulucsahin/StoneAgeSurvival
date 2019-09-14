@@ -5,6 +5,8 @@
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "StoneAgeColonyCharacter.h"
 #include "SurvivalWidget.h"
+#include "Communicator.h"
+#include "ObjectFactory.h"
 
 AHouse::AHouse(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -64,4 +66,47 @@ void AHouse::SetupType(FString Type)
 	}
 
 	DefaultMesh = Data->Mesh.Get();
+}
+
+void AHouse::RegisterActorDetailsToSave()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AHouse::RegisterActorDetailsToSave"));
+	FHouseDetails Details;
+
+	Details.ID = ID;
+	Details.Transform = GetActorTransform();
+	Details.Capacity = Capacity;
+
+	Communicator::GetInstance().SpawnedHouseDetails.Add(Details);
+}
+
+void AHouse::EmptyCommunicatorDetailsArray()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AHouse::EmptyCommunicatorDetailsArray"));
+	Communicator::GetInstance().SpawnedHouseDetails.Empty();
+}
+
+void AHouse::SpawnLoadedActors()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AHouse::SpawnLoadedActors"));
+	/* Spawn previously saved characters from savefile. */
+	FActorSpawnParameters SpawnParams;
+
+	static AObjectFactory* Factory = NewObject<AObjectFactory>();
+
+	// Iterate over array and saved spawn actors.
+	for (auto Details : Communicator::GetInstance().SpawnedHouseDetails)
+	{
+		auto ObjectToPlace = Factory->CreateObjectBetter(Details.ID);
+		auto ClassToSpawn = ObjectToPlace->GetClass();
+
+		FTransform ActorTransform = Details.Transform;
+		AHouse* SpawnedItem = (AHouse*)Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, ActorTransform, SpawnParams);
+
+		SpawnedItem->SetupType(Factory->GetObjectNameFromID(Details.ID));
+		SpawnedItem->SetMeshToDefault();
+
+		SpawnedItem->Capacity = Details.Capacity;
+
+	}
 }

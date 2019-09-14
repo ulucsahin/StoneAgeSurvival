@@ -124,6 +124,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	}
 	
 	// Set common properties of created object
+	ObjectToReturn->ID = ObjectID;
 	ObjectToReturn->Description = Data->Description;
 	ObjectToReturn->CraftRequirements = Data->CraftRequirements;
 	

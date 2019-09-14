@@ -8,6 +8,9 @@
 #include "GatherableTree.h"
 #include "UsableActor.h"
 #include "Building.h"
+#include "Settlement.h"
+#include "CraftingStation.h"
+#include "House.h"
 
 //struct FHumanCharacterDetails;
 //struct FGatherableTreeDetails;
@@ -82,6 +85,9 @@ public:
 	TArray<FHumanCharacterDetails>   SpawnedCharacterDetails;
 	TArray<FGatherableTreeDetails>   SpawnedGatherableTreeDetails;
 	TArray<FBuildingDetails>         SpawnedBuildingDetails;
+	TArray<FSettlementDetails>		 SpawnedSettlementDetails;
+	TArray<FCraftingStationDetails>  SpawnedCraftingStationDetails;
+	TArray<FHouseDetails>			 SpawnedHouseDetails;
 
 	// Blueprints that are used in save-load system or spawning actors
 	TSubclassOf<AEnemyCharacter> EnemyCharacterBlueprint;

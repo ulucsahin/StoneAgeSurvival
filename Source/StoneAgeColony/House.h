@@ -7,6 +7,25 @@
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "House.generated.h"
 
+
+// Save details
+USTRUCT(BlueprintType)
+struct FHouseDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Capacity")
+	int32 Capacity;
+};
+
+
+
 USTRUCT(BlueprintType)
 struct FHouseData : public FTableRowBase
 {
@@ -42,6 +61,11 @@ public:
 	void OpenMenu(APawn* InstigatorPawn);
 
 	int32 Capacity;
+
+	// Save-Load Methods
+	virtual void RegisterActorDetailsToSave() override;
+	virtual void EmptyCommunicatorDetailsArray() override;
+	virtual void SpawnLoadedActors() override;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	

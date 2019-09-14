@@ -21,6 +21,8 @@ AGatherableTree::AGatherableTree(const class FObjectInitializer& ObjectInitializ
 
 	static ConstructorHelpers::FObjectFinder<UTexture2D> InventoryTexObj(TEXT("Texture2D'/Game/Uluc/HUD/ItemIcons/TreeIcon.TreeIcon'"));
 	InventoryTexture = InventoryTexObj.Object;
+
+	ID = 100;
 }
 
 void AGatherableTree::BeginPlay()
@@ -37,25 +39,13 @@ void AGatherableTree::SetupType(FString Type)
 	const FString ContextString(TEXT("Gatherable Type Context"));
 	Data = PropertiesDataTable->FindRow<FGatherableData>(Type_, ContextString, true);
 	ID = Data->ID;
-	//Description = Data->Description;
 	GatherID = Data->GatherID;
 
-	//// Required for loading icon from TAssetPtr with Get()
-	//if (Data->Icon.IsPending()) 
-	//{
-	//	UAssetManager* tmp = NewObject<UAssetManager>();
-	//	FStreamableManager& AssetMgr = tmp->GetStreamableManager();//UAssetManager::GetStreamableManager();
-	//	const FStringAssetReference& AssetRef = Data->Icon.ToStringReference();
-	//	Data->Icon = Cast<UTexture2D>(AssetMgr.SynchronousLoad(AssetRef));
-	//}
-
-	//InventoryTexture = Data->Icon.Get();
 }
 
 void AGatherableTree::OnUsed(APawn* InstigatorPawn)
 {
 	//Super::OnUsed(InstigatorPawn);
-
 }
 
 void AGatherableTree::OnGathered(APawn* InstigatorPawn)
@@ -95,16 +85,6 @@ void AGatherableTree::EmptyCommunicatorDetailsArray()
 {
 	Communicator::GetInstance().SpawnedGatherableTreeDetails.Empty();
 }
-
-//TArray<FGatherableTreeDetails> AGatherableTree::GetCommunicatorDetailsArray()
-//{
-//	return Communicator::GetInstance().SpawnedGatherableTreeDetails;
-//}
-//
-//TSubclassOf<AGatherableTree> AGatherableTree::GetActorToSpawn()
-//{
-//	return Communicator::GetInstance().GatherableTreeToSpawn;
-//}
 
 void AGatherableTree::SpawnLoadedActors()
 {

@@ -8,6 +8,9 @@
 #include "EnemyCharacter.h"
 #include "GatherableTree.h"
 #include "Building.h"
+#include "Settlement.h"
+#include "CraftingStation.h"
+#include "House.h"
 #include "SaveGameEntity.generated.h"
 
 //class AEnemyCharacter;
@@ -70,6 +73,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	TArray<FBuildingDetails> SpawnedBuildingDetails;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	TArray<FSettlementDetails> SpawnedSettlementDetails;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	TArray<FCraftingStationDetails> SpawnedCraftingStationDetails;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	TArray<FHouseDetails> SpawnedHouseDetails;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	float ElapsedGameMinutes;

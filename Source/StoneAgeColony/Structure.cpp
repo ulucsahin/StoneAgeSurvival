@@ -26,5 +26,18 @@ void AStructure::OnUsed(APawn* InstigatorPawn)
 
 void AStructure::EmptyCommunicatorDetailsArray()
 {
+	UE_LOG(LogTemp, Warning, TEXT("AStructure::EmptyCommunicatorDetailsArray"));
+	// to be implemented
+}
+
+void AStructure::RegisterActorDetailsToSave()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AStructure::RegisterActorDetailsToSave"));
+	// to be implemented
+}
+
+void AStructure::SpawnLoadedActors()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AStructure::SpawnLoadedActors"));
 	// to be implemented
 }

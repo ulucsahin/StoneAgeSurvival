@@ -7,6 +7,10 @@
 #include "EnemyCharacter.h"
 #include "Communicator.h"
 #include "Building.h"
+#include "Structure.h"
+#include "Settlement.h"
+#include "CraftingStation.h"
+#include "House.h"
 //#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
 
 GameSaver::GameSaver()
@@ -38,6 +42,9 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	RegisterActors<AEnemyCharacter>();
 	RegisterActors<AGatherableTree>();
 	RegisterActors<ABuilding>();
+	RegisterActors<ASettlement>();
+	RegisterActors<ACraftingStation>();
+	RegisterActors<AHouse>();
 
 	// Assign variables to save file (from communicator).
 	SaveGameEntity->PlayerTransform = Communicator::GetInstance().PlayerTransform;
@@ -51,6 +58,9 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	SaveGameEntity->SpawnedCharacterDetails = Communicator::GetInstance().SpawnedCharacterDetails;
 	SaveGameEntity->SpawnedGatherableTreeDetails = Communicator::GetInstance().SpawnedGatherableTreeDetails;
 	SaveGameEntity->SpawnedBuildingDetails = Communicator::GetInstance().SpawnedBuildingDetails;
+	SaveGameEntity->SpawnedSettlementDetails = Communicator::GetInstance().SpawnedSettlementDetails;
+	SaveGameEntity->SpawnedCraftingStationDetails = Communicator::GetInstance().SpawnedCraftingStationDetails;
+	SaveGameEntity->SpawnedHouseDetails = Communicator::GetInstance().SpawnedHouseDetails;
 	SaveGameEntity->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 	SaveGameEntity->PlayerInventory = Communicator::GetInstance().PlayerInventory;
 
@@ -64,7 +74,8 @@ void GameSaver::RegisterActors()
 {
 	// We will reset spawned character details and update it with current details.
 	
-	T::EmptyCommunicatorDetailsArray();
+	//T::EmptyCommunicatorDetailsArray();
+	T::StaticClass()->GetDefaultObject<T>()->EmptyCommunicatorDetailsArray();
 
 	UWorld* YourGameWorld = Communicator::GetInstance().World;
 

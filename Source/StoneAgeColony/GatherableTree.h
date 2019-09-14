@@ -51,7 +51,7 @@ public:
 
 	virtual void SetupType(FString) override;
 
-	int ID = 100;
+	//int ID = 100;
 	virtual int GetID() override;
 
 	virtual bool IsPickupable() override;

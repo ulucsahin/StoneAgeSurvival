@@ -39,7 +39,7 @@ public:
 
 	class UDataTable* PropertiesDataTable;
 
-	const static int ID = 0;
+	int32 ID = 0;
 
 	UTexture2D* InventoryTexture;
 
@@ -67,7 +67,7 @@ public:
 
 	virtual void PreInitializeComponents() override;
 
-	virtual int GetID() { return 0; };
+	virtual int GetID() { return ID; };
 
 	virtual UTexture2D* GetInventoryTexture() { return InventoryTexture; };
 
