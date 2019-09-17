@@ -70,7 +70,7 @@ protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	
 private:
-	int32 ID;
+	//int32 ID;
 	FName HouseType;
 	FHouseData* Data;
 	

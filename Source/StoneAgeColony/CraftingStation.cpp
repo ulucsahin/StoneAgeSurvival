@@ -18,7 +18,7 @@
 
 ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/StructuresDataTable.StructuresDataTable'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/CraftingStationsDataTable.CraftingStationsDataTable'"));
 	if (PropertiesDataObject.Succeeded())
 	{
 		PropertiesDataTable = PropertiesDataObject.Object;

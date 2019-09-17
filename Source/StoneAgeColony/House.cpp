@@ -19,7 +19,7 @@ AHouse::AHouse(const class FObjectInitializer& ObjectInitializer) : Super(Object
 
 void AHouse::OnUsed(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("in da hosuze"));
+	UE_LOG(LogTemp, Warning, TEXT("in dasda hosuze"));
 	OpenMenu(InstigatorPawn);
 }
 
@@ -88,7 +88,7 @@ void AHouse::EmptyCommunicatorDetailsArray()
 
 void AHouse::SpawnLoadedActors()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AHouse::SpawnLoadedActors"));
+	UE_LOG(LogTemp, Warning, TEXT("AHouse:SpawnLoadedActors"));
 	/* Spawn previously saved characters from savefile. */
 	FActorSpawnParameters SpawnParams;
 

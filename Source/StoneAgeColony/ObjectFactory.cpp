@@ -16,6 +16,7 @@
 #include "House.h"
 #include "UsableActor.h"
 #include "CraftingMaterial.h"
+#include "Farm.h"
 #include "Runtime/Engine/Classes/Engine/Texture2D.h"
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
@@ -97,10 +98,15 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	{
 		ObjectToReturn = NewObject<AEdible>();
 	}
-	// Crafting Stations
-	else if (ObjectID >= 400 && ObjectID <= 489)
+	// Crafting Stations, wall is a crafting station aswell 
+	else if (ObjectID >= 400 && ObjectID <= 449)
 	{
 		ObjectToReturn = NewObject<ACraftingStation>();
+	}
+	// Farms
+	else if (ObjectID >= 450 && ObjectID <= 489)
+	{
+		ObjectToReturn = NewObject<AFarm>();
 	}
 	// Houses
 	else if (ObjectID >= 490 && ObjectID <= 499)

@@ -117,15 +117,15 @@ void AObjectSnapper::SnapToGround(AUsableActor* Actor, UWorld* World, FVector Lo
 		}
 	}
 
-	//if(Success)
-	Actor->SetActorLocation(FVector(Location.X, Location.Y, ActorLocation.Z - DistanceToFloor + LineStartOffsetZ));
-
+	
+	AdjustToSurfaceNormal(Actor, &OutHit);
+	Actor->SetActorLocation(FVector(Location.X, Location.Y, ActorLocation.Z - DistanceToFloor + LineStartOffsetZ));	
 }
 
 void AObjectSnapper::SnapReverse(AUsableActor* Actor, UWorld* World, FVector Location, float Threshold)
 {
 	/* if object is going underground snap it back to surface*/
-		// Z to change
+	// Z to change
 	float TotalZ = 0.f;
 
 	// Get item location
@@ -158,8 +158,6 @@ void AObjectSnapper::SnapReverse(AUsableActor* Actor, UWorld* World, FVector Loc
 
 		DrawDebugLine(World, Start, End, FColor(255.f, 125.f, 125.f), true, 5.0f);
 
-
-
 		auto HittedActor = OutHit.GetActor();
 		if (HittedActor)
 		{
@@ -182,7 +180,6 @@ void AObjectSnapper::SnapReverse(AUsableActor* Actor, UWorld* World, FVector Loc
 		{
 			End.Z += TraceLength;
 			TraceLength /= 2;
-			//UE_LOG(LogTemp, Warning, TEXT("TraceLength: %f"), TraceLength);
 		}
 
 		// if linetrace did not hit the landscape
@@ -206,6 +203,29 @@ void AObjectSnapper::SnapReverse(AUsableActor* Actor, UWorld* World, FVector Loc
 			return;
 		}
 	}
-	//if(Success)
+
+	AdjustToSurfaceNormal(Actor, &OutHit);
 	Actor->SetActorLocation(FVector(Location.X, Location.Y, ActorLocation.Z - DistanceToFloor + ItemHeightSize *1.05f/*+ (ItemHeightSize/2)*/));
+}
+
+void AObjectSnapper::AdjustToSurfaceNormal(AActor* item, FHitResult* OutHit)
+{
+	/*
+	* This method adjust spawned items' pitch and roll according to normal of surface they are placed on
+	Different from ProceduralEntityPlacer's method.
+	*/
+
+	auto OriginalRotation = item->GetActorRotation();
+	FQuat RootQuat = OriginalRotation.Quaternion();
+	FVector UpVector = RootQuat.GetUpVector();
+	auto Normal = OutHit->ImpactNormal;
+	FVector RotationAxis = FVector::CrossProduct(UpVector, Normal);
+	RotationAxis.Normalize();
+	float DotProduct = FVector::DotProduct(UpVector, Normal);
+	float RotationAngle = acosf(DotProduct);
+	FQuat Quat = FQuat(RotationAxis, RotationAngle);
+	FQuat NewQuat = Quat * RootQuat;
+
+	auto NewRotation = NewQuat.Rotator();
+	item->SetActorRotation(NewRotation);
 }

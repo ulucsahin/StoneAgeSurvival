@@ -87,7 +87,7 @@ public:
 	void UpdateStateDisplay();
 
 	// Inventory, with items to test
-	TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {450, 5}, {506, 25}, {490,2} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
+	TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {402, 5}, {506, 25}, {490,2}, {450, 3} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;

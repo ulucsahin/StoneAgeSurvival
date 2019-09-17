@@ -9,6 +9,7 @@
 
 class AUsableActor;
 
+
 UCLASS()
 class STONEAGECOLONY_API AObjectSnapper : public AActor
 {
@@ -29,5 +30,5 @@ public:
 	float CalculateHeight(AUsableActor*);
 	void SnapToGround(AUsableActor*, UWorld*, FVector, float Threshold);
 	void SnapReverse(AUsableActor*, UWorld*, FVector, float Threshold);
-
+	void AdjustToSurfaceNormal(AActor* item, FHitResult* OutHit);
 };
