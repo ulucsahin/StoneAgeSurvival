@@ -7,7 +7,8 @@
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "Farm.generated.h"
 
-class AFarmPlot;
+class AObjectFactory;
+class AUsableActor;
 
 USTRUCT(BlueprintType)
 struct FFarmData : public FTableRowBase
@@ -41,16 +42,22 @@ public:
 
 	AFarm(const FObjectInitializer& ObjectInitializer);
 	void SetupType(FString);
+	void Plant(AUsableActor* Item, FName SocketName);
+	void RemovePlant(FName SocketName);
 
 	int32 ID;
 	int32 PlotCapacity; 
 
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
+	virtual void OpenMenu(APawn* InstigatorPawn) override;
+
 
 private:
-	//int32 ID;
+	FString SocketName = "Plot";
+	AObjectFactory* Factory;
 	FName FarmType;
 	FFarmData* Data;
-	TArray<AFarmPlot*> FarmPlots;
+	TMap<FString, bool> SocketFull; // keeps track of farm plots (planted or empty), true = planted, false = empty
+	TMap<FString, AUsableActor*> PlantsInSockets;
 };

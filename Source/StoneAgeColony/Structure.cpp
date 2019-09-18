@@ -19,6 +19,11 @@ void AStructure::Tick(float DeltaTime)
 
 }
 
+void AStructure::OpenMenu(APawn* InstigatorPawn)
+{
+
+}
+
 void AStructure::OnUsed(APawn* InstigatorPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Im a structure"));

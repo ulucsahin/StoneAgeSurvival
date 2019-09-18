@@ -41,7 +41,6 @@ ABuilding::ABuilding(const FObjectInitializer& ObjectInitializer)
 		// Initialize default mesh as first type
 		BuildingMesh->SetStaticMesh(MeshTypes[LastMeshType]);
 		CurrentMeshType = LastMeshType;
-		
 	}
 	SetBoxComponent(true);
 
@@ -302,6 +301,7 @@ TArray<FName> ABuilding::GetSocketsWithType(EBuildTypes SocketType)
 	
 	return Result;
 }
+
 // Save-Load Methods
 void ABuilding::EmptyCommunicatorDetailsArray()
 {

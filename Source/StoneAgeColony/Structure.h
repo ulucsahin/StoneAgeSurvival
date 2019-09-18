@@ -40,6 +40,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void OpenMenu(APawn* InstigatorPawn);
+
 	// Save-Load methods
 	virtual void RegisterActorDetailsToSave();
 	virtual void EmptyCommunicatorDetailsArray();
@@ -52,6 +54,8 @@ protected:
 	UPROPERTY()
 	USurvivalWidget* Menu;
 	
+
+	FString MenuRef;
 private:
 	FName Name;
 	FTableRowBase* Data;

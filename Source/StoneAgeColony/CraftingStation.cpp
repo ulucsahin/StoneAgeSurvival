@@ -38,7 +38,7 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	/* Prevents opening multiple of same menus */
 
 	// Data->Menu is empty if this station has no menu.
-	if (Data->Menu == "")
+	if (MenuRef == "")
 	{
 		return;
 	}
@@ -46,7 +46,7 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	// Checks if menu is already open or not.
 	if (!Menu)
 	{
-		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, OwnerSettlement);
+		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(MenuRef, this, OwnerSettlement);
 
 		// Set bar visible if currently crafting
 		((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting); 
@@ -56,7 +56,7 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	{
 		if (!Menu->IsActive)
 		{
-			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(Data->Menu, this, OwnerSettlement); 
+			Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(MenuRef, this, OwnerSettlement);
 
 			// Set bar visible if currently crafting
 			((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting);
@@ -73,6 +73,7 @@ void ACraftingStation::SetupType(FString Type)
 	Data = PropertiesDataTable->FindRow<FStructureData>(CraftingStationType, ContextString, true);
 	ID = Data->ID;
 	CraftableItems = Data->CraftableItems;
+	MenuRef = Data->Menu;
 
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Mesh.IsPending())

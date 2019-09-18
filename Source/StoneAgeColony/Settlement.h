@@ -130,7 +130,4 @@ private:
 	//UStaticMeshComponent* SettlementMesh;
 	UMaterial* AreaDisplayerMaterial;
 	float OriginalAreaDisplayerSize;
-
-	// Private Properties
-	FString MenuRef;
 };

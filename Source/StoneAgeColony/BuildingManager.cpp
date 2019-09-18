@@ -252,7 +252,7 @@ TTuple<ABuilding*, FName> UBuildingManager::AttachTo()
 	auto BuildingAndSocketToAttach = SelectSocketToAttach(); // key: ABuilding*, value: socket FName
 	FName SocketName = BuildingAndSocketToAttach.Value;
 	ABuilding* ChosenBuilding = BuildingAndSocketToAttach.Key;
-
+		
 	CurrentBuilding->AttachToComponent(ChosenBuilding->BuildingMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, SocketName);
 	CurrentBuilding->PreviewMode(true);
 

@@ -74,7 +74,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
 	UStaticMeshComponent* MeshComp;
 
-	virtual bool IsPickupable() { return bIsPickupable; }
+	virtual bool IsPickupable() { return bIsPickupable; } // bullshit getter, will remove later
 
 	// Collision Methods
 	UFUNCTION()
@@ -97,10 +97,11 @@ public:
 	TMap<int32, int32> CraftRequirements;
 	FText Description;
 	int32 YieldAmount = 1; // How many of this item will be produced when crafted.
+	bool bIsPickupable = true;
 private:
 	UMaterialInterface* OriginalMaterial;
 	UMaterial* GhostMaterial;
 	UMaterial* CollisionMaterial;
 	TSet<AActor*> OverlappingActors;
-	bool bIsPickupable = true;
+	
 };

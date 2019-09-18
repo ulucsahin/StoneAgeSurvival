@@ -60,7 +60,7 @@ public:
 
 	int32 GetID() { return ID; };
 
-	void OpenMenu(APawn* InstigatorPawn);
+	virtual void OpenMenu(APawn* InstigatorPawn) override;
 
 	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
