@@ -4,12 +4,10 @@
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "StoneAgeColonyCharacter.h"
-#include "FarmPlot.h"
 #include "Kismet/GameplayStatics.h"
 #include "ObjectFactory.h"
 #include "SurvivalWidget.h"
-
-#include "CraftingStation.h"
+#include "Plant.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 
 AFarm::AFarm(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -59,7 +57,8 @@ void AFarm::SetupType(FString Type)
 
 void AFarm::OnUsed(APawn* InstigatorPawn)
 {
-	OpenMenu(InstigatorPawn);
+	UE_LOG(LogTemp, Warning, TEXT("Farm used"));
+	//OpenMenu(InstigatorPawn);
 	Plant(nullptr, "Plot1");
 }
 
@@ -96,32 +95,31 @@ void AFarm::Plant(AUsableActor* Item, FName SocketName)
 	// Plant only if socket is empty
 	if (!SocketFull[SocketName_])
 	{
-		ACraftingStation* ObjectToPlant = (ACraftingStation*)Factory->CreateObjectBetter(402);
-		auto ObjectName = Factory->GetObjectNameFromID(402);
+		APlant* ObjectToPlant = (APlant*)Factory->CreateObjectBetter(700);
+		auto ObjectName = Factory->GetObjectNameFromID(700);
 		auto ClassToSpawn = ObjectToPlant->GetClass();
-		auto SpawnedItem = GetWorld()->SpawnActor<AUsableActor>(ClassToSpawn, GetActorLocation(), FRotator::ZeroRotator);
+		auto SpawnedItem = GetWorld()->SpawnActor<APlant>(ClassToSpawn, GetActorLocation(), FRotator::ZeroRotator);
 		SpawnedItem->SetupType(ObjectName);
 		SpawnedItem->SetMeshToDefault();
 		SpawnedItem->AttachToComponent(MeshComp, FAttachmentTransformRules::SnapToTargetIncludingScale, SocketName);
 		SpawnedItem->bIsPickupable = false;
+		SpawnedItem->StartGrowing();
+		SpawnedItem->OwnerFarm = this;
+		SpawnedItem->OwnerSocket = SocketName_;
 		SocketFull[SocketName_] = true; // mark socket as planted
 		PlantsInSockets.Emplace(SocketName_, SpawnedItem);
-	}
-	else // just to test
-	{
-		RemovePlant(SocketName);
 	}
 
 }
 
-void AFarm::RemovePlant(FName SocketName)
+void AFarm::RemovePlant(FString SocketName)
 {
 	/* Removes plant from socket name */
 
-	FString SocketName_ = SocketName.ToString();
+	//FString SocketName_ = SocketName.ToString();
 
 	// destroy actor and mark sockets as empty
-	PlantsInSockets[SocketName_]->Destroy(); 
-	SocketFull[SocketName_] = false;
-	PlantsInSockets.Emplace(SocketName_, nullptr);
+	PlantsInSockets[SocketName]->Destroy();
+	SocketFull[SocketName] = false;
+	PlantsInSockets.Emplace(SocketName, nullptr);
 }

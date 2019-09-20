@@ -17,6 +17,7 @@
 #include "UsableActor.h"
 #include "CraftingMaterial.h"
 #include "Farm.h"
+#include "Plant.h"
 #include "Runtime/Engine/Classes/Engine/Texture2D.h"
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
@@ -67,6 +68,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	FString Tmp = FString::FromInt(ObjectID);
 	FName ObjectID_ = FName(*Tmp);
 	const FString ContextString(TEXT("Object Type Context"));
+	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory::CreateObjectBetter Object ID: %s"), *Tmp);
 	auto Data = CommonPropertiesTable->FindRow<FObjectCommonPropertiesData>(ObjectID_, ContextString, true);
 	auto ObjectName = Data->Name_;
 
@@ -117,6 +119,11 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	else if(ObjectID >= 500 && ObjectID <= 699)
 	{
 		ObjectToReturn = NewObject<ACraftingMaterial>();
+	}
+	// Plants
+	else if (ObjectID >= 700 && ObjectID <= 799)
+	{
+		ObjectToReturn = NewObject<APlant>();
 	}
 	// Equipment
 	else if (ObjectID >= 1000 && ObjectID <= 1199)

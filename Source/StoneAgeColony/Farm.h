@@ -43,7 +43,7 @@ public:
 	AFarm(const FObjectInitializer& ObjectInitializer);
 	void SetupType(FString);
 	void Plant(AUsableActor* Item, FName SocketName);
-	void RemovePlant(FName SocketName);
+	void RemovePlant(FString SocketName);
 
 	int32 ID;
 	int32 PlotCapacity; 
@@ -51,7 +51,6 @@ public:
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	virtual void OpenMenu(APawn* InstigatorPawn) override;
-
 
 private:
 	FString SocketName = "Plot";

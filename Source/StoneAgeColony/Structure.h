@@ -54,7 +54,6 @@ protected:
 	UPROPERTY()
 	USurvivalWidget* Menu;
 	
-
 	FString MenuRef;
 private:
 	FName Name;
