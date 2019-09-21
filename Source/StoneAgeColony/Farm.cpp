@@ -59,7 +59,7 @@ void AFarm::OnUsed(APawn* InstigatorPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Farm used"));
 	//OpenMenu(InstigatorPawn);
-	Plant(nullptr, "Plot1");
+	Plant(700, "Plot1");
 }
 
 void AFarm::OpenMenu(APawn* InstigatorPawn)
@@ -86,17 +86,18 @@ void AFarm::OpenMenu(APawn* InstigatorPawn)
 	}
 }
 
-void AFarm::Plant(AUsableActor* Item, FName SocketName)
+void AFarm::Plant(int32 ItemIDToPlant, FName SocketName)
 {
-	/* Plants a plant to socket*/
+	/* Plants a plant to socket
+	*/
 
 	FString SocketName_ = SocketName.ToString();
 
 	// Plant only if socket is empty
 	if (!SocketFull[SocketName_])
 	{
-		APlant* ObjectToPlant = (APlant*)Factory->CreateObjectBetter(700);
-		auto ObjectName = Factory->GetObjectNameFromID(700);
+		APlant* ObjectToPlant = (APlant*)Factory->CreateObjectBetter(ItemIDToPlant);
+		auto ObjectName = Factory->GetObjectNameFromID(ItemIDToPlant);
 		auto ClassToSpawn = ObjectToPlant->GetClass();
 		auto SpawnedItem = GetWorld()->SpawnActor<APlant>(ClassToSpawn, GetActorLocation(), FRotator::ZeroRotator);
 		SpawnedItem->SetupType(ObjectName);

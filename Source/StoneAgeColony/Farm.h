@@ -42,7 +42,7 @@ public:
 
 	AFarm(const FObjectInitializer& ObjectInitializer);
 	void SetupType(FString);
-	void Plant(AUsableActor* Item, FName SocketName);
+	void Plant(int32 ItemIDToPlant, FName SocketName);
 	void RemovePlant(FString SocketName);
 
 	int32 ID;

@@ -8,6 +8,9 @@
 #include "Plant.generated.h"
 
 class AFarm;
+class UWidgetComponent;
+class AStoneAgeColonyCharacter;
+class UPlantProgressBar;
 
 USTRUCT(BlueprintType)
 struct FPlantData : public FTableRowBase
@@ -47,6 +50,7 @@ class STONEAGECOLONY_API APlant : public AUsableActor
 public:
 	APlant(const FObjectInitializer& ObjectInitializer);
 	void SetupType(FString);
+	void SetupProgressBar();
 	void Gather(APawn* InstigatorPawn);
 	void Grow();
 
@@ -57,6 +61,15 @@ public:
 
 	AFarm* OwnerFarm;
 	FString OwnerSocket;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "3DWidget")
+	UWidgetComponent* ProgressBar;
+
+	UFUNCTION() // ufunction needed for timer
+	void UpdateProgressBar();
+	void StartUpdatingProgressBar();
+	void StopUpdatingProgressBar();
+
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	
@@ -66,13 +79,19 @@ private:
 	int32 CurrentStage;
 	int32 NumberOfStages;
 	FString MenuRef;
+	UPlantProgressBar* ProgressBarWidget;
 	TArray<int32> YieldedItems;
 	TArray<int32> YieldAmounts;
 	TArray<float> GrowingTimes;
 	TArray<TAssetPtr<UStaticMesh>> MeshAssetPointers;
 	TArray<UStaticMesh*> Meshes;
 	float ProgressToNextStage;
-	float ProgressUpdateFrequency = 0.1f;
+	const float ProgressUpdateFrequency = 0.1f;
+	const float WidgetProgressUpdateFrequency = 0.015f; // 60 fps
 	
 	FTimerHandle TimerHandle;
+	FTimerHandle TimerHandleProgressBar;
+
+	AStoneAgeColonyCharacter* Player;
 };
+

@@ -7,6 +7,12 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Farm.h"
+#include "Components/WidgetComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "Camera/CameraComponent.h"
+#include "PlantProgressBar.h"
+#include "StoneAgeColonyCharacter.h"
 
 APlant::APlant(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -15,6 +21,18 @@ APlant::APlant(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitia
 	{
 		PropertiesDataTable = PropertiesDataObject.Object;
 	}
+//	
+	// Setup ProgressBarWidget
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	FStringClassReference MyWidgetClassRef("WidgetBlueprint'/Game/Uluc/Plants/PlantProgressBar.PlantProgressBar_C'");
+	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UPlantProgressBar>();
+	ProgressBarWidget = CreateWidget<UPlantProgressBar>(PlayerController, MyWidgetClass);
+	//ProgressBarWidget->OwnerPlant = this;
+
+	// Initialize ProgressBar component
+	ProgressBar = ObjectInitializer.CreateDefaultSubobject<UWidgetComponent>(this, TEXT("TestWidget3D"));
+	SetupProgressBar();
+
 
 	CurrentStage = 0;
 }
@@ -22,6 +40,8 @@ APlant::APlant(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitia
 void APlant::OnUsed(APawn* InstigatorPawn) 
 {
 	Gather(InstigatorPawn);
+
+	// WidgetBlueprint'/Game/Uluc/FloatingWidget.FloatingWidget'
 }
 
 void APlant::SetupType(FString Type)
@@ -54,6 +74,21 @@ void APlant::SetupType(FString Type)
 	// Set default mesh to baby plant
 	MeshComp->SetStaticMesh(MeshAssetPointers[0].Get());
 	DefaultMesh = MeshComp->GetStaticMesh();
+
+	Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+}
+
+void APlant::SetupProgressBar()
+{
+	//ProgressBar->RegisterComponent();
+	//ProgressBar->SetOnlyOwnerSee(true);
+	auto Z = DefaultMesh->GetBoundingBox().GetSize().X;
+	ProgressBar->AttachTo(MeshComp);
+	ProgressBar->RelativeLocation = FVector(0.f, 0.f, Z + 100.f);
+	ProgressBar->RelativeRotation = FRotator(0.0f, 0.0f, 0.0f); // PlayerCamera->GetComponentRotation();
+	ProgressBar->SetWidget(ProgressBarWidget);
+	ProgressBar->SetWidgetSpace(EWidgetSpace::World);
+
 }
 
 void APlant::Gather(APawn* InstigatorPawn)
@@ -91,6 +126,7 @@ void APlant::StartGrowing()
 {
 	/* This method is called from owner farm when this plant is planted */
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APlant::GrowingStep, ProgressUpdateFrequency, true);
+	StartUpdatingProgressBar();
 }
 
 void APlant::GrowingStep()
@@ -114,6 +150,32 @@ void APlant::GrowingStep()
 
 void APlant::CompleteGrowing()
 {
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 	ProgressToNextStage = 0.f;
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	StopUpdatingProgressBar();
+}
+
+void APlant::UpdateProgressBar()
+{
+	// Set Rotation
+	FRotator Rotation;
+	Rotation.Yaw = Player->GetFirstPersonCameraComponent()->GetComponentRotation().Yaw + 180.f;
+	Rotation.Pitch = 0.f;
+	Rotation.Roll = 0.f;
+	ProgressBar->SetWorldRotation(Rotation);
+
+	// Set Percentage
+	ProgressBarWidget->Percentage = ProgressToNextStage;
+}
+
+void APlant::StartUpdatingProgressBar()
+{
+	ProgressBarWidget->SetVisibility(ESlateVisibility::Visible);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandleProgressBar, this, &APlant::UpdateProgressBar, WidgetProgressUpdateFrequency, true);
+}
+
+void APlant::StopUpdatingProgressBar()
+{
+	ProgressBarWidget->SetVisibility(ESlateVisibility::Hidden);
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandleProgressBar);
 }
