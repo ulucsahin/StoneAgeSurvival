@@ -9,6 +9,7 @@
 
 class AObjectFactory;
 class AUsableActor;
+class AStoneAgeColonyCharacter;
 
 USTRUCT(BlueprintType)
 struct FFarmData : public FTableRowBase
@@ -42,6 +43,7 @@ public:
 
 	AFarm(const FObjectInitializer& ObjectInitializer);
 	void SetupType(FString);
+	FName FindSuitableSocket();
 	void Plant(int32 ItemIDToPlant, FName SocketName);
 	void RemovePlant(FString SocketName);
 
@@ -57,6 +59,7 @@ private:
 	AObjectFactory* Factory;
 	FName FarmType;
 	FFarmData* Data;
-	TMap<FString, bool> SocketFull; // keeps track of farm plots (planted or empty), true = planted, false = empty
-	TMap<FString, AUsableActor*> PlantsInSockets;
+	TMap<FString, bool> SocketFull; // keeps track of farm plots (planted or empty), true = planted, false = empty, socket name - bool
+	TMap<FString, AUsableActor*> PlantsInSockets; // socket name - actor ptr
+	AStoneAgeColonyCharacter* Player;
 };

@@ -27,7 +27,7 @@ void AFarm::SetupType(FString Type)
 
 	Data = PropertiesDataTable->FindRow<FFarmData>(FarmType, ContextString, true);
 	ID = Data->ID;
-	PlotCapacity = Data->PlotCapacity;
+	PlotCapacity = Data->PlotCapacity; // currently not used
 	MenuRef = Data->Menu;
 
 	if (Data->Mesh.IsPending())
@@ -52,14 +52,17 @@ void AFarm::SetupType(FString Type)
 	}
 
 
+	Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+
 	Factory = NewObject<AObjectFactory>();
 }
 
 void AFarm::OnUsed(APawn* InstigatorPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Farm used"));
-	//OpenMenu(InstigatorPawn);
-	Plant(700, "Plot1");
+	
+	// Plant on a suitable socket. TODO: Player should choose which socket to plant.
+	Plant(700, FindSuitableSocket()); // plant potato to test
 }
 
 void AFarm::OpenMenu(APawn* InstigatorPawn)
@@ -86,13 +89,46 @@ void AFarm::OpenMenu(APawn* InstigatorPawn)
 	}
 }
 
+FName AFarm::FindSuitableSocket()
+{
+	FName Result = FName("Plot1");
+
+	for (auto Data : PlantsInSockets)
+	{
+		FString PlantSocket = Data.Key;
+		AUsableActor* Plant = Data.Value;
+		if (!SocketFull[PlantSocket]) // if socket is empty
+		{
+			Result = FName(*PlantSocket);
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("AFarm::FindSuitableSocket Found Socket: %s"), *Result.ToString());
+
+	return Result;
+}
+
 void AFarm::Plant(int32 ItemIDToPlant, FName SocketName)
 {
-	/* Plants a plant to socket
-	*/
+	/* Plants a plant to socket */
 
 	FString SocketName_ = SocketName.ToString();
 
+	auto PlayerInventory = Player->GetInventory();
+	if (PlayerInventory.Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
+	{
+		if (PlayerInventory[ItemIDToPlant] > 0)
+		{
+			Player->ConsumeItemFromInventory(ItemIDToPlant, 1); // consume 1 from player inventory
+		}
+		else
+		{
+			return; // if player dont have item dont do anything
+		}
+		
+	}
+	
+	
 	// Plant only if socket is empty
 	if (!SocketFull[SocketName_])
 	{

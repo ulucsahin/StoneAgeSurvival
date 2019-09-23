@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-//#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
-//#include "Components/SphereComponent.h"
 #include "StoneAgeColonyCharacter.generated.h"
 
 // forward declare to prevent circular dependency
@@ -86,8 +84,8 @@ public:
 	void ChangeState(EPlayerStates NewState);
 	void UpdateStateDisplay();
 
-	// Inventory, with items to test
-	TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {402, 5}, {506, 25}, {490,2}, {450, 3}, {700, 700} }; //MakeTuple(1,5), MakeTuple(2,31), MakeTuple(200, 17)
+	// Inventory, with starting items
+	TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {402, 5}, {506, 25}, {490,2}, {450, 3}, {700, 10} }; 
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;
