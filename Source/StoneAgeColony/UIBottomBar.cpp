@@ -96,14 +96,15 @@ void UUIBottomBar::SetItemAtIndex(UBottomBarItem* Item)
 void UUIBottomBar::Refresh()
 {
 	/* Also registers ItemIDs of baritems to save file */
-	//UE_LOG(LogTemp, Warning, TEXT("UUIBottomBar::Refresh"));
+	
 	WrapBox->ClearChildren();
 	int i = 0;
 	for (auto Item : BarItems)
 	{
-		Item->Update();
+		Item->Refresh();
 		BarItemIDs[i] = Item->ItemID;
 		i++;
+
 	}
 	AddItems();
 
@@ -132,7 +133,6 @@ void UUIBottomBar::SelectPreviousSlot()
 {
 	int32 NewSlot = (SelectedSlot - 1) % 8;
 	if (NewSlot < 0) NewSlot += 8;
-
 	SelectSlot(NewSlot);
 }
 

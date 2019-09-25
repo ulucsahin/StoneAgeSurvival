@@ -9,6 +9,8 @@
 #include "SurvivalWidget.h"
 #include "Plant.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
+#include "UIBottomBar.h"
+#include "BottomBarItem.h"
 
 AFarm::AFarm(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -53,23 +55,29 @@ void AFarm::SetupType(FString Type)
 
 
 	Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-
 	Factory = NewObject<AObjectFactory>();
 }
 
 void AFarm::OnUsed(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Farm used"));
+	int32 ItemToPlantID = Player->BottomBar->BarItems[Player->BottomBar->SelectedSlot]->ItemID;
+
+	// ID range of plantable objects
+	if (ItemToPlantID >= 700 && ItemToPlantID <= 799)
+	{
+		// Plant on a suitable socket. TODO: Player should choose which socket to plant.
+		Plant(ItemToPlantID, FindSuitableSocket()); // plant potato to test
+		Player->BottomBar->Refresh();
+	}
 	
-	// Plant on a suitable socket. TODO: Player should choose which socket to plant.
-	Plant(700, FindSuitableSocket()); // plant potato to test
 }
 
+// Currently not used as farms dont have any menus
 void AFarm::OpenMenu(APawn* InstigatorPawn)
 {
 	/* Prevents opening multiple of same menus */
 
-// Data->Menu is empty if this station has no menu.
+	// Data->Menu is empty if this station has no menu.
 	if (MenuRef == "")
 	{
 		return;
@@ -114,24 +122,25 @@ void AFarm::Plant(int32 ItemIDToPlant, FName SocketName)
 
 	FString SocketName_ = SocketName.ToString();
 
-	auto PlayerInventory = Player->GetInventory();
-	if (PlayerInventory.Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
-	{
-		if (PlayerInventory[ItemIDToPlant] > 0)
-		{
-			Player->ConsumeItemFromInventory(ItemIDToPlant, 1); // consume 1 from player inventory
-		}
-		else
-		{
-			return; // if player dont have item dont do anything
-		}
-		
-	}
-	
-	
 	// Plant only if socket is empty
 	if (!SocketFull[SocketName_])
 	{
+		// And only if player has required seed/item to plant.
+		auto PlayerInventory = Player->GetInventory();
+		if (PlayerInventory.Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
+		{
+			if (PlayerInventory[ItemIDToPlant] > 0)
+			{
+				Player->ConsumeItemFromInventory(ItemIDToPlant, 1); // consume 1 from player inventory
+			}
+			else
+			{
+				return; // if player dont have item dont do anything
+			}
+
+		}
+
+		// Create object, attach to socket, setup
 		APlant* ObjectToPlant = (APlant*)Factory->CreateObjectBetter(ItemIDToPlant);
 		auto ObjectName = Factory->GetObjectNameFromID(ItemIDToPlant);
 		auto ClassToSpawn = ObjectToPlant->GetClass();
@@ -139,10 +148,12 @@ void AFarm::Plant(int32 ItemIDToPlant, FName SocketName)
 		SpawnedItem->SetupType(ObjectName);
 		SpawnedItem->SetMeshToDefault();
 		SpawnedItem->AttachToComponent(MeshComp, FAttachmentTransformRules::SnapToTargetIncludingScale, SocketName);
+		RandomizePlantAppearance(SpawnedItem);
 		SpawnedItem->bIsPickupable = false;
 		SpawnedItem->StartGrowing();
 		SpawnedItem->OwnerFarm = this;
 		SpawnedItem->OwnerSocket = SocketName_;
+
 		SocketFull[SocketName_] = true; // mark socket as planted
 		PlantsInSockets.Emplace(SocketName_, SpawnedItem);
 	}
@@ -153,10 +164,20 @@ void AFarm::RemovePlant(FString SocketName)
 {
 	/* Removes plant from socket name */
 
-	//FString SocketName_ = SocketName.ToString();
-
 	// destroy actor and mark sockets as empty
 	PlantsInSockets[SocketName]->Destroy();
 	SocketFull[SocketName] = false;
 	PlantsInSockets.Emplace(SocketName, nullptr);
+}
+
+void AFarm::RandomizePlantAppearance(APlant* Plant)
+{
+	// Set Random Rotation, must be done after attaching to socket.
+	auto Rot = Plant->GetActorRotation();
+	float RandomYaw = FMath::RandRange(0.f, 360.f);
+	Rot.Yaw += RandomYaw;
+	Plant->SetActorRotation(Rot);
+
+	// Set Random Scale
+	Plant->SetActorScale3D(FVector(FMath::RandRange(0.8f, 1.2f), FMath::RandRange(0.8f, 1.2f), FMath::RandRange(0.8f, 1.2f)));
 }

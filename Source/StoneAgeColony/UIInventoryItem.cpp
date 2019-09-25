@@ -12,6 +12,7 @@
 #include "ObjectFactory.h"
 #include "StoneAgeColonyCharacter.h"
 #include "UIPlayerInventory.h"
+#include "UIBottomBar.h"
 
 UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -42,10 +43,10 @@ void UUIInventoryItem::Use()
 		auto ItemToUse = Factory->CreateObjectBetter(ItemID);
 		ItemToUse->OnUsedFromInventory(PlayerCharacter);
 
-		//Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(PlayerCharacter);
 		PlayerCharacter->Inventory.Emplace(ItemID, PlayerCharacter->Inventory[ItemID] - 1);
 		ItemAmount = PlayerCharacter->Inventory[ItemID];
 		PlayerCharacter->UIPlayerInventory->Refresh();
+		PlayerCharacter->BottomBar->Refresh();
 	}
 
 	//UE_LOG(LogTemp, Warning, TEXT("UUIInventoryItem::Use, ItemAmount: %d"), ItemAmount);

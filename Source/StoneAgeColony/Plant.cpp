@@ -21,7 +21,7 @@ APlant::APlant(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitia
 	{
 		PropertiesDataTable = PropertiesDataObject.Object;
 	}
-//	
+
 	// Setup ProgressBarWidget
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	FStringClassReference MyWidgetClassRef("WidgetBlueprint'/Game/Uluc/Plants/PlantProgressBar.PlantProgressBar_C'");
@@ -32,7 +32,6 @@ APlant::APlant(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitia
 	// Initialize ProgressBar component
 	ProgressBar = ObjectInitializer.CreateDefaultSubobject<UWidgetComponent>(this, TEXT("TestWidget3D"));
 	SetupProgressBar();
-
 
 	CurrentStage = 0;
 }

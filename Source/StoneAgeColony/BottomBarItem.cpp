@@ -40,26 +40,26 @@ void UBottomBarItem::UseBarItem()
 	
 }
 
-void UBottomBarItem::Update()
+void UBottomBarItem::Refresh()
 {
-	//if (BottomBar)
-	//{
-	//	if (BottomBar->Player)
-	//	{
-	//		auto PlayerInventory = BottomBar->Player->Inventory;
+	if (BottomBar)
+	{
+		if (BottomBar->Player)
+		{
+			auto PlayerInventory = BottomBar->Player->Inventory;
 
-	//		if (PlayerInventory.Contains(ItemID))
-	//		{
-	//			ItemAmount = PlayerInventory[ItemID];
-	//			//NotifyBottomBar();
-	//		}
-	//		else 
-	//		{
-	//			ItemAmount = 0;
-	//		}
-	//		
-	//	}
-	//}
+			if (PlayerInventory.Contains(ItemID))
+			{
+				ItemAmount = PlayerInventory[ItemID];
+				//NotifyBottomBar();
+			}
+			else 
+			{
+				ItemAmount = 0;
+			}
+			
+		}
+	}
 	
 }
 

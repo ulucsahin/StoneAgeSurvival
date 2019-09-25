@@ -32,7 +32,7 @@ public:
 
 	void UseBarItem();
 
-	void Update();
+	void Refresh();
 
 	UUIBottomBar* BottomBar;
 };

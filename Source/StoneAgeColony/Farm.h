@@ -10,6 +10,7 @@
 class AObjectFactory;
 class AUsableActor;
 class AStoneAgeColonyCharacter;
+class APlant;
 
 USTRUCT(BlueprintType)
 struct FFarmData : public FTableRowBase
@@ -62,4 +63,6 @@ private:
 	TMap<FString, bool> SocketFull; // keeps track of farm plots (planted or empty), true = planted, false = empty, socket name - bool
 	TMap<FString, AUsableActor*> PlantsInSockets; // socket name - actor ptr
 	AStoneAgeColonyCharacter* Player;
+
+	void RandomizePlantAppearance(APlant* Plant);
 };

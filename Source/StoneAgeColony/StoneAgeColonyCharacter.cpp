@@ -337,8 +337,8 @@ void AStoneAgeColonyCharacter::OnClick()
 	{
 		InteractPickup();
 	}
-	
 }
+
 
 void AStoneAgeColonyCharacter::MoveForward(float Value)
 {
@@ -644,6 +644,7 @@ void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amou
 		{
 			UIPlayerInventory->Refresh();
 		}
+
 	}
 	
 }
