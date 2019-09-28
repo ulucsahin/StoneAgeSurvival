@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "UsableActor.h"
 #include "GatherableObject.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "GatherableTree.generated.h"
@@ -25,6 +24,9 @@ public:
 	// Gathered Item ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
 	int32 GatherID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelUp)
+	TAssetPtr<UStaticMesh> Mesh;
 };
 
 
@@ -33,6 +35,9 @@ USTRUCT(BlueprintType)
 struct FGatherableTreeDetails
 {
 	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
 	FTransform Transform;

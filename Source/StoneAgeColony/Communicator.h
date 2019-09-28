@@ -12,15 +12,6 @@
 #include "CraftingStation.h"
 #include "House.h"
 
-//struct FHumanCharacterDetails;
-//struct FGatherableTreeDetails;
-//struct FBuildingDetails;
-//
-//class AEnemyCharacter;
-//class AGatherableTree;
-//class ABuilding;
-//class UDataTable;
-
 
 class STONEAGECOLONY_API Communicator
 {
@@ -91,6 +82,6 @@ public:
 
 	// Blueprints that are used in save-load system or spawning actors
 	TSubclassOf<AEnemyCharacter> EnemyCharacterBlueprint;
-	TSubclassOf<AGatherableTree> GatherableTreeBlueprint;
+	//TSubclassOf<AGatherableTree> GatherableTreeBlueprint;
 	TSubclassOf<ABuilding>       BuildingBlueprint;
 };

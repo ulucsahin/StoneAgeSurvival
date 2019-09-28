@@ -41,8 +41,8 @@ AStoneAgeColonyGameMode::AStoneAgeColonyGameMode(const FObjectInitializer& Objec
 	// Set communicator blueprints
 	static ConstructorHelpers::FClassFinder<AEnemyCharacter> BPClass(TEXT("'/Game/Uluc/ActiveAssets/BP_FollowerEnemyCharacter'"));
 	Communicator::GetInstance().EnemyCharacterBlueprint = BPClass.Class;
-	static ConstructorHelpers::FClassFinder<AGatherableTree> BPClass2(TEXT("'/Game/Uluc/ActiveAssets/GatherableObjects/BP_GatherableTree'"));
-	Communicator::GetInstance().GatherableTreeBlueprint = BPClass2.Class;
+	//static ConstructorHelpers::FClassFinder<AGatherableTree> BPClass2(TEXT("'/Game/Uluc/ActiveAssets/GatherableObjects/BP_GatherableTree'"));
+	//Communicator::GetInstance().GatherableTreeBlueprint = BPClass2.Class;
 	static ConstructorHelpers::FClassFinder<ABuilding> BPClass3(TEXT("/Game/Uluc/BuildingSystem/Blueprints/BP_Building"));
 	Communicator::GetInstance().BuildingBlueprint = BPClass3.Class;
 

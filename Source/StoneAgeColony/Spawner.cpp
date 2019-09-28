@@ -2,7 +2,6 @@
 
 #include "Spawner.h"
 #include "EnemyCharacter.h"
-//#include "Runtime/Engine/Classes/Engine/World.h"
 
 // Sets default values
 ASpawner::ASpawner()

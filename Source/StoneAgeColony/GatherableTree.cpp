@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "ObjectFactory.h"
 
 // Static Variables
 //TSubclassOf<AGatherableTree> AGatherableTree::GatherableTreeBlueprint;
@@ -41,6 +42,16 @@ void AGatherableTree::SetupType(FString Type)
 	ID = Data->ID;
 	GatherID = Data->GatherID;
 
+	// Required for loading icon from TAssetPtr with Get()
+	if (Data->Mesh.IsPending())
+	{
+		UAssetManager* tmp = NewObject<UAssetManager>();
+		FStreamableManager& AssetMgr = tmp->GetStreamableManager(); //UAssetManager::GetStreamableManager();
+		const FStringAssetReference& MeshRef = Data->Mesh.ToStringReference();
+		Data->Mesh = Cast<UStaticMesh>(AssetMgr.SynchronousLoad(MeshRef));
+	}
+
+	DefaultMesh = Data->Mesh.Get();
 }
 
 void AGatherableTree::OnUsed(APawn* InstigatorPawn)
@@ -75,6 +86,7 @@ void AGatherableTree::RegisterActorDetailsToSave() {
 	FGatherableTreeDetails TreeDetails;
 
 	// Assign details to struct.
+	TreeDetails.ID = ID;
 	TreeDetails.Transform = GetActorTransform();
 
 	// Save details as struct to communicator. Which will be used during saving.
@@ -92,14 +104,23 @@ void AGatherableTree::SpawnLoadedActors()
 
 	FActorSpawnParameters SpawnParams;
 
+	static AObjectFactory* Factory = NewObject<AObjectFactory>();
+
 	// Get actor details to spawn from communicator.
-	auto ActorToSpawn = Communicator::GetInstance().GatherableTreeBlueprint;
+	//auto ActorToSpawn = Communicator::GetInstance().GatherableTreeBlueprint;
 
 	// Iterate over array and saved spawn actors.
 	for (auto Details : Communicator::GetInstance().SpawnedGatherableTreeDetails)
 	{
+
+		auto ObjectToPlace = Factory->CreateObjectBetter(Details.ID);
+		auto ClassToSpawn = ObjectToPlace->GetClass();
+
 		FTransform ActorTransform = Details.Transform;
-		Communicator::GetInstance().World->SpawnActor<AGatherableTree>(ActorToSpawn, ActorTransform, SpawnParams);
+		AGatherableTree* SpawnedItem = (AGatherableTree*)Communicator::GetInstance().World->SpawnActor<AGatherableTree>(ClassToSpawn, ActorTransform, SpawnParams);
+
+		SpawnedItem->SetupType(Factory->GetObjectNameFromID(Details.ID));
+		SpawnedItem->SetMeshToDefault();
 	}
 }
 

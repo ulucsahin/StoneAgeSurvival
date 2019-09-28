@@ -2,10 +2,7 @@
 
 #include "BuildingManager.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
-//#include "Runtime/Engine/Classes/Materials/Material.h"
-//#include "Kismet/GameplayStatics.h"
 #include "Runtime/Engine/Public/TimerManager.h"
-//#include "Runtime/Engine/Classes/Engine/StaticMeshSocket.h"
 #include "Communicator.h"
 #include "StoneAgeColonyCharacter.h"
 

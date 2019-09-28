@@ -41,12 +41,12 @@ class STONEAGECOLONY_API AFarm : public AStructure
 	GENERATED_BODY()
 
 public:
-
 	AFarm(const FObjectInitializer& ObjectInitializer);
 	void SetupType(FString);
-	FName FindSuitableSocket();
 	void Plant(int32 ItemIDToPlant, FName SocketName);
 	void RemovePlant(FString SocketName);
+	void RandomizePlantAppearance(APlant* Plant);
+	FName SelectSocketToPlant();
 
 	int32 ID;
 	int32 PlotCapacity; 
@@ -64,5 +64,5 @@ private:
 	TMap<FString, AUsableActor*> PlantsInSockets; // socket name - actor ptr
 	AStoneAgeColonyCharacter* Player;
 
-	void RandomizePlantAppearance(APlant* Plant);
+	
 };

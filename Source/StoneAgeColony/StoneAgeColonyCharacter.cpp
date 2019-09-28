@@ -28,6 +28,10 @@
 #include "BottomBarItem.h"
 #include "SurvivalWidget.h"
 
+//#include "InstancedFoliageActor.h"
+//#include "FoliageType.h"
+//#include "InstancedFoliage.h"
+
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
 
@@ -160,6 +164,7 @@ void AStoneAgeColonyCharacter::BeginPlay()
 	{
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
+	//	Mesh1P->SetHiddenInGame(true, true); // i hid the FP hands for now
 	}
 
 	// Will be visible when player loads or starts game. Currently we are in main menu.
@@ -176,6 +181,26 @@ void AStoneAgeColonyCharacter::OnOverlapBegin(class UPrimitiveComponent* Overlap
 {
 	if (OtherActor != this)
 	{
+		//AInstancedFoliageActor* test;
+		//auto asd = OtherActor->GetClass()->GetFName();
+		//auto asd2 = asd.ToString();
+		//UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OnOverlapBegin name: %s"), *asd2);
+
+		//if (asd2 == "InstancedFoliageActor")
+		//{
+		//	auto x = ((AInstancedFoliageActor*)OtherActor);
+		//	auto Components = OtherActor->GetComponents();
+		//	for (auto test : Components)
+		//	{
+		//		TMap<UFoliageType *, TArray< const FFoliageInstancePlacementInfo* >> y = x->GetInstancesForComponent(test);
+		//		UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OnOverlapBegin y.num: %d"), y.Num());
+		//	}
+		//	
+		//	//OtherActor->Destroy();
+
+		//	return;
+		//}
+
 		UStaticMeshComponent* Mesh = Cast<UStaticMeshComponent>(OtherComp);
 		if (Mesh != nullptr)
 		{
@@ -818,7 +843,9 @@ void AStoneAgeColonyCharacter::HideFirstPersonHands(bool Hide)
 void AStoneAgeColonyCharacter::Debug()
 {
 	Gather();
+
 	GEngine->ForceGarbageCollection();
 	AnimationManager->PlayAnimation(EAnimations::VE_Cutting);
+	HideFirstPersonHands(true);
 	CloseAllMenus(); // sometimes crashes?
 }

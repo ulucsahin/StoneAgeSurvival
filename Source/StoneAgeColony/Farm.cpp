@@ -3,14 +3,17 @@
 #include "Farm.h"
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
+#include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 #include "StoneAgeColonyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "ObjectFactory.h"
 #include "SurvivalWidget.h"
 #include "Plant.h"
-#include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 #include "UIBottomBar.h"
 #include "BottomBarItem.h"
+
+#include "EngineUtils.h"
+//#include "InstancedFoliageActor.h"
 
 AFarm::AFarm(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -53,23 +56,31 @@ void AFarm::SetupType(FString Type)
 		PlantsInSockets.Emplace(SocketName, nullptr); // all sockets are empty at the beginning
 	}
 
-
 	Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	Factory = NewObject<AObjectFactory>();
 }
 
 void AFarm::OnUsed(APawn* InstigatorPawn)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Farm : :Debug"));
+
 	int32 ItemToPlantID = Player->BottomBar->BarItems[Player->BottomBar->SelectedSlot]->ItemID;
 
 	// ID range of plantable objects
 	if (ItemToPlantID >= 700 && ItemToPlantID <= 799)
 	{
 		// Plant on a suitable socket. TODO: Player should choose which socket to plant.
-		Plant(ItemToPlantID, FindSuitableSocket()); // plant potato to test
+		Plant(ItemToPlantID, SelectSocketToPlant()); // plant potato to test
 		Player->BottomBar->Refresh();
 	}
-	
+
+	//TActorIterator<AFarm> foliageIterator(GetWorld());
+	//AFarm* foliageActor = *foliageIterator;
+
+
+	//InstancedStaticMeshComponents
+
+
 }
 
 // Currently not used as farms dont have any menus
@@ -97,28 +108,11 @@ void AFarm::OpenMenu(APawn* InstigatorPawn)
 	}
 }
 
-FName AFarm::FindSuitableSocket()
-{
-	FName Result = FName("Plot1");
-
-	for (auto Data : PlantsInSockets)
-	{
-		FString PlantSocket = Data.Key;
-		AUsableActor* Plant = Data.Value;
-		if (!SocketFull[PlantSocket]) // if socket is empty
-		{
-			Result = FName(*PlantSocket);
-		}
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("AFarm::FindSuitableSocket Found Socket: %s"), *Result.ToString());
-
-	return Result;
-}
-
 void AFarm::Plant(int32 ItemIDToPlant, FName SocketName)
 {
 	/* Plants a plant to socket */
+
+	if (SocketName.ToString() == "") return;
 
 	FString SocketName_ = SocketName.ToString();
 
@@ -180,4 +174,41 @@ void AFarm::RandomizePlantAppearance(APlant* Plant)
 
 	// Set Random Scale
 	Plant->SetActorScale3D(FVector(FMath::RandRange(0.8f, 1.2f), FMath::RandRange(0.8f, 1.2f), FMath::RandRange(0.8f, 1.2f)));
+}
+
+FName AFarm::SelectSocketToPlant()
+{
+	/* Selects closest socket where player is looking. 
+	 * Mostly copied from BuildingManager::CalculateMinDistanceSocket
+	*/
+
+	FVector CamLoc;
+	FRotator CamRot;
+	Player->Controller->GetPlayerViewPoint(CamLoc, CamRot);
+	const FVector TraceStart = CamLoc;
+	const FVector Direction = CamRot.Vector();
+	int32 InteractDistance = 350;
+	const FVector TraceEnd = TraceStart + (Direction * InteractDistance);
+	auto Sockets = MeshComp->GetAllSocketNames();
+	float SmallestDistance = 999999.f;
+	FName ClosestSocketName = "";
+
+	if (Sockets.Num() > 0)
+	{
+		for (auto temp : Sockets)
+		{
+			FString SocketName = temp.ToString();
+			UE_LOG(LogTemp, Warning, TEXT("SocketName %s"), *SocketName);
+			FVector SocketLocation = MeshComp->GetSocketLocation(*SocketName);
+			float Distance = FVector::Dist(TraceEnd, SocketLocation);
+
+			if (Distance < SmallestDistance)
+			{
+				SmallestDistance = Distance;		
+				ClosestSocketName = temp;
+			}
+		}
+	}
+
+	return ClosestSocketName;
 }

@@ -250,7 +250,7 @@ void ACraftingStation::SpawnLoadedActors()
 	// Iterate over array and saved spawn actors.
 	for (auto Details : Communicator::GetInstance().SpawnedCraftingStationDetails)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::SpawnLoadedActors ID: %d"), Details.ID);
+		//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::SpawnLoadedActors ID: %d"), Details.ID);
 		auto ObjectToPlace = Factory->CreateObjectBetter(Details.ID);
 		auto ClassToSpawn = ObjectToPlace->GetClass();
 

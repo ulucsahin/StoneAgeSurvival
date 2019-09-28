@@ -2,11 +2,6 @@
 
 #include "TestGameLoader.h"
 #include "GameLoadManager.h"
-//#include "PeopleSpawner.h"
-//#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-//#include "Communicator.h"
-//#include "EnemyCharacter.h"
-
 
 void ATestGameLoader::OnUsed(APawn* InstigatorPawn)
 {
