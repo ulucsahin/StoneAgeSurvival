@@ -141,7 +141,6 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 	AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	if (Player)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed Player ok"));
 		Player->OpenMenu(DialogueMenuRef, NULL, NULL);
 	}
 	StartDialogue();
