@@ -4,13 +4,15 @@
 #include "SaveGameEntity.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "StoneAgeColonyCharacter.h"
-#include "EnemyCharacter.h"
+//#include "EnemyCharacter.h"
+#include "SettlementMember.h"
 #include "Communicator.h"
 #include "Building.h"
 #include "Structure.h"
 #include "Settlement.h"
 #include "CraftingStation.h"
 #include "House.h"
+#include "Farm.h"
 //#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
 
 GameSaver::GameSaver()
@@ -39,12 +41,13 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 
 	// Iterate over actors in world to get details of spawned actors.
 	// Saves actors to communicator.
-	RegisterActors<AEnemyCharacter>();
+	RegisterActors<ASettlementMember>();
 	RegisterActors<AGatherableTree>();
 	RegisterActors<ABuilding>();
 	RegisterActors<ASettlement>();
 	RegisterActors<ACraftingStation>();
 	RegisterActors<AHouse>();
+	RegisterActors<AFarm>();
 
 	// Assign variables to save file (from communicator).
 	SaveGameEntity->PlayerTransform = Communicator::GetInstance().PlayerTransform;
@@ -60,6 +63,7 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	SaveGameEntity->SpawnedBuildingDetails = Communicator::GetInstance().SpawnedBuildingDetails;
 	SaveGameEntity->SpawnedSettlementDetails = Communicator::GetInstance().SpawnedSettlementDetails;
 	SaveGameEntity->SpawnedCraftingStationDetails = Communicator::GetInstance().SpawnedCraftingStationDetails;
+	SaveGameEntity->SpawnedFarmDetails = Communicator::GetInstance().SpawnedFarmDetails;
 	SaveGameEntity->SpawnedHouseDetails = Communicator::GetInstance().SpawnedHouseDetails;
 	SaveGameEntity->ElapsedGameMinutes = Communicator::GetInstance().ElapsedGameMinutes;
 	SaveGameEntity->PlayerInventory = Communicator::GetInstance().PlayerInventory;

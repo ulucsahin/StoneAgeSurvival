@@ -36,7 +36,7 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 	AreaDisplayer = ObjectInitializer.CreateDefaultSubobject<UStaticMeshComponent>(this, TEXT("SettlementArea")); // MeshComp from UsableActor parent class
 
 	AreaDisplayer->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	FString CompName = "SettlementArea";
+	//FString CompName = "SettlementArea";
 	//AreaDisplayer->Rename(*CompName); // CAUSES CRASH AFTER CLOSING AND REOPENING EDITOR
 	AreaDisplayer->SetCollisionProfileName("OverlapAll");
 	AreaDisplayer->SetupAttachment(SceneComponent);

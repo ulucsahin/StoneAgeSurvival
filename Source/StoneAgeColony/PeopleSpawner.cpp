@@ -5,6 +5,7 @@
 #include "Communicator.h"
 #include "StoneAgeColonyCharacter.h"
 #include "EnemyCharacter.h"
+#include "SettlementMember.h"
 //#include "Spawner.h"
  
 void APeopleSpawner::BeginPlay()
@@ -37,8 +38,8 @@ void APeopleSpawner::SpawnCharacter(bool bShouldRegister)
 	Location.Z += 0.f;
 	Transform.SetLocation(Location);
 
-	auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterBlueprint; // AEnemyCharacter::EnemyCharacterBlueprint;
-	AEnemyCharacter* SpawnedActor = GetWorld()->SpawnActor<AEnemyCharacter>(ActorToSpawn, Transform, SpawnParams);
+	auto ActorToSpawn = Communicator::GetInstance().SettlementMemberBlueprint; // AEnemyCharacter::EnemyCharacterBlueprint;
+	ASettlementMember* SpawnedActor = GetWorld()->SpawnActor<ASettlementMember>(ActorToSpawn, Transform, SpawnParams);
 
 	SpawnCount += 1;
 	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter Spawned. SpawnCount: %d"), SpawnCount);
@@ -56,12 +57,12 @@ void APeopleSpawner::SpawnCharacter(bool bShouldRegister)
 	}*/
 }
 
-// not used
-void APeopleSpawner::RegisterActorDetailsToSave(AEnemyCharacter* EnemyCharacter) 
-{
-	UE_LOG(LogTemp, Warning, TEXT("IS THIS USED? SHOULD NOT BE USED"));
-	EnemyCharacter->RegisterActorDetailsToSave();
-}
+//// not used
+//void APeopleSpawner::RegisterActorDetailsToSave(AEnemyCharacter* EnemyCharacter) 
+//{
+//	UE_LOG(LogTemp, Warning, TEXT("IS THIS USED? SHOULD NOT BE USED"));
+//	EnemyCharacter->RegisterActorDetailsToSave();
+//}
 
 int APeopleSpawner::GetID()
 {

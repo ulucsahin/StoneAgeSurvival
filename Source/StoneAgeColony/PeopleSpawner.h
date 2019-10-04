@@ -27,7 +27,7 @@ public:
 
 	int SpawnCount = 0;
 	void SpawnCharacter(bool bShouldRegister);
-	void RegisterActorDetailsToSave(AEnemyCharacter*);
+	//void RegisterActorDetailsToSave(AEnemyCharacter*);
 	virtual int GetID() override;
 
 protected:

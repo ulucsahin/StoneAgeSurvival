@@ -68,7 +68,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	FString Tmp = FString::FromInt(ObjectID);
 	FName ObjectID_ = FName(*Tmp);
 	const FString ContextString(TEXT("Object Type Context"));
-	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory::CreateObjectBetter Object ID: %s"), *Tmp);
+	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory:: CreateObjectBetter Object ID: %s"), *Tmp);
 	auto Data = CommonPropertiesTable->FindRow<FObjectCommonPropertiesData>(ObjectID_, ContextString, true);
 	auto ObjectName = Data->Name_;
 

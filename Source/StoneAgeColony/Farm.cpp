@@ -11,6 +11,7 @@
 #include "Plant.h"
 #include "UIBottomBar.h"
 #include "BottomBarItem.h"
+#include "Communicator.h"
 
 #include "EngineUtils.h"
 //#include "InstancedFoliageActor.h"
@@ -62,7 +63,7 @@ void AFarm::SetupType(FString Type)
 
 void AFarm::OnUsed(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Farm : :Debug"));
+	//UE_LOG(LogTemp, Warning, TEXT("Farm : :Debug"));
 
 	int32 ItemToPlantID = Player->BottomBar->BarItems[Player->BottomBar->SelectedSlot]->ItemID;
 
@@ -70,16 +71,9 @@ void AFarm::OnUsed(APawn* InstigatorPawn)
 	if (ItemToPlantID >= 700 && ItemToPlantID <= 799)
 	{
 		// Plant on a suitable socket. TODO: Player should choose which socket to plant.
-		Plant(ItemToPlantID, SelectSocketToPlant()); // plant potato to test
+		Plant(ItemToPlantID, SelectSocketToPlant(), false); // plant potato to test
 		Player->BottomBar->Refresh();
 	}
-
-	//TActorIterator<AFarm> foliageIterator(GetWorld());
-	//AFarm* foliageActor = *foliageIterator;
-
-
-	//InstancedStaticMeshComponents
-
 
 }
 
@@ -108,31 +102,36 @@ void AFarm::OpenMenu(APawn* InstigatorPawn)
 	}
 }
 
-void AFarm::Plant(int32 ItemIDToPlant, FName SocketName)
+APlant* AFarm::Plant(int32 ItemIDToPlant, FName SocketName, bool FromSave)
 {
-	/* Plants a plant to socket */
+	/* Plants a plant to socket
+	 if FromSave, then don't use item from player inventory
+	*/
 
-	if (SocketName.ToString() == "") return;
+	if (SocketName.ToString() == "") return nullptr;
 
 	FString SocketName_ = SocketName.ToString();
 
 	// Plant only if socket is empty
 	if (!SocketFull[SocketName_])
 	{
-		// And only if player has required seed/item to plant.
-		auto PlayerInventory = Player->GetInventory();
-		if (PlayerInventory.Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
+		// If not spawning from save, check if player has required seed/item to plant.
+		if(!FromSave)
 		{
-			if (PlayerInventory[ItemIDToPlant] > 0)
+			auto PlayerInventory = Player->GetInventory();
+			if (PlayerInventory.Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
 			{
-				Player->ConsumeItemFromInventory(ItemIDToPlant, 1); // consume 1 from player inventory
+				if (PlayerInventory[ItemIDToPlant] > 0)
+				{
+					Player->ConsumeItemFromInventory(ItemIDToPlant, 1); // consume 1 from player inventory
+				}
+				else
+				{
+					return nullptr; // if player dont have item dont do anything
+				}
 			}
-			else
-			{
-				return; // if player dont have item dont do anything
-			}
-
 		}
+		
 
 		// Create object, attach to socket, setup
 		APlant* ObjectToPlant = (APlant*)Factory->CreateObjectBetter(ItemIDToPlant);
@@ -150,8 +149,14 @@ void AFarm::Plant(int32 ItemIDToPlant, FName SocketName)
 
 		SocketFull[SocketName_] = true; // mark socket as planted
 		PlantsInSockets.Emplace(SocketName_, SpawnedItem);
+		return SpawnedItem;
+	}
+	else
+	{
+		return nullptr;
 	}
 
+	
 }
 
 void AFarm::RemovePlant(FString SocketName)
@@ -211,4 +216,76 @@ FName AFarm::SelectSocketToPlant()
 	}
 
 	return ClosestSocketName;
+}
+
+//
+// Save-Load Methods below
+//
+
+void AFarm::RegisterActorDetailsToSave()
+{
+	FFarmDetails Details;
+
+	Details.ID = ID;
+	Details.Transform = GetActorTransform();
+
+	// Save Details of plants in sockets so we can recreate them upon loading.
+	Details.PlantDetailsInSockets.Empty();
+	for (auto Item : PlantsInSockets)
+	{
+		auto Plant = (APlant*)Item.Value;
+		if (Plant)
+		{
+			Details.PlantDetailsInSockets.Emplace(Item.Key, Plant->GetDetails());
+		}
+		
+	}
+
+	Communicator::GetInstance().SpawnedFarmDetails.Add(Details);
+}
+
+void AFarm::EmptyCommunicatorDetailsArray()
+{
+	Communicator::GetInstance().SpawnedFarmDetails.Empty();
+}
+
+void AFarm::SpawnLoadedActors()
+{
+	/* Spawn previously saved characters from savefile. */
+	FActorSpawnParameters SpawnParams;
+
+	static AObjectFactory* Factory = NewObject<AObjectFactory>();
+
+	// Iterate over array and saved spawn actors.
+	for (auto Details : Communicator::GetInstance().SpawnedFarmDetails)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::SpawnLoadedActors ID: %d"), Details.ID);
+		auto ObjectToPlace = Factory->CreateObjectBetter(Details.ID);
+		auto ClassToSpawn = ObjectToPlace->GetClass();
+
+		FTransform ActorTransform = Details.Transform;
+		AFarm* SpawnedItem = (AFarm*)Communicator::GetInstance().World->SpawnActor<AUsableActor>(ClassToSpawn, ActorTransform, SpawnParams);
+
+		SpawnedItem->SetupType(Factory->GetObjectNameFromID(Details.ID));
+		SpawnedItem->SetMeshToDefault();
+
+
+		// Spawn plants for current farm.
+		FActorSpawnParameters SpawnParams2;
+		for (auto Socket_PlantDetails : Details.PlantDetailsInSockets)
+		{
+			auto PlantDetails = Socket_PlantDetails.Value;
+			auto SpawnedPlant = SpawnedItem->Plant(PlantDetails.ID, FName(*Socket_PlantDetails.Key), true);
+			
+			if (SpawnedPlant)
+			{
+				SpawnedPlant->CurrentStage = PlantDetails.GrowStage;
+				SpawnedPlant->ProgressToNextStage = PlantDetails.GrowProgress;
+				SpawnedPlant->ApplyDetails();
+			}
+
+		}
+
+	}
+
 }

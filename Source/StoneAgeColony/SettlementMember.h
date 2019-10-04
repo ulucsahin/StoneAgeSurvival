@@ -4,26 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "HumanCharacter.h"
-#include "EnemyCharacter.generated.h"
+#include "SettlementMember.generated.h"
 
-//USTRUCT(BlueprintType)
-//struct FEnemyCharacterDetails
-//{
-//	GENERATED_USTRUCT_BODY()
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
-//	FTransform Transform;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FaceDetails")
-//	TMap<FName, float> FaceDetails;
-//};
+/**
+ * 
+ */
 
+class ASettlementMemberAI;
+class ASettlement;
 
 UCLASS()
-class STONEAGECOLONY_API AEnemyCharacter : public AHumanCharacter
+class STONEAGECOLONY_API ASettlementMember : public AHumanCharacter
 {
 	GENERATED_BODY()
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,9 +29,9 @@ protected:
 	UFUNCTION()
 	void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
 
-public:	
+public:
 	// Sets default values for this character's properties
-	AEnemyCharacter(const FObjectInitializer& ObjectInitializer);
+	ASettlementMember(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(EditAnywhere, Category = "Behavior")
 	class UBehaviorTree *BotBehavior;
@@ -48,10 +42,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void OnUsed(APawn* InstigatorPawn);
+	void StartDialogue();
+
 	// Save-Load Methods
 	virtual void RegisterActorDetailsToSave() override;
 	static void EmptyCommunicatorDetailsArray();
 	static void SpawnLoadedActors();
+	
 
 	UPROPERTY(EditAnywhere, Category = "Identification")
 	int ExternalID;
@@ -59,9 +57,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	class UPawnSensingComponent* PawnSensingComp;
 
+	void SetupBelongingSettlement();
+
 private:
 	float FollowRadius;
-	
-	
+	ASettlementMemberAI* AIController;
+	ASettlement* BelongingSettlement;
+	FString DialogueMenuRef;
+	//UStaticMeshComponent* PerceptiveArea;
 };
-

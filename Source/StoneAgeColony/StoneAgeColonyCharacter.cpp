@@ -28,6 +28,8 @@
 #include "BottomBarItem.h"
 #include "SurvivalWidget.h"
 
+#include "SettlementMember.h"
+
 //#include "InstancedFoliageActor.h"
 //#include "FoliageType.h"
 //#include "InstancedFoliage.h"
@@ -118,7 +120,7 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	// Init Stats
 	Health = 100.f;
 	Stamina = 100.f;
-	Gold = 50;
+	Gold = 5000;
 	Experience = 0;
 	Level = 1;
 
@@ -449,6 +451,18 @@ void AStoneAgeColonyCharacter::Use()
 	{
 		Usable->OnUsed(this);
 	}
+	else
+	{
+		ASettlementMember* NPC = GetActorInView<ASettlementMember>(250.f);
+		
+		if (NPC)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("GetActorInView<ASettlementMember> Success"));
+			NPC->OnUsed(this);
+		}
+
+	}
+
 }
 
 void AStoneAgeColonyCharacter::Gather()
@@ -478,7 +492,7 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructur
 	if (OwnerStructure)
 	{
 		MenuWidget->OwnerStructure = OwnerStructure;
-		MenuWidget->OwnerSettlement = OwnerSettlement; // TODO::this may be null for now, each structure will have a pointer to owner settlement later on.
+		MenuWidget->OwnerSettlement = OwnerSettlement;
 	}
 
 	MenuWidget->AddToViewport();

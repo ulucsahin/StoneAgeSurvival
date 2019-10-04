@@ -8,7 +8,7 @@
 //#include "EnemyAI.h"
 #include "BTTask_MoveToPlayer.generated.h"
 
-class AEnemyAI;
+class ASettlementMemberAI;
 //class MyUtility;
 /**
  * 
@@ -20,7 +20,7 @@ class STONEAGECOLONY_API UBTTask_MoveToPlayer : public UBTTask_BlackboardBase
 
 public:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-	void Act(AEnemyAI*);
+	void Act(ASettlementMemberAI*);
 	MyUtility Utility;
 
 private:

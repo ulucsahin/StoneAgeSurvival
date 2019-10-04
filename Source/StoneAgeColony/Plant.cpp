@@ -34,13 +34,12 @@ APlant::APlant(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitia
 	SetupProgressBar();
 
 	CurrentStage = 0;
+
 }
 
 void APlant::OnUsed(APawn* InstigatorPawn) 
 {
 	Gather(InstigatorPawn);
-
-	// WidgetBlueprint'/Game/Uluc/FloatingWidget.FloatingWidget'
 }
 
 void APlant::SetupType(FString Type)
@@ -177,4 +176,42 @@ void APlant::StopUpdatingProgressBar()
 {
 	ProgressBarWidget->SetVisibility(ESlateVisibility::Hidden);
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandleProgressBar);
+}
+
+//
+// Save-Load Methods
+//
+
+FPlantDetails APlant::GetDetails()
+{
+	/* This method is called by owner farm object. */
+
+	FPlantDetails Details;
+	Details.ID = Data->ID;
+	Details.GrowProgress = ProgressToNextStage;
+	Details.GrowStage = CurrentStage;
+	Details.Transform = GetActorTransform();
+
+	return Details;
+}
+
+void APlant::ApplyDetails()
+{
+	MeshComp->SetStaticMesh(MeshAssetPointers[CurrentStage].Get());
+	DefaultMesh = MeshComp->GetStaticMesh();
+}
+
+void APlant::RegisterActorDetailsToSave()
+{
+
+}
+
+void APlant::EmptyCommunicatorDetailsArray()
+{
+
+}
+
+void APlant::SpawnLoadedActors()
+{
+
 }

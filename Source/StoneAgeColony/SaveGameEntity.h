@@ -5,12 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
 #include "SurvivalGameInstance.h"
-#include "EnemyCharacter.h"
+//#include "EnemyCharacter.h"
+#include "SettlementMember.h"
 #include "GatherableTree.h"
 #include "Building.h"
 #include "Settlement.h"
 #include "CraftingStation.h"
 #include "House.h"
+#include "Farm.h"
 #include "SaveGameEntity.generated.h"
 
 //class AEnemyCharacter;
@@ -82,6 +84,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	TArray<FHouseDetails> SpawnedHouseDetails;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	TArray<FFarmDetails> SpawnedFarmDetails;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
 	float ElapsedGameMinutes;

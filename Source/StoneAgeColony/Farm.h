@@ -5,12 +5,33 @@
 #include "CoreMinimal.h"
 #include "Structure.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
+#include "Plant.h"
 #include "Farm.generated.h"
 
 class AObjectFactory;
 class AUsableActor;
 class AStoneAgeColonyCharacter;
-class APlant;
+//class APlant;
+
+// Save details
+USTRUCT(BlueprintType)
+struct FFarmDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Plants")
+	TMap<FString, FPlantDetails> PlantDetailsInSockets;
+
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Plants")
+	TArray<FPlantDetails> PlantDetails;*/
+	
+};
 
 USTRUCT(BlueprintType)
 struct FFarmData : public FTableRowBase
@@ -43,13 +64,19 @@ class STONEAGECOLONY_API AFarm : public AStructure
 public:
 	AFarm(const FObjectInitializer& ObjectInitializer);
 	void SetupType(FString);
-	void Plant(int32 ItemIDToPlant, FName SocketName);
+	APlant* Plant(int32 ItemIDToPlant, FName SocketName, bool FromSave);
 	void RemovePlant(FString SocketName);
 	void RandomizePlantAppearance(APlant* Plant);
 	FName SelectSocketToPlant();
 
 	int32 ID;
 	int32 PlotCapacity; 
+
+	//
+    // Save-Load Methods below
+	virtual void RegisterActorDetailsToSave() override;
+	virtual void EmptyCommunicatorDetailsArray() override;
+	virtual void SpawnLoadedActors() override;
 
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;

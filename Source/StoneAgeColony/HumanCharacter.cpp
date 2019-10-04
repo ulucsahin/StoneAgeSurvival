@@ -9,7 +9,7 @@
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 
 // Sets default values
-AHumanCharacter::AHumanCharacter()
+AHumanCharacter::AHumanCharacter(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AHumanCharacter::AHumanCharacter"));
 
@@ -38,7 +38,6 @@ AHumanCharacter::AHumanCharacter()
 	EquipmentMapping = {
 		{EEquipmentSlots::VE_Feet, FeetEquipmentComponent},
 		{EEquipmentSlots::VE_Legs, LegsEquipmentComponent}
-
 	};
 	
 }

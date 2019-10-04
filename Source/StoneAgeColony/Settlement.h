@@ -3,19 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "GameFramework/Actor.h"
-//#include "Structure.h"
-//#include "Components/SphereComponent.h"
-//#include "UsableActor.h"
 #include "Structure.h"
 #include "Settlement.generated.h"
 
-//
 class AStoneAgeColonyCharacter;
 class AStructure;
-class USphereComponent;
 class AActor;
-
 
 // Save details
 USTRUCT(BlueprintType)
@@ -125,7 +118,7 @@ protected:
 private:
 	
 	USceneComponent* SceneComponent;
-	USphereComponent* SettlementArea;
+	//USphereComponent* SettlementArea;
 	UStaticMeshComponent* AreaDisplayer;
 	//UStaticMeshComponent* SettlementMesh;
 	UMaterial* AreaDisplayerMaterial;

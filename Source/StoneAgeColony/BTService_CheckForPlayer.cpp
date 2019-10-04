@@ -11,26 +11,23 @@
 #include <string>
 
 
-UBTService_CheckForPlayer::UBTService_CheckForPlayer() {
+UBTService_CheckForPlayer::UBTService_CheckForPlayer() 
+{
 	bCreateNodeInstance = true;
 }
 
-
-
-void UBTService_CheckForPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) {
+void UBTService_CheckForPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) 
+{
 	AEnemyAI *EnemyPC = Cast<AEnemyAI>(OwnerComp.GetAIOwner());
-
-	//GLog->Log("UBTService_CheckForPlayer working");
-
-	if (EnemyPC) {
-		//AStoneAgeColonyCharacter *Enemycasted = Cast<AStoneAgeColonyCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	UE_LOG(LogTemp, Warning, TEXT("UBTService_CheckForPlayer::TickNode Enemy"));
+	if (EnemyPC) 
+	{
 		APawn *Enemy = GetWorld()->GetFirstPlayerController()->GetPawn();
-		
-		//GLog->Log(typeid(GetWorld()->GetFirstPlayerController()->GetPawn()).name()); // pawn pointer
 
-		if (Enemy) {
+		if (Enemy) 
+		{
+			
 			OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(EnemyPC->EnemyKeyID, Enemy);
-			//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, "ENEMY IS HERE");
 			
 		}
 	}

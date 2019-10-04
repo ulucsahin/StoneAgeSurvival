@@ -19,6 +19,7 @@ class USphereComponent;
 class UUserWidget;
 class USurvivalWidget;
 class AStructure;
+class ASettlementMember;
 
 enum class EPlayerStates : uint8
 {

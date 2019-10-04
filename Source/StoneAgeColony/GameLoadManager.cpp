@@ -2,22 +2,22 @@
 
 #include "GameLoadManager.h"
 #include "SaveGameEntity.h"
-//#include "PeopleSpawner.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Communicator.h"
-#include "EnemyCharacter.h"
+//#include "EnemyCharacter.h"
+#include "SettlementMember.h"
 #include "GatherableTree.h"
 #include "Building.h"
 #include "UIBottomBar.h"
 #include "UIPlayerInventory.h"
-//#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
-//#include "Runtime/Engine/Classes/Engine/World.h"
 #include "StoneAgeColonyCharacter.h"
 #include "SurvivalGameState.h"
 #include "Structure.h"
 #include "Settlement.h"
 #include "CraftingStation.h"
 #include "House.h"
+#include "Farm.h"
+#include "Plant.h"
 
 // Sets default values
 AGameLoadManager::AGameLoadManager()
@@ -53,12 +53,14 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 	if (SaveGameEntityLoad)
 	{
 		// Destroy existing characters that should be deleted before loading.
-		DestroyActors<AEnemyCharacter>();
+		DestroyActors<ASettlementMember>();
 		DestroyActors<AGatherableTree>();
 		DestroyActors<ABuilding>();
 		DestroyActors<ASettlement>();
 		DestroyActors<ACraftingStation>();
 		DestroyActors<AHouse>();
+		DestroyActors<AFarm>();
+		DestroyActors<APlant>();
 
 		// Load varibles to communicator (update with loaded variables).
 		Communicator::GetInstance().test = SaveGameEntityLoad->test;
@@ -68,6 +70,7 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 		Communicator::GetInstance().SpawnedSettlementDetails = SaveGameEntityLoad->SpawnedSettlementDetails;
 		Communicator::GetInstance().SpawnedCraftingStationDetails = SaveGameEntityLoad->SpawnedCraftingStationDetails;
 		Communicator::GetInstance().SpawnedHouseDetails = SaveGameEntityLoad->SpawnedHouseDetails;
+		Communicator::GetInstance().SpawnedFarmDetails = SaveGameEntityLoad->SpawnedFarmDetails;
 		Communicator::GetInstance().PlayerTransform = SaveGameEntityLoad->PlayerTransform;
 		Communicator::GetInstance().PlayerRotation = SaveGameEntityLoad->PlayerRotation;
 		Communicator::GetInstance().PlayerHealth = SaveGameEntityLoad->PlayerHealth;
@@ -93,12 +96,13 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 		RefreshUI(InstigatorPawn);
 
 		// Spawn saved characters.
-		SpawnLoadedActors<AEnemyCharacter>();
+		SpawnLoadedActors<ASettlementMember>();
 		SpawnLoadedActors<AGatherableTree>();
 		SpawnLoadedActors<ABuilding>();
 		SpawnLoadedActors<ACraftingStation>();
 		SpawnLoadedActors<ASettlement>();
 		SpawnLoadedActors<AHouse>();
+		SpawnLoadedActors<AFarm>();
 
 	}
 

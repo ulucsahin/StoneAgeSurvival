@@ -11,6 +11,8 @@
 #include "Settlement.h"
 #include "CraftingStation.h"
 #include "House.h"
+#include "Farm.h"
+#include "SettlementMember.h"
 
 
 class STONEAGECOLONY_API Communicator
@@ -79,9 +81,12 @@ public:
 	TArray<FSettlementDetails>		 SpawnedSettlementDetails;
 	TArray<FCraftingStationDetails>  SpawnedCraftingStationDetails;
 	TArray<FHouseDetails>			 SpawnedHouseDetails;
+	TArray<FFarmDetails>			 SpawnedFarmDetails;
 
+	// these will be removed 
 	// Blueprints that are used in save-load system or spawning actors
-	TSubclassOf<AEnemyCharacter> EnemyCharacterBlueprint;
+	//TSubclassOf<AEnemyCharacter> EnemyCharacterBlueprint;
+	TSubclassOf<ASettlementMember> SettlementMemberBlueprint;
 	//TSubclassOf<AGatherableTree> GatherableTreeBlueprint;
 	TSubclassOf<ABuilding>       BuildingBlueprint;
 };

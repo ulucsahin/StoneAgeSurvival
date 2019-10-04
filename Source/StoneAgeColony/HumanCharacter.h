@@ -33,7 +33,7 @@ class STONEAGECOLONY_API AHumanCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	AHumanCharacter();
+	AHumanCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned

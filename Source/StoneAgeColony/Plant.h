@@ -12,6 +12,25 @@ class UWidgetComponent;
 class AStoneAgeColonyCharacter;
 class UPlantProgressBar;
 
+// Save details
+USTRUCT(BlueprintType)
+struct FPlantDetails
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FTransform Transform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GrowProgress")
+	int32 GrowStage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GrowProgress")
+	float GrowProgress;
+};
+
 USTRUCT(BlueprintType)
 struct FPlantData : public FTableRowBase
 {
@@ -70,13 +89,22 @@ public:
 	void StartUpdatingProgressBar();
 	void StopUpdatingProgressBar();
 
+	//
+	// Save-Load functions
+	FPlantDetails GetDetails();
+	void ApplyDetails();
+	virtual void RegisterActorDetailsToSave();
+	virtual void EmptyCommunicatorDetailsArray();
+	virtual void SpawnLoadedActors();
+
+	int32 CurrentStage;
+	float ProgressToNextStage;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	
 private:
 	FPlantData* Data;
 	FName PlantType;
-	int32 CurrentStage;
 	int32 NumberOfStages;
 	FString MenuRef;
 	UPlantProgressBar* ProgressBarWidget;
@@ -85,13 +113,10 @@ private:
 	TArray<float> GrowingTimes;
 	TArray<TAssetPtr<UStaticMesh>> MeshAssetPointers;
 	TArray<UStaticMesh*> Meshes;
-	float ProgressToNextStage;
 	const float ProgressUpdateFrequency = 0.1f;
 	const float WidgetProgressUpdateFrequency = 0.015f; // 60 fps
-	
 	FTimerHandle TimerHandle;
 	FTimerHandle TimerHandleProgressBar;
-
 	AStoneAgeColonyCharacter* Player;
 };
 

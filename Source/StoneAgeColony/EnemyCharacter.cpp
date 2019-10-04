@@ -3,11 +3,9 @@
 #include "EnemyCharacter.h"
 #include "EnemyAI.h"
 #include "Communicator.h"
-//#include "UObject/ConstructorHelpers.h"
 #include "EquipmentManager.h"
 #include "ObjectFactory.h"
 #include "MorphManager.h"
-/* AI Include */
 #include "Perception/PawnSensingComponent.h"
 
 
@@ -15,7 +13,7 @@
 //TSubclassOf<AEnemyCharacter> AEnemyCharacter::EnemyCharacterBlueprint;
 
 // Sets default values
-AEnemyCharacter::AEnemyCharacter()
+AEnemyCharacter::AEnemyCharacter(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -59,6 +57,11 @@ void AEnemyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+
+
+//
+// Save-Load Methods
+//
 void AEnemyCharacter::OnSeePlayer(APawn* Pawn) {
 	AEnemyAI* AIController = Cast<AEnemyAI>(GetController());
 	ACharacter* SensedPawn = Cast<ACharacter>(Pawn);
@@ -119,39 +122,39 @@ void AEnemyCharacter::EmptyCommunicatorDetailsArray()
 void AEnemyCharacter::SpawnLoadedActors()
 {
 	
-	/* Spawn previously saved characters from savefile. */
+	///* Spawn previously saved characters from savefile. */
 
-	FActorSpawnParameters SpawnParams;
-	auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterBlueprint;
+	//FActorSpawnParameters SpawnParams;
+	//auto ActorToSpawn = Communicator::GetInstance().EnemyCharacterBlueprint;
 
-	// Iterate over array and saved spawn actors.
-	for (auto Details : Communicator::GetInstance().SpawnedCharacterDetails)
-	{
-		FTransform ActorTransform = Details.Transform;
-		auto Spawned = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
+	//// Iterate over array and saved spawn actors.
+	//for (auto Details : Communicator::GetInstance().SpawnedCharacterDetails)
+	//{
+	//	FTransform ActorTransform = Details.Transform;
+	//	auto Spawned = Communicator::GetInstance().World->SpawnActor<AEnemyCharacter>(ActorToSpawn, ActorTransform, SpawnParams);
 
-		// Restore Morph Settings
-		auto MorphMgr = Spawned->MorphManager;
-		if (MorphMgr)
-		{
-			MorphMgr->LoadFace(&Details);
-		}
+	//	// Restore Morph Settings
+	//	auto MorphMgr = Spawned->MorphManager;
+	//	if (MorphMgr)
+	//	{
+	//		MorphMgr->LoadFace(&Details);
+	//	}
 
-		// Restore Equipments
-		UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors Restore Equipments"));
-		auto EquipManager = Spawned->EquipmentManager;
-		if (EquipManager)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors EquipManager available"));
-			AObjectFactory* Factory = NewObject<AObjectFactory>();
-			for (auto Item : Details.EquippedItems)
-			{
-				
-				auto Equipment = (AEquipment*) Factory->CreateObjectBetter(Item.Value); // Item.Value is item ID
-				EquipManager->EquipItem(Equipment);
-				UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors Item available, ID: %d"), Item.Value);
-			}
-		}
-		
-	}
+	//	// Restore Equipments
+	//	UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors Restore Equipments"));
+	//	auto EquipManager = Spawned->EquipmentManager;
+	//	if (EquipManager)
+	//	{
+	//		UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors EquipManager available"));
+	//		AObjectFactory* Factory = NewObject<AObjectFactory>();
+	//		for (auto Item : Details.EquippedItems)
+	//		{
+	//			
+	//			auto Equipment = (AEquipment*) Factory->CreateObjectBetter(Item.Value); // Item.Value is item ID
+	//			EquipManager->EquipItem(Equipment);
+	//			UE_LOG(LogTemp, Warning, TEXT("AEnemyCharacter::SpawnLoadedActors Item available, ID: %d"), Item.Value);
+	//		}
+	//	}
+	//	
+	//}
 }
