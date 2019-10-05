@@ -6,9 +6,6 @@
 #include "HumanCharacter.h"
 #include "SettlementMember.generated.h"
 
-/**
- * 
- */
 
 class ASettlementMemberAI;
 class ASettlement;
@@ -50,7 +47,6 @@ public:
 	static void EmptyCommunicatorDetailsArray();
 	static void SpawnLoadedActors();
 	
-
 	UPROPERTY(EditAnywhere, Category = "Identification")
 	int ExternalID;
 
@@ -59,6 +55,9 @@ public:
 
 	void SetupBelongingSettlement();
 
+
+	FString Profession;
+	FString Name;
 private:
 	float FollowRadius;
 	ASettlementMemberAI* AIController;

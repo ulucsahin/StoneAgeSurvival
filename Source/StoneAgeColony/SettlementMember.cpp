@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "StoneAgeColonyCharacter.h"
+#include "DialogueMenu.h"
 
 ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -43,6 +44,9 @@ ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectIniti
 	mesh->SetCollisionProfileName("BlockAll");
 	DialogueMenuRef = "'/Game/Uluc/NPC/DialogueSystem/DialogueMenu_BP.DialogueMenu_BP_C'";
 	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::ASettlementMember"));
+
+	Profession = "unoccupied"; // Currently we just have normal set to all settlement members. More will be added later on.
+	Name = "Harambe";
 }
 
 
@@ -141,7 +145,9 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 	AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	if (Player)
 	{
-		Player->OpenMenu(DialogueMenuRef, NULL, NULL);
+		auto DialogueMenu = (UDialogueMenu*)Player->OpenMenu(DialogueMenuRef, NULL, NULL);
+		DialogueMenu->Owner = this;
+		DialogueMenu->InitialSetup();
 	}
 	StartDialogue();
 }
