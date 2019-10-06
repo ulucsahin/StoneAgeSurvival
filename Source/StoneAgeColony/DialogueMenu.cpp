@@ -15,36 +15,30 @@ UDialogueMenu::UDialogueMenu(const FObjectInitializer& ObjectInitializer) : Supe
 
 	static ConstructorHelpers::FClassFinder<UDialogueChoiceButton> BPClass(TEXT("'/Game/Uluc/NPC/DialogueSystem/DialogueChoiceButton_BP.DialogueChoiceButton_BP_C'"));
 	DialogueChoiceButtonWidget = BPClass.Class;
-
 }
 
 void UDialogueMenu::InitialSetup()
 {
-	UE_LOG(LogTemp, Warning, TEXT("DialogueMenu:: InitialSetup"));
+	Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 
-	auto Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-
-	auto DialogueChoiceButton = CreateWidget<UDialogueChoiceButton>((APlayerController*)Player->GetController(), DialogueChoiceButtonWidget);
-	DialogueChoiceButton->OwnerDialogueMenu = this;
-
-	// TEST
-	FLinkedListDialogueItem test;
-	test.ID = 0;
-	test.Type = EButtonTypes::VE_String;
-	test.Text = "Pepega suk mi pini";
-
-
-	DialogueChoiceButton->Data = &test;
-	
-	// WrapBox assigned from blueprint
-	ChoicesVerticalBox->AddChild(DialogueChoiceButton);
-	DialogueChoiceButton->InitialSetup();
-	
-
-
-	//SetText("Hello! I am " + Owner->Name + ". I am currently " + Owner->Profession + "."); // Just for testing
+	AddChoices(StartingChoiceIDs); // currently only with ID 20000.
 }
 
+void UDialogueMenu::AddChoices(TArray<int32> ChoiceIDs)
+{
+	ChoicesVerticalBox->ClearChildren();
+
+	auto Controller = (APlayerController*)Player->GetController();
+
+	for (auto ID : ChoiceIDs)
+	{
+		auto DialogueChoiceButton = CreateWidget<UDialogueChoiceButton>(Controller, DialogueChoiceButtonWidget);
+		DialogueChoiceButton->OwnerDialogueMenu = this;
+		ChoicesVerticalBox->AddChild(DialogueChoiceButton); // WrapBox assigned from blueprint
+		DialogueChoiceButton->InitialSetup();
+		DialogueChoiceButton->SetupType(*FString::FromInt(ID));
+	}
+}
 
 void UDialogueMenu::SetText(FString Text)
 {

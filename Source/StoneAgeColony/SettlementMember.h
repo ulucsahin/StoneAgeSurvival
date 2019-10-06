@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "HumanCharacter.h"
+#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "SettlementMember.generated.h"
-
 
 class ASettlementMemberAI;
 class ASettlement;
@@ -55,7 +55,7 @@ public:
 
 	void SetupBelongingSettlement();
 
-
+	class UDataTable* PropertiesDataTable;
 	FString Profession;
 	FString Name;
 private:

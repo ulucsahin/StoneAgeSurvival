@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UIItemSlot.h"
+#include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "DialogueChoiceButton.generated.h"
 
 class UTextBlock;
@@ -18,15 +19,33 @@ enum class EButtonTypes : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FLinkedListDialogueItem
+struct FLinkedListDialogueItem : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	EButtonTypes Type;
+	FLinkedListDialogueItem() {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
+	FString Label;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
 	int32 ID;
-	FString Text;
-	TArray<FLinkedListDialogueItem*> Next;
-	TArray<FLinkedListDialogueItem*> Previous;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
+	FString Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
+	FString Query;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
+	FString Response;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
+	TArray<int32> Next;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
+	TArray<int32> Previous;
+
 
 };
 
@@ -39,6 +58,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "ChoiceText")
 	UTextBlock* ChoiceTextBox;
 
+	void SetupType(FString ID_as_String);
+
 	UFUNCTION(BlueprintCallable, Category = "ButtonMouseEvents")
 	void OnButtonClick();
 
@@ -46,10 +67,18 @@ public:
 	void OnButtonHover();
 
 	virtual void InitialSetup() override;
-
 	void SetOwnerMemberProfession();
+	FString GenerateResponse();
 
+	class UDataTable* PropertiesDataTable;
 	UDialogueMenu* OwnerDialogueMenu;
-	FLinkedListDialogueItem* Data;
+	FLinkedListDialogueItem* ButtonData;
 	
+	int32 ID;
+	FString Type;
+	FString Query;
+	FString Response;
+	TArray<int32> Next;
+	TArray<int32> Previous;
+
 };

@@ -10,6 +10,7 @@ class UTextBlock;
 class UVerticalBox;
 class ASettlementMember;
 class UDialogueChoiceButton;
+class AStoneAgeColonyCharacter;
 
 UCLASS()
 class STONEAGECOLONY_API UDialogueMenu : public USurvivalWidget
@@ -28,8 +29,11 @@ public:
 	ASettlementMember* Owner;
 
 	virtual void InitialSetup() override;
+	void AddChoices(TArray<int32> ChoiceIDs);
 	void SetText(FString Text);
 
+	TArray<int32> StartingChoiceIDs;
 private:
 	TSubclassOf<UDialogueChoiceButton> DialogueChoiceButtonWidget;
+	AStoneAgeColonyCharacter* Player;
 };

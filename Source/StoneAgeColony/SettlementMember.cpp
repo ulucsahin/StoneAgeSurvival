@@ -14,6 +14,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "StoneAgeColonyCharacter.h"
 #include "DialogueMenu.h"
+#include "DialogueChoiceButton.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -39,6 +41,15 @@ ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectIniti
 	//PerceptiveArea->SetVisibility(true);
 	//PerceptiveArea->OnComponentBeginOverlap.AddDynamic(this, &ASettlement::OnOverlapBegin);
 	//PerceptiveArea->OnComponentEndOverlap.AddDynamic(this, &ASettlement::OnOverlapEnd);
+
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/DialogueChoiceDataTable.DialogueChoiceDataTable'"));
+	if (PropertiesDataObject.Succeeded())
+	{
+		PropertiesDataTable = PropertiesDataObject.Object;
+	}
+
+
 
 	auto mesh = GetMesh();
 	mesh->SetCollisionProfileName("BlockAll");
@@ -147,6 +158,7 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 	{
 		auto DialogueMenu = (UDialogueMenu*)Player->OpenMenu(DialogueMenuRef, NULL, NULL);
 		DialogueMenu->Owner = this;
+		DialogueMenu->StartingChoiceIDs = { 20000 };
 		DialogueMenu->InitialSetup();
 	}
 	StartDialogue();
