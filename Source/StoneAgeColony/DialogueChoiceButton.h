@@ -69,6 +69,7 @@ public:
 	virtual void InitialSetup() override;
 	void SetOwnerMemberProfession();
 	FString GenerateResponse();
+	FString GetJobFromQuery();
 
 	class UDataTable* PropertiesDataTable;
 	UDialogueMenu* OwnerDialogueMenu;

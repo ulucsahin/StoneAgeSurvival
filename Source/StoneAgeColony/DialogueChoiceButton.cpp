@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Internationalization/Regex.h"
 
 void UDialogueChoiceButton::InitialSetup()
 {
@@ -53,9 +54,34 @@ FString UDialogueChoiceButton::GenerateResponse()
 	{
 		return Response + OwnerDialogueMenu->Owner->Name + ".";
 	}
-	else if (Type == "asking_job")
+	else if (Type == "ask_job")
 	{
 		return Response + OwnerDialogueMenu->Owner->Profession + ".";
+	}
+	else if (Type == "assign_job")
+	{
+		// assign job to owner settlement member
+		OwnerDialogueMenu->Owner->Profession = GetJobFromQuery();
+		return Response;
+	}
+	else
+	{
+		return "";
+	}
+	
+}
+
+FString UDialogueChoiceButton::GetJobFromQuery()
+{
+	const FRegexPattern myPattern(TEXT("^[a-z,A-Z]+"));
+	FRegexMatcher myMatcher(myPattern, Query);
+
+	if (myMatcher.FindNext())
+	{
+		int32 b = myMatcher.GetMatchBeginning();
+		int32 e = myMatcher.GetMatchEnding();
+		UE_LOG(LogTemp , Warning, TEXT("REGEX %s"), *Query.Mid(b, e));
+		return Query.Mid(b, e);
 	}
 	else
 	{

@@ -54,7 +54,7 @@ ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectIniti
 	auto mesh = GetMesh();
 	mesh->SetCollisionProfileName("BlockAll");
 	DialogueMenuRef = "'/Game/Uluc/NPC/DialogueSystem/DialogueMenu_BP.DialogueMenu_BP_C'";
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::ASettlementMember"));
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember:: ASettlementMember"));
 
 	Profession = "unoccupied"; // Currently we just have normal set to all settlement members. More will be added later on.
 	Name = "Harambe";
