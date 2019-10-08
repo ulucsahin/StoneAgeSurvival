@@ -26,7 +26,7 @@ public:
 	FLinkedListDialogueItem() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
-	FString Label;
+	FString Label; // just for giving names to buttons (for development purposes)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
 	int32 ID;
@@ -35,7 +35,10 @@ public:
 	FString Type;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
-	FString Query;
+	FString Query; // text that will be displayed on button
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
+	FString Payload;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
 	FString Response;
@@ -67,7 +70,7 @@ public:
 	void OnButtonHover();
 
 	virtual void InitialSetup() override;
-	void SetOwnerMemberProfession();
+	void SetOwnerMemberProfession(FString Profession);
 	FString GenerateResponse();
 	FString GetJobFromQuery();
 
@@ -78,6 +81,7 @@ public:
 	int32 ID;
 	FString Type;
 	FString Query;
+	FString Payload;
 	FString Response;
 	TArray<int32> Next;
 	TArray<int32> Previous;

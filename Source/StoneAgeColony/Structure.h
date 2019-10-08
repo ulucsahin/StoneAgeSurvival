@@ -48,6 +48,7 @@ public:
 	virtual void SpawnLoadedActors();
 
 	ASettlement* OwnerSettlement;
+	FName Name;
 protected:
 	//UUserWidget* Menu;
 
@@ -56,7 +57,7 @@ protected:
 	
 	FString MenuRef;
 private:
-	FName Name;
+	
 	FTableRowBase* Data;
 	
 };

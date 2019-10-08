@@ -16,6 +16,7 @@
 #include "DialogueMenu.h"
 #include "DialogueChoiceButton.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "SettlementMemberProfession.h"
 
 ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -56,7 +57,7 @@ ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectIniti
 	DialogueMenuRef = "'/Game/Uluc/NPC/DialogueSystem/DialogueMenu_BP.DialogueMenu_BP_C'";
 	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember:: ASettlementMember"));
 
-	Profession = "unoccupied"; // Currently we just have normal set to all settlement members. More will be added later on.
+	Profession = USettlementMemberProfession::GetProfession("unoccupied"); // Currently we just have normal set to all settlement members. More will be added later on.
 	Name = "Harambe";
 }
 
@@ -74,14 +75,7 @@ void ASettlementMember::BeginPlay()
 	 AIController = Cast<ASettlementMemberAI>(GetController());
 	 SetupBelongingSettlement();
 
-	 if (BelongingSettlement)
-	 {
-		 for (auto x : BelongingSettlement->Structures)
-		 {
-			 AIController->MoveToLocation(x->GetActorLocation());
-			 UE_LOG(LogTemp, Warning, TEXT("xD"));
-		 }
-	 }
+	 AIController->MoveToWorkingStation();
 	 
 		
 }
@@ -148,6 +142,14 @@ void ASettlementMember::SetupBelongingSettlement()
 
 	}
 
+}
+
+void ASettlementMember::ChangeProfession(FProfession NewProfession)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::ChangeProfession %s"), *NewProfession.ProfessionName);
+	SetupBelongingSettlement();
+	Profession = NewProfession;
+	AIController->MoveToWorkingStation();
 }
 
 

@@ -7,7 +7,8 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyAllTypes.h"
-
+#include "SettlementMember.h"
+#include "Settlement.h"
 
 ASettlementMemberAI::ASettlementMemberAI() 
 {
@@ -43,5 +44,24 @@ void ASettlementMemberAI::SetTargetInRange(bool InRange)
 	if (BlackboardComp) 
 	{
 		BlackboardComp->SetValueAsBool("TargetInRange", InRange);
+	}
+}
+
+void ASettlementMemberAI::MoveToWorkingStation()
+{
+	ASettlementMember* Possessed = (ASettlementMember*)GetPawn();
+	ASettlement* BelongingSettlement = Possessed->BelongingSettlement;
+
+	if (BelongingSettlement)
+	{
+		for (auto x : BelongingSettlement->Structures)
+		{
+			if (x->GetID() == Possessed->Profession.WorkstationTypeID)
+			{
+				MoveToLocation(x->GetActorLocation());
+			}
+
+		}
+
 	}
 }

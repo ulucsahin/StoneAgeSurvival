@@ -8,11 +8,12 @@
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Internationalization/Regex.h"
+#include "SettlementMemberProfession.h"
+
 
 void UDialogueChoiceButton::InitialSetup()
 {
 	PropertiesDataTable = OwnerDialogueMenu->Owner->PropertiesDataTable;
-
 }
 
 void UDialogueChoiceButton::SetupType(FString ID_as_String)
@@ -22,6 +23,7 @@ void UDialogueChoiceButton::SetupType(FString ID_as_String)
 	ID = Data->ID;
 	Type = Data->Type;
 	Query = Data->Query;
+	Payload = Data->Payload;
 	Response = Data->Response;
 	Next = Data->Next;
 	Previous = Data->Previous;
@@ -41,10 +43,13 @@ void UDialogueChoiceButton::OnButtonHover()
 	
 }
 
-void UDialogueChoiceButton::SetOwnerMemberProfession()
+void UDialogueChoiceButton::SetOwnerMemberProfession(FString Profession)
 {
+	auto NewProfession = USettlementMemberProfession::GetProfession(Profession);
+
 	ASettlementMember* OwnerMember = OwnerDialogueMenu->Owner;
-	OwnerMember->Profession = "yarrak";
+	OwnerMember->ChangeProfession(NewProfession);
+	//OwnerMember->Profession = NewProfession;
 }
 
 // this is retarded
@@ -56,12 +61,12 @@ FString UDialogueChoiceButton::GenerateResponse()
 	}
 	else if (Type == "ask_job")
 	{
-		return Response + OwnerDialogueMenu->Owner->Profession + ".";
+		return Response + OwnerDialogueMenu->Owner->Profession.ProfessionName + ".";
 	}
 	else if (Type == "assign_job")
 	{
 		// assign job to owner settlement member
-		OwnerDialogueMenu->Owner->Profession = GetJobFromQuery();
+		SetOwnerMemberProfession(GetJobFromQuery());
 		return Response;
 	}
 	else
@@ -73,15 +78,15 @@ FString UDialogueChoiceButton::GenerateResponse()
 
 FString UDialogueChoiceButton::GetJobFromQuery()
 {
-	const FRegexPattern myPattern(TEXT("^[a-z,A-Z]+"));
-	FRegexMatcher myMatcher(myPattern, Query);
+	const FRegexPattern myPattern(TEXT("^[a-z,A-Z,_]+"));
+	FRegexMatcher myMatcher(myPattern, Payload);
 
 	if (myMatcher.FindNext())
 	{
 		int32 b = myMatcher.GetMatchBeginning();
 		int32 e = myMatcher.GetMatchEnding();
-		UE_LOG(LogTemp , Warning, TEXT("REGEX %s"), *Query.Mid(b, e));
-		return Query.Mid(b, e);
+		//UE_LOG(LogTemp , Warning, TEXT("REGEX %s"), *Payload.Mid(b, e));
+		return Payload.Mid(b, e);
 	}
 	else
 	{

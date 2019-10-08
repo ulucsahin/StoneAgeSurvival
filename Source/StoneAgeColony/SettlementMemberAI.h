@@ -27,6 +27,8 @@ public:
 	virtual void Possess(APawn *InPawn) override;
 	void SetTargetEnemy(APawn* NewTarget);
 	void SetTargetInRange(bool InRange);
+	void MoveToWorkingStation();
 
 	uint8 EnemyKeyID;
+
 };

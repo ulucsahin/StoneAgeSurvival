@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "HumanCharacter.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
+#include "SettlementMemberProfession.h"
 #include "SettlementMember.generated.h"
 
 class ASettlementMemberAI;
 class ASettlement;
+//struct FProfession;
 
 UCLASS()
 class STONEAGECOLONY_API ASettlementMember : public AHumanCharacter
@@ -54,14 +56,16 @@ public:
 	class UPawnSensingComponent* PawnSensingComp;
 
 	void SetupBelongingSettlement();
+	void ChangeProfession(FProfession NewProfession);
 
 	class UDataTable* PropertiesDataTable;
-	FString Profession;
+	FProfession Profession;
 	FString Name;
+	ASettlement* BelongingSettlement;
+
 private:
 	float FollowRadius;
 	ASettlementMemberAI* AIController;
-	ASettlement* BelongingSettlement;
 	FString DialogueMenuRef;
 	//UStaticMeshComponent* PerceptiveArea;
 };

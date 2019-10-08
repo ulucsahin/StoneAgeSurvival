@@ -25,6 +25,7 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 	}
 
 	CraftAmount = 1; // TODO: craft how many?
+	
 }
 
 void ACraftingStation::OnUsed(APawn* InstigatorPawn)
@@ -68,12 +69,14 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 void ACraftingStation::SetupType(FString Type)
 {
 	CraftingStationType = FName(*Type);
-	
+	Name = CraftingStationType;
+
 	const FString ContextString(TEXT("Edible Type Context"));
 	Data = PropertiesDataTable->FindRow<FStructureData>(CraftingStationType, ContextString, true);
 	ID = Data->ID;
 	CraftableItems = Data->CraftableItems;
 	MenuRef = Data->Menu;
+	
 
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Mesh.IsPending())
