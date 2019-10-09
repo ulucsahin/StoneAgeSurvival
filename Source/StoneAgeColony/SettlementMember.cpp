@@ -17,6 +17,7 @@
 #include "DialogueChoiceButton.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "SettlementMemberProfession.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -77,7 +78,8 @@ void ASettlementMember::BeginPlay()
 
 	 AIController->MoveToWorkingStation();
 	 
-		
+	 auto x = GetCharacterMovement();
+	 x->MaxWalkSpeed = 100.f;
 }
 
 
@@ -138,6 +140,7 @@ void ASettlementMember::SetupBelongingSettlement()
 		if (((ASettlement*)Settlement)->IsActiveSettlement)
 		{
 			BelongingSettlement = (ASettlement*)Settlement;
+			BelongingSettlement->RegisterMember(this);
 		}
 
 	}
@@ -146,15 +149,27 @@ void ASettlementMember::SetupBelongingSettlement()
 
 void ASettlementMember::ChangeProfession(FProfession NewProfession)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::ChangeProfession %s"), *NewProfession.ProfessionName);
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::CChangeProfession %s"), *NewProfession.ProfessionName);
 	SetupBelongingSettlement();
 	Profession = NewProfession;
+	
+}
+
+void ASettlementMember::MoveToStation()
+{
 	AIController->MoveToWorkingStation();
 }
 
 
 void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 {
+	
+	StartDialogue(InstigatorPawn);
+}
+
+void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::StartDialogue!"));
 	AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	if (Player)
 	{
@@ -163,14 +178,14 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 		DialogueMenu->StartingChoiceIDs = { 20000 };
 		DialogueMenu->InitialSetup();
 	}
-	StartDialogue();
 }
 
-void ASettlementMember::StartDialogue()
+void ASettlementMember::GetNotification()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::StartDialogue!"));
-}
+	UE_LOG(LogTemp, Warning, TEXT("Notification squad bitch"));
 
+	MoveToStation();
+}
 
 //
 // Save-Load methods

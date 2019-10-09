@@ -28,6 +28,7 @@ public:
 	void SetTargetEnemy(APawn* NewTarget);
 	void SetTargetInRange(bool InRange);
 	void MoveToWorkingStation();
+	void WanderAround();
 
 	uint8 EnemyKeyID;
 

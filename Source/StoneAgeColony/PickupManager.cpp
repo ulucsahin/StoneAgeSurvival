@@ -5,6 +5,8 @@
 #include "Building.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
+#include "Structure.h"
+#include "Settlement.h"
 
 // Sets default values
 APickupManager::APickupManager()
@@ -172,6 +174,17 @@ void APickupManager::PlaceObject()
 	{
 		World->GetTimerManager().ClearTimer(TimerHandle);
 		CurrentActor->MeshComp->SetCollisionProfileName("BlockAll"); // Gotta fix this, not every item blocks all.
+
+		// if current actor is a structure then send a notification from owner settlement of that structure
+		if (CurrentActor->GetClass()->IsChildOf(AStructure::StaticClass()))
+		{
+			auto CurrentActor_ = (AStructure*)CurrentActor;
+			if (CurrentActor_->OwnerSettlement)
+			{
+				CurrentActor_->OwnerSettlement->SendNotification();
+			}
+		}
+
 
 		// IMPORTANT: IF TYPE IS 0 UNCOMMENT THESE 2 LINES.
 		//auto Box = (UBoxComponent*)CurrentActor->FindComponentByClass(UBoxComponent::StaticClass());

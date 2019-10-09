@@ -49,7 +49,6 @@ void UDialogueChoiceButton::SetOwnerMemberProfession(FString Profession)
 
 	ASettlementMember* OwnerMember = OwnerDialogueMenu->Owner;
 	OwnerMember->ChangeProfession(NewProfession);
-	//OwnerMember->Profession = NewProfession;
 }
 
 // this is retarded

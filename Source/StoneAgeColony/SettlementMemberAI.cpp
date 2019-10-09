@@ -65,3 +65,8 @@ void ASettlementMemberAI::MoveToWorkingStation()
 
 	}
 }
+
+void ASettlementMemberAI::WanderAround()
+{
+	
+}

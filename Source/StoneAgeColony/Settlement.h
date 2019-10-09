@@ -9,6 +9,7 @@
 class AStoneAgeColonyCharacter;
 class AStructure;
 class AActor;
+class ASettlementMember;
 
 // Save details
 USTRUCT(BlueprintType)
@@ -85,6 +86,11 @@ public:
 
 	void RegisterStructure(AStructure* Structure);
 	void DeRegisterStructure(AStructure* Structure);
+
+	void RegisterMember(ASettlementMember* Member);
+	void DeRegisterMember(ASettlementMember* Member);
+
+	void SendNotification();
 	
 	virtual int GetID() override;
 
@@ -102,6 +108,7 @@ public:
 	bool IsActiveSettlement;
 	bool AreaDisplayOn;
 	TSet<AStructure*> Structures;
+	TSet<ASettlementMember*> Members;
 
 	void OpenMenu(APawn* InstigatorPawn);
 	void MakeActiveSettlement();

@@ -24,6 +24,12 @@ void UDialogueMenu::InitialSetup()
 	AddChoices(StartingChoiceIDs); // currently only with ID 20000.
 }
 
+void UDialogueMenu::CloseMenu()
+{
+	Super::CloseMenu();
+	Owner->MoveToStation();
+}
+
 void UDialogueMenu::AddChoices(TArray<int32> ChoiceIDs)
 {
 	ChoicesVerticalBox->ClearChildren();

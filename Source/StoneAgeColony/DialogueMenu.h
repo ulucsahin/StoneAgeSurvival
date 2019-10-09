@@ -31,6 +31,7 @@ public:
 	virtual void InitialSetup() override;
 	void AddChoices(TArray<int32> ChoiceIDs);
 	void SetText(FString Text);
+	virtual void CloseMenu() override;
 
 	TArray<int32> StartingChoiceIDs;
 private:

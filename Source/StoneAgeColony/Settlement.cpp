@@ -10,6 +10,7 @@
 #include "CraftingStation.h"
 #include "Communicator.h"
 #include "ObjectFactory.h"
+#include "SettlementMember.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -183,7 +184,7 @@ void ASettlement::RegisterStructure(AStructure* Structure)
 	Structure->OwnerSettlement = this;
 	Structures.Add(Structure);
 	UpdateStats();
-	UE_LOG(LogTemp, Warning, TEXT("ASettlement::RegisterStructure Structure Amount: %d"), Structures.Num());
+	SendNotification();
 }
 
 void ASettlement::DeRegisterStructure(AStructure* Structure)
@@ -191,7 +192,31 @@ void ASettlement::DeRegisterStructure(AStructure* Structure)
 	Structure->OwnerSettlement = nullptr;
 	Structures.Remove(Structure);
 	UpdateStats();
-	UE_LOG(LogTemp, Warning, TEXT("ASettlement::DeregisterStructure Structure Amount: %d"), Structures.Num());
+	SendNotification();
+}
+
+void ASettlement::RegisterMember(ASettlementMember* Member)
+{
+	Members.Add(Member);
+	UpdateStats();
+	SendNotification();
+}
+
+void ASettlement::DeRegisterMember(ASettlementMember* Member)
+{
+	Members.Remove(Member);
+	UpdateStats();
+	SendNotification();
+}
+
+void ASettlement::SendNotification()
+{
+	/* Notifies settlement members about any change made to structures so that members will know newly added/removed structures */
+	for (auto Member : Members)
+	{
+		Member->GetNotification();
+	}
+
 }
 
 void ASettlement::UpdateStats()
@@ -204,6 +229,13 @@ void ASettlement::UpdateStats()
 			PopulationLimit += ((AHouse*)Structure)->Capacity;
 		}
 	}
+
+	CurrentPopulation = 1; // including player
+	for (auto Member : Members)
+	{
+		CurrentPopulation++;
+	}
+
 }
 
 void ASettlement::MakeActiveSettlement()

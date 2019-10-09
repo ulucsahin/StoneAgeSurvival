@@ -42,7 +42,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void OnUsed(APawn* InstigatorPawn);
-	void StartDialogue();
+	void StartDialogue(APawn* InstigatorPawn);
+	void GetNotification();
 
 	// Save-Load Methods
 	virtual void RegisterActorDetailsToSave() override;
@@ -57,6 +58,7 @@ public:
 
 	void SetupBelongingSettlement();
 	void ChangeProfession(FProfession NewProfession);
+	void MoveToStation();
 
 	class UDataTable* PropertiesDataTable;
 	FProfession Profession;
