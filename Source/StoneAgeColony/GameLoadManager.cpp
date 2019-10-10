@@ -96,13 +96,13 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 		RefreshUI(InstigatorPawn);
 
 		// Spawn saved characters.
-		SpawnLoadedActors<ASettlementMember>();
 		SpawnLoadedActors<AGatherableTree>();
 		SpawnLoadedActors<ABuilding>();
 		SpawnLoadedActors<ACraftingStation>();
 		SpawnLoadedActors<ASettlement>();
 		SpawnLoadedActors<AHouse>();
 		SpawnLoadedActors<AFarm>();
+		SpawnLoadedActors<ASettlementMember>();
 
 	}
 

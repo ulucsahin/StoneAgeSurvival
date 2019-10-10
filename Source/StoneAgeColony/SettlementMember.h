@@ -50,8 +50,8 @@ public:
 	static void EmptyCommunicatorDetailsArray();
 	static void SpawnLoadedActors();
 	
-	UPROPERTY(EditAnywhere, Category = "Identification")
-	int ExternalID;
+	//UPROPERTY(EditAnywhere, Category = "Identification")
+	//int ExternalID;
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	class UPawnSensingComponent* PawnSensingComp;
@@ -64,6 +64,7 @@ public:
 	FProfession Profession;
 	FString Name;
 	ASettlement* BelongingSettlement;
+	FString LastWorkingStationSpecialID;
 
 private:
 	float FollowRadius;

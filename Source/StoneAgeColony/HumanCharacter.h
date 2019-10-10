@@ -6,6 +6,7 @@
 //#include "MorphManager.h"
 #include "GameFramework/Character.h"
 #include "Equipment.h"
+#include "SettlementMemberProfession.h"
 #include "HumanCharacter.generated.h"
 
 class UEquipmentManager;
@@ -18,6 +19,12 @@ struct FHumanCharacterDetails
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
 	FTransform Transform;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpecialID")
+	FString SpecialID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ProfessionName")
+	FString ProfessionName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FaceDetails")
 	TMap<FName, float> FaceDetails;
@@ -40,6 +47,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	FString SpecialID;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

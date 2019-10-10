@@ -30,8 +30,13 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 
 void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 {
+	Super::OnUsed(InstigatorPawn);
+
 	Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	OpenMenu(InstigatorPawn);
+
+	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID: %s"), *SpecialID);
+	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID Len: %d"), SpecialID.Len());
 }
 
 void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
@@ -77,7 +82,6 @@ void ACraftingStation::SetupType(FString Type)
 	CraftableItems = Data->CraftableItems;
 	MenuRef = Data->Menu;
 	
-
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Mesh.IsPending())
 	{
@@ -233,6 +237,7 @@ void ACraftingStation::RegisterActorDetailsToSave()
 	FCraftingStationDetails Details;
 	
 	Details.ID = ID;
+	Details.SpecialID = SpecialID;
 	Details.Transform = GetActorTransform();
 
 	Communicator::GetInstance().SpawnedCraftingStationDetails.Add(Details);
@@ -262,5 +267,6 @@ void ACraftingStation::SpawnLoadedActors()
 		
 		SpawnedItem->SetupType(Factory->GetObjectNameFromID(Details.ID));
 		SpawnedItem->SetMeshToDefault();
+		SpawnedItem->SpecialID = Details.SpecialID;
 	}
 }

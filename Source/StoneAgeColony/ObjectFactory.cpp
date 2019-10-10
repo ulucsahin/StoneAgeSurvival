@@ -18,6 +18,7 @@
 #include "CraftingMaterial.h"
 #include "Farm.h"
 #include "Plant.h"
+#include "Communicator.h"
 #include "Runtime/Engine/Classes/Engine/Texture2D.h"
 #include "Runtime/Engine/Classes/Engine/StreamableManager.h"
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
@@ -68,7 +69,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	FString Tmp = FString::FromInt(ObjectID);
 	FName ObjectID_ = FName(*Tmp);
 	const FString ContextString(TEXT("Object Type Context"));
-	UE_LOG(LogTemp, Warning, TEXT("AObjectFactory:: CreateObjectBetter Object ID: %s"), *Tmp);
+	//UE_LOG(LogTemp, Warning, TEXT("AObjectFactory:: CreateObjectBetter Object ID: %s"), *Tmp);
 	auto Data = CommonPropertiesTable->FindRow<FObjectCommonPropertiesData>(ObjectID_, ContextString, true);
 	auto ObjectName = Data->Name_;
 
@@ -140,6 +141,7 @@ AUsableActor* AObjectFactory::CreateObjectBetter(int32 ObjectID)
 	ObjectToReturn->ID = ObjectID;
 	ObjectToReturn->Description = Data->Description;
 	ObjectToReturn->CraftRequirements = Data->CraftRequirements;
+	ObjectToReturn->SpecialID = Communicator::GetInstance().GenerateID();
 	
 	if (Data->Icon.IsPending())
 	{

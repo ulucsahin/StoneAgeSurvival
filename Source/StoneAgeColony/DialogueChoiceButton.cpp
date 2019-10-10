@@ -77,14 +77,14 @@ FString UDialogueChoiceButton::GenerateResponse()
 
 FString UDialogueChoiceButton::GetJobFromQuery()
 {
-	const FRegexPattern myPattern(TEXT("^[a-z,A-Z,_]+"));
+	const FRegexPattern myPattern(TEXT("^[a-z,A-Z,_, ]+"));
 	FRegexMatcher myMatcher(myPattern, Payload);
 
 	if (myMatcher.FindNext())
 	{
 		int32 b = myMatcher.GetMatchBeginning();
 		int32 e = myMatcher.GetMatchEnding();
-		//UE_LOG(LogTemp , Warning, TEXT("REGEX %s"), *Payload.Mid(b, e));
+		UE_LOG(LogTemp , Warning, TEXT("REGEX %s"), *Payload.Mid(b, e));
 		return Payload.Mid(b, e);
 	}
 	else

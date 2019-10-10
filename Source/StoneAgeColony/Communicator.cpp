@@ -43,3 +43,21 @@ void Communicator::SetPlayerLocation(APawn* Player) {
 	// Sets player location in communicator class. Does not actually change players location.
 	PlayerTransform = Player->GetActorTransform();
 }
+
+FString Communicator::GenerateID()
+{
+	int32 Len = 6;
+	FString Result = "000000";
+
+	static const char alphanum[] =
+		"0123456789"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz";
+
+	for (int i = 0; i < Len; ++i) {
+		Result[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+	}
+
+
+	return Result;	
+}

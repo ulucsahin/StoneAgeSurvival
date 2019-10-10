@@ -29,7 +29,7 @@ FProfession USettlementMemberProfession::GetProfession(FString Profession)
 	{
 		return FCarpenter{};
 	}
-	else if (Profession == "stone_worker")
+	else if (Profession == "stone worker")
 	{
 		return FStoneWorker{};
 	}

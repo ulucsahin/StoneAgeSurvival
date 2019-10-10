@@ -50,15 +50,27 @@ void ASettlementMemberAI::SetTargetInRange(bool InRange)
 void ASettlementMemberAI::MoveToWorkingStation()
 {
 	ASettlementMember* Possessed = (ASettlementMember*)GetPawn();
-	ASettlement* BelongingSettlement = Possessed->BelongingSettlement;
+	ASettlement* BelongingSettlement = nullptr;
+	if(Possessed)
+		BelongingSettlement = Possessed->BelongingSettlement;
 
 	if (BelongingSettlement)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("if BelongingSettlement"));
 		for (auto x : BelongingSettlement->Structures)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("BelongingSettlement->Structures"));
+			// if this structure is suitable for profession of member
 			if (x->GetID() == Possessed->Profession.WorkstationTypeID)
 			{
-				MoveToLocation(x->GetActorLocation());
+				// only select this structure if it belongs to current member or has no working member, aka if it is empty-available
+				if (x->WorkingMember == nullptr || x->WorkingMember == (ASettlementMember*)GetPawn())
+				{
+					x->WorkingMember = (ASettlementMember*)GetPawn();
+					MoveToLocation(x->GetActorLocation());
+					break;
+				}
+				
 			}
 
 		}

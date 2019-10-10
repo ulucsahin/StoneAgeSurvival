@@ -81,7 +81,7 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("PLAYER CHARACTER IS NULL IN AUsableActor::OnUsed"));
 	}
-	
+
 }
 
 void AUsableActor::OnUsedFromInventory(APawn* InstigatorPawn)
@@ -101,6 +101,8 @@ void AUsableActor::PrintName()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("IM USABLE ACTOR XD"));
 }
+
+
 
 
 void AUsableActor::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

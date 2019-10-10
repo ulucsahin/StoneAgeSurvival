@@ -20,6 +20,9 @@ struct FCraftingStationDetails
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
 	int32 ID;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
+	FString SpecialID;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
 	FTransform Transform;
 

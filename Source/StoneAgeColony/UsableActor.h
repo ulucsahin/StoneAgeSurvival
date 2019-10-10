@@ -39,7 +39,8 @@ public:
 
 	class UDataTable* PropertiesDataTable;
 
-	int32 ID = 0;
+	int32 ID = 0; // id specific to class
+	FString SpecialID = ""; // id specific to instances
 
 	UTexture2D* InventoryTexture;
 

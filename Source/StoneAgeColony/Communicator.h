@@ -28,8 +28,8 @@ public:
 	void Reset();
 	void Increment();
 	void SetPlayerLocation(APawn* Player);
-	void SetupAssets();
-
+	//void SetupAssets();
+	static FString GenerateID();
 private:
 	Communicator() {}
 
@@ -49,6 +49,9 @@ private:
 public:
 //	Communicator(Communicator const&) = delete;
 //	void operator=(Communicator const&) = delete;
+
+	
+
 
 	// Game world
 	UWorld* World;

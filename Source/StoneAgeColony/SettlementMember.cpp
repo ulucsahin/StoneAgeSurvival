@@ -76,10 +76,15 @@ void ASettlementMember::BeginPlay()
 	 AIController = Cast<ASettlementMemberAI>(GetController());
 	 SetupBelongingSettlement();
 
-	 AIController->MoveToWorkingStation();
+	 //AIController->MoveToWorkingStation();
 	 
 	 auto x = GetCharacterMovement();
 	 x->MaxWalkSpeed = 100.f;
+
+	 if (SpecialID.Len() < 1)
+	 {
+		 SpecialID = Communicator::GetInstance().GenerateID();
+	 }
 }
 
 
@@ -95,11 +100,9 @@ void ASettlementMember::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-//
-// Save-Load Methods
-//
-void ASettlementMember::OnSeePlayer(APawn* Pawn) {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnSeePlayer"));
+
+void ASettlementMember::OnSeePlayer(APawn* Pawn) 
+{
 	
 	ACharacter* SensedPawn = Cast<ACharacter>(Pawn);
 
@@ -149,10 +152,9 @@ void ASettlementMember::SetupBelongingSettlement()
 
 void ASettlementMember::ChangeProfession(FProfession NewProfession)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::CChangeProfession %s"), *NewProfession.ProfessionName);
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::ChangeProfession"));
 	SetupBelongingSettlement();
 	Profession = NewProfession;
-	
 }
 
 void ASettlementMember::MoveToStation()
@@ -163,13 +165,14 @@ void ASettlementMember::MoveToStation()
 
 void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 {
-	
 	StartDialogue(InstigatorPawn);
+	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID: %s"), *SpecialID);
+	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID Len: %d"), SpecialID.Len());
+	
 }
 
 void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::StartDialogue!"));
 	AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	if (Player)
 	{
@@ -182,8 +185,6 @@ void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 
 void ASettlementMember::GetNotification()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Notification squad bitch"));
-
 	MoveToStation();
 }
 
@@ -198,19 +199,14 @@ void ASettlementMember::RegisterActorDetailsToSave()
 	// Assign details to struct.
 	CharDetails.Transform = GetActorTransform();
 	CharDetails.FaceDetails = MorphManager->FaceDetails;
-
+	CharDetails.SpecialID = SpecialID;
+	CharDetails.ProfessionName = Profession.ProfessionName;
+	
 	// Save equipments
 	CharDetails.EquippedItems = EquipmentManager->EquippedItems;
-	for (auto x : CharDetails.EquippedItems)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave, items: %d"), x.Value);
-	}
-
 
 	// Save details as struct to communicator. Which will be used during saving.
 	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
-
-	UE_LOG(LogTemp, Warning, TEXT("EnemyCharacter added to communicator."));
 }
 
 void ASettlementMember::EmptyCommunicatorDetailsArray()
@@ -232,6 +228,11 @@ void ASettlementMember::SpawnLoadedActors()
 		FTransform ActorTransform = Details.Transform;
 		auto Spawned = Communicator::GetInstance().World->SpawnActor<ASettlementMember>(ActorToSpawn, ActorTransform, SpawnParams);
 
+		Spawned->SetupBelongingSettlement();
+		Spawned->SpecialID = Details.SpecialID;
+		Spawned->Profession = USettlementMemberProfession::GetProfession(Details.ProfessionName);
+		Spawned->MoveToStation();
+	
 		// Restore Morph Settings
 		auto MorphMgr = Spawned->MorphManager;
 		if (MorphMgr)
@@ -240,18 +241,14 @@ void ASettlementMember::SpawnLoadedActors()
 		}
 
 		// Restore Equipments
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SpawnLoadedActors Restore Equipments"));
 		auto EquipManager = Spawned->EquipmentManager;
 		if (EquipManager)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SpawnLoadedActors EquipManager available"));
 			AObjectFactory* Factory = NewObject<AObjectFactory>();
 			for (auto Item : Details.EquippedItems)
 			{
-
 				auto Equipment = (AEquipment*)Factory->CreateObjectBetter(Item.Value); // Item.Value is item ID
 				EquipManager->EquipItem(Equipment);
-				UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SpawnLoadedActors Item available, ID: %d"), Item.Value);
 			}
 		}
 

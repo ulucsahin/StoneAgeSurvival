@@ -12,6 +12,7 @@
 class UUserWidget;
 class USurvivalWidget;
 class ASettlement;
+class ASettlementMember;
 
 
 // Save details
@@ -48,6 +49,7 @@ public:
 	virtual void SpawnLoadedActors();
 
 	ASettlement* OwnerSettlement;
+	ASettlementMember* WorkingMember;
 	FName Name;
 protected:
 	//UUserWidget* Menu;

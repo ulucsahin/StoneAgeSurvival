@@ -3,6 +3,7 @@
 #include "Structure.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Communicator.h"
 
 
 // Called when the game starts or when spawned
@@ -10,6 +11,10 @@ void AStructure::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (SpecialID.Len() < 1)
+	{
+		SpecialID = Communicator::GetInstance().GenerateID();
+	}
 }
 
 // Called every frame
