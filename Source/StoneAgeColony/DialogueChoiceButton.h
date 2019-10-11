@@ -10,20 +10,24 @@
 class UTextBlock;
 class UDialogueMenu;
 
-
-enum class EButtonTypes : uint8
+UENUM()
+enum class EButtonTypes : uint32
 {
-	VE_Profession  UMETA(DisplayName = "Profession"), // Sets Profession
-	VE_String   UMETA(DisplayName = "String") // Contains information as string, for example profession
-
+	VE_Introduction  UMETA(DisplayName = "Introduction"), 
+	VE_AskJob   UMETA(DisplayName = "AskJob"),  // displays profession
+	VE_OpenMenu UMETA(DisplayName = "OpenMenu"), // Just displays different choices
+	VE_AssignJob UMETA(DisplayName = "AssignJob"), // sets profession
+	
 };
 
+
+
 USTRUCT(BlueprintType)
-struct FLinkedListDialogueItem : public FTableRowBase
+struct FDialogueChoiceData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	FLinkedListDialogueItem() {}
+	FDialogueChoiceData() {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
 	FString Label; // just for giving names to buttons (for development purposes)
@@ -32,7 +36,7 @@ public:
 	int32 ID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
-	FString Type;
+	EButtonTypes Type;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
 	FString Query; // text that will be displayed on button
@@ -48,8 +52,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ChoiceData")
 	TArray<int32> Previous;
-
-
 };
 
 UCLASS()
@@ -76,10 +78,10 @@ public:
 
 	class UDataTable* PropertiesDataTable;
 	UDialogueMenu* OwnerDialogueMenu;
-	FLinkedListDialogueItem* ButtonData;
+	FDialogueChoiceData* ButtonData;
 	
 	int32 ID;
-	FString Type;
+	EButtonTypes Type;
 	FString Query;
 	FString Payload;
 	FString Response;

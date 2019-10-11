@@ -19,7 +19,7 @@ void UDialogueChoiceButton::InitialSetup()
 void UDialogueChoiceButton::SetupType(FString ID_as_String)
 {
 	const FString ContextString(TEXT("Button Type Context"));
-	auto Data = PropertiesDataTable->FindRow<FLinkedListDialogueItem>(FName(*ID_as_String), ContextString, true);
+	auto Data = PropertiesDataTable->FindRow<FDialogueChoiceData>(FName(*ID_as_String), ContextString, true);
 	ID = Data->ID;
 	Type = Data->Type;
 	Query = Data->Query;
@@ -51,22 +51,25 @@ void UDialogueChoiceButton::SetOwnerMemberProfession(FString Profession)
 	OwnerMember->ChangeProfession(NewProfession);
 }
 
-// this is retarded
 FString UDialogueChoiceButton::GenerateResponse()
 {
-	if (Type == "introduction")
+	if (Type == EButtonTypes::VE_Introduction)
 	{
 		return Response + OwnerDialogueMenu->Owner->Name + ".";
 	}
-	else if (Type == "ask_job")
+	else if (Type == EButtonTypes::VE_AskJob)
 	{
 		return Response + OwnerDialogueMenu->Owner->Profession.ProfessionName + ".";
 	}
-	else if (Type == "assign_job")
+	else if (Type == EButtonTypes::VE_AssignJob)
 	{
 		// assign job to owner settlement member
 		SetOwnerMemberProfession(GetJobFromQuery());
 		return Response;
+	}
+	else if (Type == EButtonTypes::VE_OpenMenu)
+	{
+		return "";
 	}
 	else
 	{
