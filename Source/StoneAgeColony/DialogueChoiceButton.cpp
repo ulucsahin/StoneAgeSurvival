@@ -43,7 +43,7 @@ void UDialogueChoiceButton::OnButtonHover()
 	
 }
 
-void UDialogueChoiceButton::SetOwnerMemberProfession(FString Profession)
+void UDialogueChoiceButton::SetOwnerMemberProfession(EProfession Profession)
 {
 	auto NewProfession = USettlementMemberProfession::GetProfession(Profession);
 
@@ -78,21 +78,34 @@ FString UDialogueChoiceButton::GenerateResponse()
 	
 }
 
-FString UDialogueChoiceButton::GetJobFromQuery()
+EProfession UDialogueChoiceButton::GetJobFromQuery()
 {
-	const FRegexPattern myPattern(TEXT("^[a-z,A-Z,_, ]+"));
-	FRegexMatcher myMatcher(myPattern, Payload);
+	static TMap<FString, EProfession> Professions = { 
+		{"unoccupied", EProfession::VE_Unoccupied},
+		{"carpenter", EProfession::VE_Carpenter},
+		{"stoneworker", EProfession::VE_StoneWorker} 
+	};
 
-	if (myMatcher.FindNext())
-	{
-		int32 b = myMatcher.GetMatchBeginning();
-		int32 e = myMatcher.GetMatchEnding();
-		UE_LOG(LogTemp , Warning, TEXT("REGEX %s"), *Payload.Mid(b, e));
-		return Payload.Mid(b, e);
-	}
+	if (Professions.Contains(Payload))
+		return Professions[Payload];
 	else
-	{
-		return "";
-	}
+		return EProfession::VE_Unoccupied;
+
+	//const FRegexPattern myPattern(TEXT("^[a-z,A-Z,_, ]+"));
+	//FRegexMatcher myMatcher(myPattern, Payload);
+
+	//if (myMatcher.FindNext())
+	//{
+	//	int32 b = myMatcher.GetMatchBeginning();
+	//	int32 e = myMatcher.GetMatchEnding();
+	//	UE_LOG(LogTemp , Warning, TEXT("REGEX %s"), *Payload.Mid(b, e));
+
+	//	//return Payload.Mid(b, e);
+	//	return EProfession::VE_Unoccupied;;
+	//}
+	//else
+	//{
+	//	return EProfession::VE_Unoccupied;
+	//}
 	
 }

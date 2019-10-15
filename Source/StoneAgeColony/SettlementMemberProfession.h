@@ -7,12 +7,15 @@
 #include "Structure.h"
 #include "SettlementMemberProfession.generated.h"
 
-//enum class EProfession : uint8
-//{
-//	VE_Unoccupied  UMETA(DisplayName = "Unoccupied"), 
-//	VE_Carpenter   UMETA(DisplayName = "Carpenter")
-//
-//};
+
+UENUM()
+enum class EProfession : uint8
+{
+	VE_Unoccupied  UMETA(DisplayName = "Unoccupied"), 
+	VE_Carpenter   UMETA(DisplayName = "Carpenter"),
+	VE_StoneWorker   UMETA(DisplayName = "StoneWorker"),
+
+};
 
 USTRUCT(BlueprintType)
 struct FProfession
@@ -21,6 +24,7 @@ struct FProfession
 
 public:
 	FString ProfessionName = "unoccupied";
+	EProfession Type = EProfession::VE_Unoccupied;
 	int32 WorkstationTypeID = -1;
 	//AStructure* Type = NewObject<AStructure>();
 };
@@ -34,6 +38,7 @@ public:
 	FUnoccupied()
 	{
 		ProfessionName = "unoccupied";
+		Type = EProfession::VE_Unoccupied;
 		WorkstationTypeID = -1;
 	}
 };
@@ -47,6 +52,7 @@ public:
 	FCarpenter()
 	{
 		ProfessionName = "carpenter";
+		Type = EProfession::VE_Carpenter;
 		WorkstationTypeID = 400;
 	}
 
@@ -61,6 +67,7 @@ public:
 	FStoneWorker()
 	{
 		ProfessionName = "stone worker";
+		Type = EProfession::VE_StoneWorker;
 		WorkstationTypeID = 401;
 	}
 
@@ -76,10 +83,11 @@ public:
 	// Sets default values for this component's properties
 	USettlementMemberProfession();
 
-	static FProfession GetProfession(FString Profession);
+	static FProfession GetProfession(EProfession Profession);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
 };
+

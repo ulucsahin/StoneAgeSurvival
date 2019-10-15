@@ -7,6 +7,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "StoneAgeColonyCharacter.h"
+#include "SettlementMemberAI.h"
 #include "Runtime/UMG/Public/Components/VerticalBox.h"
 
 UDialogueMenu::UDialogueMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -27,7 +28,16 @@ void UDialogueMenu::InitialSetup()
 void UDialogueMenu::CloseMenu()
 {
 	Super::CloseMenu();
-	Owner->MoveToStation();
+	auto Controller = Owner->AIController;
+	if (Controller)
+	{
+		Controller->Activity = EActivity::VE_Idle;
+	}
+
+	Owner->Act();
+
+	//Owner->AIController->Activity = EActivity::VE_Idle;
+
 }
 
 void UDialogueMenu::AddChoices(TArray<int32> ChoiceIDs)

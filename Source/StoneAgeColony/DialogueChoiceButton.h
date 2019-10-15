@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UIItemSlot.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
+#include "SettlementMemberProfession.h"
 #include "DialogueChoiceButton.generated.h"
 
 class UTextBlock;
@@ -19,8 +20,6 @@ enum class EButtonTypes : uint32
 	VE_AssignJob UMETA(DisplayName = "AssignJob"), // sets profession
 	
 };
-
-
 
 USTRUCT(BlueprintType)
 struct FDialogueChoiceData : public FTableRowBase
@@ -72,9 +71,10 @@ public:
 	void OnButtonHover();
 
 	virtual void InitialSetup() override;
-	void SetOwnerMemberProfession(FString Profession);
+	void SetOwnerMemberProfession(EProfession Profession);
 	FString GenerateResponse();
-	FString GetJobFromQuery();
+	EProfession GetJobFromQuery();
+
 
 	class UDataTable* PropertiesDataTable;
 	UDialogueMenu* OwnerDialogueMenu;

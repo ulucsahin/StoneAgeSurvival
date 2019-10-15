@@ -2,7 +2,9 @@
 
 #include "SettlementMember.h"
 //#include "EnemyAI.h"
-#include "SettlementMemberAI.h"
+//#include "SettlementMemberAI.h"
+#include "UnoccupiedAI.h"
+#include "StationWorkerAI.h"
 #include "Communicator.h"
 #include "EquipmentManager.h"
 #include "ObjectFactory.h"
@@ -52,39 +54,33 @@ ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectIniti
 	}
 
 
-
 	auto mesh = GetMesh();
 	mesh->SetCollisionProfileName("BlockAll");
 	DialogueMenuRef = "'/Game/Uluc/NPC/DialogueSystem/DialogueMenu_BP.DialogueMenu_BP_C'";
 	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember:: ASettlementMember"));
 
-	Profession = USettlementMemberProfession::GetProfession("unoccupied"); // Currently we just have normal set to all settlement members. More will be added later on.
+	Profession = USettlementMemberProfession::GetProfession(EProfession::VE_Unoccupied); // Currently we just have normal set to all settlement members. More will be added later on.
 	Name = "Harambe";
 }
 
 
 void ASettlementMember::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	/* This is the earliest moment we can bind our delegates to the component */
-	//if (PawnSensingComp) {
-	//	PawnSensingComp->OnSeePawn.AddDynamic(this, &ASettlementMember::OnSeePlayer);
-	//	PawnSensingComp->OnHearNoise.AddDynamic(this, &ASettlementMember::OnHearNoise);
-	//}
+	SetupAIController();
+	//AIController = Cast<ASettlementMemberAI>(GetController());
+	SetupBelongingSettlement();
 
-	 AIController = Cast<ASettlementMemberAI>(GetController());
-	 SetupBelongingSettlement();
-
-	 //AIController->MoveToWorkingStation();
+	//AIController->MoveToWorkingStation();
 	 
-	 auto x = GetCharacterMovement();
-	 x->MaxWalkSpeed = 100.f;
+	auto x = GetCharacterMovement();
+	x->MaxWalkSpeed = 100.f;
 
-	 if (SpecialID.Len() < 1)
-	 {
-		 SpecialID = Communicator::GetInstance().GenerateID();
-	 }
+	if (SpecialID.Len() < 1)
+	{
+		SpecialID = Communicator::GetInstance().GenerateID();
+	}
 }
 
 
@@ -98,34 +94,6 @@ void ASettlementMember::Tick(float DeltaTime)
 void ASettlementMember::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-
-void ASettlementMember::OnSeePlayer(APawn* Pawn) 
-{
-	
-	ACharacter* SensedPawn = Cast<ACharacter>(Pawn);
-
-	// Allows AI to stop chasing target when target is out of range
-	AIController->SetTargetInRange(true);
-
-	if (AIController /*&& SensedPawn->IsAlive()*/)
-	{
-		if (SensedPawn) {
-			AIController->SetTargetEnemy(SensedPawn);
-		}
-	}
-
-	FVector SensedPawnLocation = SensedPawn->GetActorLocation();
-	FVector SelfLocation = GetActorLocation();
-	float Distance = FVector::Dist(SelfLocation, SensedPawnLocation);
-
-	// Stop following once target is out of follow radius.
-	// TODO: Line of sight.
-	if (Distance > FollowRadius) 
-	{
-		AIController->SetTargetInRange(false);
-	}
 }
 
 void ASettlementMember::OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume)
@@ -152,23 +120,25 @@ void ASettlementMember::SetupBelongingSettlement()
 
 void ASettlementMember::ChangeProfession(FProfession NewProfession)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::ChangeProfession"));
-	SetupBelongingSettlement();
 	Profession = NewProfession;
+	SetupAIController();
 }
 
-void ASettlementMember::MoveToStation()
+void ASettlementMember::Act()
 {
-	AIController->MoveToWorkingStation();
+	AIController->Act();
 }
 
+void ASettlementMember::GetNotification()
+{
+	Act();
+}
 
 void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 {
 	StartDialogue(InstigatorPawn);
-	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID: %s"), *SpecialID);
-	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID Len: %d"), SpecialID.Len());
-	
+	//UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed MY SPECIAL ID: %s"), *SpecialID);
+	//Act();
 }
 
 void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
@@ -176,17 +146,69 @@ void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 	AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	if (Player)
 	{
+		if (AIController)
+		{
+			Controller->StopMovement();
+			AIController->Activity = EActivity::VE_Talking;
+			
+			// Face Player
+			auto x = Player->GetActorRotation();
+			x.Yaw += 180.f;
+			SetActorRotation(x);
+
+		}
+
 		auto DialogueMenu = (UDialogueMenu*)Player->OpenMenu(DialogueMenuRef, NULL, NULL);
 		DialogueMenu->Owner = this;
 		DialogueMenu->StartingChoiceIDs = { 20000 };
 		DialogueMenu->InitialSetup();
+		AIController->Activity = EActivity::VE_Talking;
 	}
 }
 
-void ASettlementMember::GetNotification()
+
+void ASettlementMember::SetupAIController()
 {
-	MoveToStation();
+	if (AIController)
+	{
+		AIController->StopTimerHandle();
+		AIController->Destroy();
+	}
+
+	// Copied from SpawnDefaultController()
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.Instigator = Instigator;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnInfo.OverrideLevel = GetLevel();
+	SpawnInfo.ObjectFlags |= RF_Transient;	// We never want to save AI controllers into a map
+
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Profession name: %s"), *Profession.ProfessionName);
+	if (Profession.ProfessionName == "unoccupied")
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember: :SetupAIController Choosing Unoccupied AI"));
+		AIControllerClass = AUnoccupiedAI::StaticClass();
+		AIController = (AUnoccupiedAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
+	}
+	else if (Profession.ProfessionName == "stone worker")
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing StationWorker AI"));
+		AIControllerClass = AStationWorkerAI::StaticClass();
+		AIController = (AStationWorkerAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing else"));
+		AIControllerClass = AUnoccupiedAI::StaticClass();
+		AIController = (AUnoccupiedAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
+	}
+	
+	if (AIController != nullptr)
+	{
+		AIController->Possess(this);
+	}
 }
+
+
 
 //
 // Save-Load methods
@@ -200,7 +222,8 @@ void ASettlementMember::RegisterActorDetailsToSave()
 	CharDetails.Transform = GetActorTransform();
 	CharDetails.FaceDetails = MorphManager->FaceDetails;
 	CharDetails.SpecialID = SpecialID;
-	CharDetails.ProfessionName = Profession.ProfessionName;
+	//CharDetails.ProfessionName = Profession.ProfessionName;
+	CharDetails.ProfessionType = Profession.Type;
 	
 	// Save equipments
 	CharDetails.EquippedItems = EquipmentManager->EquippedItems;
@@ -230,8 +253,8 @@ void ASettlementMember::SpawnLoadedActors()
 
 		Spawned->SetupBelongingSettlement();
 		Spawned->SpecialID = Details.SpecialID;
-		Spawned->Profession = USettlementMemberProfession::GetProfession(Details.ProfessionName);
-		Spawned->MoveToStation();
+		Spawned->ChangeProfession(USettlementMemberProfession::GetProfession(Details.ProfessionType));
+		Spawned->Act();
 	
 		// Restore Morph Settings
 		auto MorphMgr = Spawned->MorphManager;

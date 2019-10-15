@@ -65,7 +65,7 @@ public:
 	int32 CraftAmount;
 	TSubclassOf<UCraftListButton> CraftMenuItem;
 	UTimelineComponent* CraftProgressTimeline;
-	FTimerHandle TimerHandle;
+	//FTimerHandle TimerHandle;
 	bool CurrentlyCrafting;
 	float CraftingBarProgress;
 };

@@ -14,5 +14,5 @@ class STONEAGECOLONY_API MyUtility
 public:
 	MyUtility();
 	~MyUtility();
-	float RandomFloat(float, float);
+	static float RandomFloat(float, float);
 };

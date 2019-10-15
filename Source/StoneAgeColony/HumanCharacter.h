@@ -7,7 +7,9 @@
 #include "GameFramework/Character.h"
 #include "Equipment.h"
 #include "SettlementMemberProfession.h"
+#include "SettlementMemberProfession.h"
 #include "HumanCharacter.generated.h"
+
 
 class UEquipmentManager;
 class UMorphManager;
@@ -24,7 +26,7 @@ struct FHumanCharacterDetails
 	FString SpecialID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ProfessionName")
-	FString ProfessionName;
+	EProfession ProfessionType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FaceDetails")
 	TMap<FName, float> FaceDetails;

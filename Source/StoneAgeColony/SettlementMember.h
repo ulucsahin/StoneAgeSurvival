@@ -23,9 +23,6 @@ protected:
 
 	// AI Senses
 	UFUNCTION()
-	void OnSeePlayer(APawn* Pawn);
-
-	UFUNCTION()
 	void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
 
 public:
@@ -41,9 +38,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
 	void OnUsed(APawn* InstigatorPawn);
 	void StartDialogue(APawn* InstigatorPawn);
 	void GetNotification();
+	void SetupAIController();
 
 	// Save-Load Methods
 	virtual void RegisterActorDetailsToSave() override;
@@ -58,17 +57,16 @@ public:
 
 	void SetupBelongingSettlement();
 	void ChangeProfession(FProfession NewProfession);
-	void MoveToStation();
+	void Act();
 
 	class UDataTable* PropertiesDataTable;
 	FProfession Profession;
 	FString Name;
 	ASettlement* BelongingSettlement;
 	FString LastWorkingStationSpecialID;
-
+	ASettlementMemberAI* AIController;
 private:
 	float FollowRadius;
-	ASettlementMemberAI* AIController;
 	FString DialogueMenuRef;
 	//UStaticMeshComponent* PerceptiveArea;
 };

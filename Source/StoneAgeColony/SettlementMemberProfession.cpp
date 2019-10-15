@@ -19,17 +19,17 @@ void USettlementMemberProfession::BeginPlay()
 	Super::BeginPlay();
 }
 
-FProfession USettlementMemberProfession::GetProfession(FString Profession)
+FProfession USettlementMemberProfession::GetProfession(EProfession Profession)
 {
-	if (Profession == "unoccupied")
+	if (Profession == EProfession::VE_Unoccupied)
 	{
 		return FUnoccupied{};
 	}
-	else if (Profession == "carpenter")
+	else if (Profession == EProfession::VE_Carpenter)
 	{
 		return FCarpenter{};
 	}
-	else if (Profession == "stone worker")
+	else if (Profession == EProfession::VE_StoneWorker)
 	{
 		return FStoneWorker{};
 	}
