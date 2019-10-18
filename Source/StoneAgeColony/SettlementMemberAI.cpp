@@ -21,11 +21,8 @@ ASettlementMemberAI::ASettlementMemberAI()
 void ASettlementMemberAI::Possess(APawn *InPawn)
 {
 	Super::Possess(InPawn);
-
 	ASettlementMember *Char = Cast<ASettlementMember>(InPawn);
-	
 	Possessed = Char;
-
 	//Communicator::GetInstance().World->GetTimerManager().SetTimer(TimerHandle, this, &ASettlementMemberAI::Act, 1.0f, true);
 }
 

@@ -34,9 +34,6 @@ void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 
 	Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	OpenMenu(InstigatorPawn);
-
-	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID: %s"), *SpecialID);
-	UE_LOG(LogTemp, Warning, TEXT("MY SPECIAL ID Len: %d"), SpecialID.Len());
 }
 
 void ACraftingStation::OpenMenu(APawn* InstigatorPawn)

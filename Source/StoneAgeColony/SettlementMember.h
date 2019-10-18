@@ -10,7 +10,7 @@
 
 class ASettlementMemberAI;
 class ASettlement;
-//struct FProfession;
+class AHouse;
 
 UCLASS()
 class STONEAGECOLONY_API ASettlementMember : public AHumanCharacter
@@ -56,6 +56,7 @@ public:
 	class UPawnSensingComponent* PawnSensingComp;
 
 	void SetupBelongingSettlement();
+	void SetupHome();
 	void ChangeProfession(FProfession NewProfession);
 	void Act();
 
@@ -63,8 +64,14 @@ public:
 	FProfession Profession;
 	FString Name;
 	ASettlement* BelongingSettlement;
+	AHouse* Home;
 	FString LastWorkingStationSpecialID;
+
+	UPROPERTY()
+	FString HomeSpecialID;
+
 	ASettlementMemberAI* AIController;
+	ASettlementMemberAI* MorningAIController;
 private:
 	float FollowRadius;
 	FString DialogueMenuRef;

@@ -99,9 +99,9 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 		SpawnLoadedActors<AGatherableTree>();
 		SpawnLoadedActors<ABuilding>();
 		SpawnLoadedActors<ACraftingStation>();
-		SpawnLoadedActors<ASettlement>();
 		SpawnLoadedActors<AHouse>();
 		SpawnLoadedActors<AFarm>();
+		SpawnLoadedActors<ASettlement>();
 		SpawnLoadedActors<ASettlementMember>();
 
 	}

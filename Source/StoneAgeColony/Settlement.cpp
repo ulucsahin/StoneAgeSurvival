@@ -75,7 +75,25 @@ ASettlement::ASettlement(const class FObjectInitializer& ObjectInitializer) : Su
 
 void ASettlement::BeginPlay()
 {
-	MakeActiveSettlement();
+	MakeActiveSettlement(); // this will change later
+	NotifyAllSettlementMembers();
+}
+
+void ASettlement::NotifyAllSettlementMembers()
+{
+	TArray<AActor*> FoundPeople;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASettlementMember::StaticClass(), FoundPeople);
+
+
+	for (auto SettlementMember : FoundPeople)
+	{
+		auto Member = ((ASettlementMember*)SettlementMember);
+		if (Member)
+		{
+			Member->SetupBelongingSettlement();
+		}
+
+	}
 }
 
 int ASettlement::GetID()

@@ -122,6 +122,9 @@ void AStoneAgeColonyGameMode::DefaultTimer() {
 		/* Determine our state */
 		MyGameState->GetAndUpdateIsNight();
 
+		/* Update settlement member ai for morning night etc switches */
+		MyGameState->UpdateNPCAI();
+
 		/* Trigger events when night starts or ends */
 		bool CurrentIsNight = MyGameState->GetIsNight();
 		if (CurrentIsNight != LastIsNight)

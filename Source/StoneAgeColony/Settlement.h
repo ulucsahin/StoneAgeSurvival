@@ -81,6 +81,8 @@ public:
 	//UFUNCTION()
 	virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 
+	void NotifyAllSettlementMembers();
+
 	void AdjustAreaDisplayerSize();
 	void AdjustAreaDisplayerLocation();
 

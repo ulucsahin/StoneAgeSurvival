@@ -25,6 +25,9 @@ struct FHumanCharacterDetails
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpecialID")
 	FString SpecialID;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HomeSpecialID")
+	FString HomeSpecialID;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ProfessionName")
 	EProfession ProfessionType;
 

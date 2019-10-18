@@ -52,7 +52,6 @@ void AUnoccupiedAI::CheckStatus()
 		else if (GetMoveStatus() == EPathFollowingStatus::Moving) Activity = EActivity::VE_Moving;
 	}
 	
-
 	if (Activity == EActivity::VE_Idle)
 	{
 		Activity = EActivity::VE_Moving;

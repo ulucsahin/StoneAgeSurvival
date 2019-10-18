@@ -20,10 +20,6 @@ public:
 	/* Returns the time of day increment every real second (converted to accelerated game time, eg. 1 real second is 1 minute in time of day increment) */
 	float GetTimeOfDayIncrement();
 
-	/* Total accumulated score from all players  */
-	UPROPERTY(Replicated)
-	int32 TotalScore;
-
 	/* Current time of day in the gamemode represented in full minutes */
 	UPROPERTY(BlueprintReadOnly, Replicated, Category = "TimeOfDay")
 	int32 ElapsedGameMinutes;
@@ -44,6 +40,8 @@ public:
 	bool GetIsNight();
 
 	bool GetAndUpdateIsNight();
+
+	void UpdateNPCAI();
 
 	int32 GetElapsedMinutesCurrentDay();
 

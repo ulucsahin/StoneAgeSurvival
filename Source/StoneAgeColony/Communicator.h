@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "EnemyCharacter.h"
 #include "GatherableTree.h"
 #include "UsableActor.h"
@@ -50,19 +49,12 @@ public:
 //	Communicator(Communicator const&) = delete;
 //	void operator=(Communicator const&) = delete;
 
-	
-
-
 	// Game world
 	UWorld* World;
 
 	// Variables that will be saved.
 	int test;
 
-	// IDs of usable items in game
-	//TMap<int, AUsableActor*> UsableItemIDMap; // how?
-	//TMap<int, FString> UsableItemIDSetupTypes;
-	
 	// TMap of ID-Amount pairs for items.
 	TMap<int, int> PlayerInventory;
 

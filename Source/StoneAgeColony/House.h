@@ -17,6 +17,9 @@ struct FHouseDetails
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ID")
 	int32 ID;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpecialID")
+	FString SpecialID;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
 	FTransform Transform;
 
@@ -60,18 +63,18 @@ public:
 
 	void OpenMenu(APawn* InstigatorPawn);
 
-	int32 Capacity;
-
 	// Save-Load Methods
 	virtual void RegisterActorDetailsToSave() override;
 	virtual void EmptyCommunicatorDetailsArray() override;
 	virtual void SpawnLoadedActors() override;
+
+	int32 Capacity;
+	TSet<FString> Occupants;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
-	
 private:
-	//int32 ID;
 	FName HouseType;
 	FHouseData* Data;
+
 	
 };

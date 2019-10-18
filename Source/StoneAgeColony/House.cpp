@@ -21,6 +21,8 @@ void AHouse::OnUsed(APawn* InstigatorPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("in dasda hosuze"));
 	OpenMenu(InstigatorPawn);
+
+	UE_LOG(LogTemp, Warning, TEXT("AHouse::OnUsed SpecialID: %s"), *SpecialID);
 }
 
 void AHouse::OpenMenu(APawn* InstigatorPawn)
@@ -76,6 +78,7 @@ void AHouse::RegisterActorDetailsToSave()
 	Details.ID = ID;
 	Details.Transform = GetActorTransform();
 	Details.Capacity = Capacity;
+	Details.SpecialID = SpecialID;
 
 	Communicator::GetInstance().SpawnedHouseDetails.Add(Details);
 }
@@ -105,8 +108,8 @@ void AHouse::SpawnLoadedActors()
 
 		SpawnedItem->SetupType(Factory->GetObjectNameFromID(Details.ID));
 		SpawnedItem->SetMeshToDefault();
-
 		SpawnedItem->Capacity = Details.Capacity;
+		SpawnedItem->SpecialID = Details.SpecialID;
 
 	}
 }

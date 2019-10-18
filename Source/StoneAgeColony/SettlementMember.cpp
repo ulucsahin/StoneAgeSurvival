@@ -1,10 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SettlementMember.h"
 //#include "EnemyAI.h"
 //#include "SettlementMemberAI.h"
 #include "UnoccupiedAI.h"
 #include "StationWorkerAI.h"
+#include "MorningRegularAI.h"
+#include "NightRegularAI.h"
 #include "Communicator.h"
 #include "EquipmentManager.h"
 #include "ObjectFactory.h"
@@ -12,6 +14,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "Settlement.h"
 #include "Structure.h"
+#include "House.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "StoneAgeColonyCharacter.h"
@@ -20,6 +23,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "SettlementMemberProfession.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "SurvivalGameState.h"
 
 ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -69,10 +73,7 @@ void ASettlementMember::BeginPlay()
     Super::BeginPlay();
 
 	SetupAIController();
-	//AIController = Cast<ASettlementMemberAI>(GetController());
 	SetupBelongingSettlement();
-
-	//AIController->MoveToWorkingStation();
 	 
 	auto x = GetCharacterMovement();
 	x->MaxWalkSpeed = 100.f;
@@ -101,6 +102,23 @@ void ASettlementMember::OnHearNoise(APawn* PawnInstigator, const FVector& Locati
 
 }
 
+void ASettlementMember::OnUsed(APawn* InstigatorPawn)
+{
+	StartDialogue(InstigatorPawn);
+	//UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed MY SPECIAL ID: %s"), *SpecialID);
+	//Act();
+	if (BelongingSettlement)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed HAS Settlement."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed no settlement bro wtf you homeless bitch faggot."));
+	}
+
+	SetupHome();
+}
+
 void ASettlementMember::SetupBelongingSettlement()
 {
 	TArray<AActor*> FoundSettlements;
@@ -118,6 +136,48 @@ void ASettlementMember::SetupBelongingSettlement()
 
 }
 
+void ASettlementMember::SetupHome()
+{
+	// Do nothing if this character already has a home 
+	if (Home) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome Already has a home, exiting method."));
+		return;
+	}
+
+
+	if (BelongingSettlement)
+	{
+		for (auto Structure : BelongingSettlement->Structures)
+		{
+			auto ProbableHome = (AHouse*)Structure;
+			if (ProbableHome)
+			{
+				// if this character has a home from saved game, try to assign to it first
+				if (ProbableHome->SpecialID == HomeSpecialID)
+				{
+					ProbableHome->Occupants.Add(SpecialID);
+					Home = ProbableHome;
+					UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome Home restored from save game."));
+					return;
+				}
+
+				// if this house has empty space
+				if (ProbableHome->Occupants.Num() < ProbableHome->Capacity)
+				{
+					ProbableHome->Occupants.Add(SpecialID);
+					HomeSpecialID = ProbableHome->SpecialID;
+					Home = ProbableHome;
+					UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome New home set, exiting method."));
+					return;
+				}
+			}
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome no house available bitch."));
+}
+
 void ASettlementMember::ChangeProfession(FProfession NewProfession)
 {
 	Profession = NewProfession;
@@ -132,13 +192,6 @@ void ASettlementMember::Act()
 void ASettlementMember::GetNotification()
 {
 	Act();
-}
-
-void ASettlementMember::OnUsed(APawn* InstigatorPawn)
-{
-	StartDialogue(InstigatorPawn);
-	//UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed MY SPECIAL ID: %s"), *SpecialID);
-	//Act();
 }
 
 void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
@@ -169,27 +222,65 @@ void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 
 void ASettlementMember::SetupAIController()
 {
+	/* Also called in ASurvivalGameState::UpdateNPCAI on Time of Day changes (morning to afternoon etc) to switch between different AI types */
+
+	// Destroy old AI instance if exists
 	if (AIController)
 	{
 		AIController->StopTimerHandle();
 		AIController->Destroy();
 	}
 
-	// Copied from SpawnDefaultController()
+	// Copied from SpawnDefaultController() ue4 source code
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.Instigator = Instigator;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnInfo.OverrideLevel = GetLevel();
 	SpawnInfo.ObjectFlags |= RF_Transient;	// We never want to save AI controllers into a map
 
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Profession name: %s"), *Profession.ProfessionName);
-	if (Profession.ProfessionName == "unoccupied")
+
+	// Select morning ai if it is morning
+	auto GameState = GetWorld()->GetGameState<ASurvivalGameState>();
+	if (GameState)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember: :SetupAIController Choosing Unoccupied AI"));
+		auto TimeOfDay = GameState->GetTimeOfDay();
+
+		// if before 8 am
+		if ((TimeOfDay < 60.f * 8.f) && (TimeOfDay > 60.f * 6.f))
+		{			
+			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing Morning AI"));
+			AIControllerClass = AMorningRegularAI::StaticClass();
+			AIController = (AMorningRegularAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
+			if (AIController != nullptr)
+			{
+				AIController->Possess(this);
+			}
+			return;
+		}
+
+		// if between 10pm - 6 am
+		if (TimeOfDay < 60.f * 6.f || TimeOfDay > 60.f * 22.f)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing NIGHT AI"));
+			AIControllerClass = ANightRegularAI::StaticClass();
+			AIController = (ANightRegularAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
+			if (AIController != nullptr)
+			{
+				AIController->Possess(this);
+			}
+			return;
+		}
+
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember:: SetupAIController Profession name: %s"), *Profession.ProfessionName);
+	if (Profession.Type == EProfession::VE_Unoccupied)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing Unoccupied AI"));
 		AIControllerClass = AUnoccupiedAI::StaticClass();
 		AIController = (AUnoccupiedAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
 	}
-	else if (Profession.ProfessionName == "stone worker")
+	else if (Profession.Type == EProfession::VE_StoneWorker)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing StationWorker AI"));
 		AIControllerClass = AStationWorkerAI::StaticClass();
@@ -222,7 +313,7 @@ void ASettlementMember::RegisterActorDetailsToSave()
 	CharDetails.Transform = GetActorTransform();
 	CharDetails.FaceDetails = MorphManager->FaceDetails;
 	CharDetails.SpecialID = SpecialID;
-	//CharDetails.ProfessionName = Profession.ProfessionName;
+	CharDetails.HomeSpecialID = HomeSpecialID;
 	CharDetails.ProfessionType = Profession.Type;
 	
 	// Save equipments
@@ -253,6 +344,8 @@ void ASettlementMember::SpawnLoadedActors()
 
 		Spawned->SetupBelongingSettlement();
 		Spawned->SpecialID = Details.SpecialID;
+		Spawned->HomeSpecialID = Details.HomeSpecialID;
+		Spawned->SetupHome(); //this causes crash, but only sometimes wtf?
 		Spawned->ChangeProfession(USettlementMemberProfession::GetProfession(Details.ProfessionType));
 		Spawned->Act();
 	
