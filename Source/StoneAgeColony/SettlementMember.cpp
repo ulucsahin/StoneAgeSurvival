@@ -123,15 +123,21 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 
 void ASettlementMember::SetupBelongingSettlement()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 0"));
 	TArray<AActor*> FoundSettlements;
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 1"));
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASettlement::StaticClass(), FoundSettlements);
-
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 2"));
 	for (auto Settlement : FoundSettlements)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 3"));
 		if (((ASettlement*)Settlement)->IsActiveSettlement)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 4"));
 			BelongingSettlement = (ASettlement*)Settlement;
+			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 5"));
 			BelongingSettlement->RegisterMember(this);
+			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 6"));
 		}
 
 	}

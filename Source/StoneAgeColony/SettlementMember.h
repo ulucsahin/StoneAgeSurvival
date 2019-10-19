@@ -75,5 +75,8 @@ public:
 private:
 	float FollowRadius;
 	FString DialogueMenuRef;
+
+	UPROPERTY()
+	TArray<AActor*> FoundSettlements;
 	//UStaticMeshComponent* PerceptiveArea;
 };

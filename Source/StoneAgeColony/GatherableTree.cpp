@@ -104,7 +104,7 @@ void AGatherableTree::SpawnLoadedActors()
 
 	FActorSpawnParameters SpawnParams;
 
-	static AObjectFactory* Factory = NewObject<AObjectFactory>();
+	AObjectFactory* Factory = NewObject<AObjectFactory>();
 
 	// Get actor details to spawn from communicator.
 	//auto ActorToSpawn = Communicator::GetInstance().GatherableTreeBlueprint;

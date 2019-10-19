@@ -95,7 +95,7 @@ void AHouse::SpawnLoadedActors()
 	/* Spawn previously saved characters from savefile. */
 	FActorSpawnParameters SpawnParams;
 
-	static AObjectFactory* Factory = NewObject<AObjectFactory>();
+	AObjectFactory* Factory = NewObject<AObjectFactory>();
 
 	// Iterate over array and saved spawn actors.
 	for (auto Details : Communicator::GetInstance().SpawnedHouseDetails)
