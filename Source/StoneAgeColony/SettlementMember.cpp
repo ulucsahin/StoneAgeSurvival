@@ -116,6 +116,8 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed no settlement bro wtf you homeless bitch faggot."));
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed SPECIAL ID: %s"), *SpecialID);
+
 	SetupHome();
 }
 
@@ -150,7 +152,7 @@ void ASettlementMember::SetupHome()
 	{
 		for (auto Structure : BelongingSettlement->Structures)
 		{
-			auto ProbableHome = (AHouse*)Structure;
+			auto ProbableHome = Cast<AHouse>(Structure);
 			if (ProbableHome)
 			{
 				// if this character has a home from saved game, try to assign to it first
@@ -261,7 +263,7 @@ void ASettlementMember::SetupAIController()
 		// if between 10pm - 6 am
 		if (TimeOfDay < 60.f * 6.f || TimeOfDay > 60.f * 22.f)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing NIGHT AI"));
+			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember:: SetupAIController Choosing NIGHT AI"));
 			AIControllerClass = ANightRegularAI::StaticClass();
 			AIController = (ANightRegularAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
 			if (AIController != nullptr)
@@ -300,7 +302,6 @@ void ASettlementMember::SetupAIController()
 }
 
 
-
 //
 // Save-Load methods
 //
@@ -308,19 +309,29 @@ void ASettlementMember::SetupAIController()
 void ASettlementMember::RegisterActorDetailsToSave()
 {
 	Super::RegisterActorDetailsToSave();
+	FHumanCharacterDetails Details;
 
 	// Assign details to struct.
-	CharDetails.Transform = GetActorTransform();
-	CharDetails.FaceDetails = MorphManager->FaceDetails;
-	CharDetails.SpecialID = SpecialID;
-	CharDetails.HomeSpecialID = HomeSpecialID;
-	CharDetails.ProfessionType = Profession.Type;
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 0"));
+	Details.Transform = GetActorTransform();
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 1"));
+	Details.FaceDetails = MorphManager->FaceDetails;
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 2"));
+	//FString asd = "asd";
+	//UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave SPECIAL ID %s"), *asd);
+	Details.SpecialID = SpecialID;
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 3"));
+	Details.HomeSpecialID = HomeSpecialID;
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 4"));
+	Details.ProfessionType = Profession.Type;
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 5"));
 	
 	// Save equipments
-	CharDetails.EquippedItems = EquipmentManager->EquippedItems;
-
+	Details.EquippedItems = EquipmentManager->EquippedItems;
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave  6"));
 	// Save details as struct to communicator. Which will be used during saving.
-	Communicator::GetInstance().SpawnedCharacterDetails.Add(CharDetails);
+	Communicator::GetInstance().SpawnedCharacterDetails.Add(Details);
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 7"));
 }
 
 void ASettlementMember::EmptyCommunicatorDetailsArray()

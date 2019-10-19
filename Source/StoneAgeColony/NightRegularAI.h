@@ -17,4 +17,5 @@ class STONEAGECOLONY_API ANightRegularAI : public ASettlementMemberAI
 public:
 	ANightRegularAI();
 	virtual void Act() override;
+	void GoHome();
 };

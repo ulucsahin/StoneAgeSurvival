@@ -53,6 +53,7 @@ protected:
 
 public:	
 
+	UPROPERTY()
 	FString SpecialID;
 
 	// Called every frame
@@ -75,10 +76,13 @@ public:
 	// Equipment Type-Component Mapping
 	TMap<EEquipmentSlots, USkeletalMeshComponent*> EquipmentMapping;
 
-
+	UPROPERTY()
 	FHumanCharacterDetails CharDetails;
+	UPROPERTY()
 	UMorphManager* MorphManager;
+	UPROPERTY()
 	UEquipmentManager* EquipmentManager;
+	UPROPERTY()
 	TMap<EEquipmentSlots, int32> EquippedItems;
 	
 private:
