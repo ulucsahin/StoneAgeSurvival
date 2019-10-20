@@ -9,6 +9,7 @@
 
 class USurvivalWidget;
 class AStoneAgeColonyCharacter;
+class AHumanCharacter;
 
 
 // Save details
@@ -65,12 +66,9 @@ public:
 
 	virtual void OpenMenu(APawn* InstigatorPawn) override;
 
-	virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 	TArray<int32> CraftableItems;
 
-	void StartCrafting(float CraftingTime);
+	void StartCrafting(float CraftingTime, APawn* InstigatorPawn);
 
 	UFUNCTION() // ufunction needed for timer
 	void CraftingStep(float CraftingTime, float UpdateFrequency); // update progress bar of CraftingStationMenu
@@ -92,6 +90,8 @@ public:
 	bool CurrentlyCrafting;
 	int32 CraftAmount;
 	float CraftingProgress;
+
+	AHumanCharacter* CraftingCharacter;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 

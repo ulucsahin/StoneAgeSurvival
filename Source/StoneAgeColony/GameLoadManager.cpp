@@ -18,6 +18,7 @@
 #include "House.h"
 #include "Farm.h"
 #include "Plant.h"
+#include "Inventory.h"
 
 // Sets default values
 AGameLoadManager::AGameLoadManager()
@@ -86,7 +87,7 @@ void AGameLoadManager::LoadGame(APawn* InstigatorPawn)
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Level = Communicator::GetInstance().PlayerLevel;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Experience = Communicator::GetInstance().PlayerExperience;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold = Communicator::GetInstance().PlayerGold;
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory = SaveGameEntityLoad->PlayerInventory;
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory->Items = SaveGameEntityLoad->PlayerInventory;
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->BottomBar->BarItemIDs = SaveGameEntityLoad->BottomBarItems;
 
 		ASurvivalGameState* CurrentGameState = Cast<ASurvivalGameState>(Communicator::GetInstance().World->GetGameState());

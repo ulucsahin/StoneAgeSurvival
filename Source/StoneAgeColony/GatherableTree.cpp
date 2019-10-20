@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "ObjectFactory.h"
+#include "Inventory.h"
 
 // Static Variables
 //TSubclassOf<AGatherableTree> AGatherableTree::GatherableTreeBlueprint;
@@ -74,7 +75,7 @@ void AGatherableTree::OnGathered(APawn* InstigatorPawn)
 		int AmountToAdd = 10;
 
 		UE_LOG(LogTemp, Warning, TEXT("AGatherableTree::OnGathered GatherID: %d"), GatherID);
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(GatherID, AmountToAdd);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory->AddItem(GatherID, AmountToAdd);
 	}
 }
 

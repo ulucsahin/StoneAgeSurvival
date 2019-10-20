@@ -69,7 +69,8 @@ void UCraftingStationMenu::ReceiveInformationFromButton(AUsableActor* Represente
 		this->CurrentItemID = ItemID;*/
 		if (((ACraftingStation*)OwnerStructure)->CraftingRequirementsMet())
 		{
-			((ACraftingStation*)OwnerStructure)->StartCrafting(5.f); // Crafting time should be different for items.
+			
+			((ACraftingStation*)OwnerStructure)->StartCrafting(5.f, Player); // Crafting time should be different for items.
 		}
 	}
 	

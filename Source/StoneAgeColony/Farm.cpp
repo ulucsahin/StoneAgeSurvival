@@ -12,6 +12,7 @@
 #include "UIBottomBar.h"
 #include "BottomBarItem.h"
 #include "Communicator.h"
+#include "Inventory.h"
 
 #include "EngineUtils.h"
 //#include "InstancedFoliageActor.h"
@@ -119,9 +120,9 @@ APlant* AFarm::Plant(int32 ItemIDToPlant, FName SocketName, bool FromSave)
 		if(!FromSave)
 		{
 			auto PlayerInventory = Player->GetInventory();
-			if (PlayerInventory.Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
+			if (PlayerInventory->Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
 			{
-				if (PlayerInventory[ItemIDToPlant] > 0)
+				if (PlayerInventory->Items[ItemIDToPlant] > 0)
 				{
 					Player->ConsumeItemFromInventory(ItemIDToPlant, 1); // consume 1 from player inventory
 				}

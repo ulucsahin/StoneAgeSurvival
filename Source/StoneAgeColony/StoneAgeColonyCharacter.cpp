@@ -13,6 +13,7 @@
 #include "SurvivalGameInstance.h"
 #include "UsableActor.h"
 #include "PickupManager.h"
+#include "Inventory.h"
 
 #include "Building.h"
 #include "BuildingManager.h"
@@ -39,7 +40,7 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
-AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
+AStoneAgeColonyCharacter::AStoneAgeColonyCharacter(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {	
 	// Flag specifying if character can have focus on a new object or not
 	bHasNewFocus = true;
@@ -127,6 +128,10 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	// Set default player state
 	PlayerStates = EPlayerStates::VE_Combat;
 
+	// Initialize Inventory
+	Inventory = NewObject<UInventory>();
+	Inventory->Owner = this;
+
 	// Initialize BuildingManager
 	BuildingManager = NewObject<UBuildingManager>();
 	BuildingManager->SetWorld(GetWorld());
@@ -143,6 +148,7 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter()
 	AnimationManager = NewObject<UFPAnimationManager>();
 	AnimationManager->SetupManager(this, GetWorld());
 	AnimationManager->AddToRoot(); // stupid gc
+
 
 	InventoryOn = false;
 	InitializeWidgets();
@@ -333,11 +339,11 @@ void AStoneAgeColonyCharacter::OnClick()
 	{
 		// Use item in BottomBar
 		int32 UsedItemID = BottomBar->BarItems[BottomBar->SelectedSlot]->ItemID;
-		if (Inventory.Contains(UsedItemID)) 
+		if (Inventory->Contains(UsedItemID)) 
 		{
-			if (Inventory[UsedItemID] > 0)
+			if (Inventory->Items[UsedItemID] > 0)
 			{
-				Inventory.Emplace(UsedItemID, Inventory[UsedItemID] - 1);
+				Inventory->Emplace(UsedItemID, Inventory->Items[UsedItemID] - 1);
 				BottomBar->BarItems[BottomBar->SelectedSlot]->UseBarItem();
 				BottomBar->Refresh();
 				
@@ -662,7 +668,7 @@ int AStoneAgeColonyCharacter::GetLevel()
 //	return Communicator::GetInstance().UsableItemIDMap[ItemIDatIndex];
 //}
 
-TMap<int, int> AStoneAgeColonyCharacter::GetInventory()
+UInventory* AStoneAgeColonyCharacter::GetInventory()
 {
 	return Inventory;
 }
@@ -670,9 +676,9 @@ TMap<int, int> AStoneAgeColonyCharacter::GetInventory()
 // we cannot(?) return TMap pointer, so instead we are accessing inventory from here when we want to increase number of item in player inventory from another class
 void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amount)
 {
-	if (Inventory.Contains(ItemID))
+	if (Inventory->Contains(ItemID))
 	{
-		Inventory.Emplace(ItemID, Inventory[ItemID] - Amount);
+		Inventory->Emplace(ItemID, Inventory->Items[ItemID] - Amount);
 
 		if (BottomBar)
 		{
@@ -688,31 +694,31 @@ void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amou
 	
 }
 
-void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
-{
-	/*ItemToAdd is ID of item that we want to add to inventory.*/
-
-	// if we have atleast one instance of ItemToAdd in inventory
-	if (!Inventory.Contains(ItemToAdd))
-	{
-		Inventory.Add(ItemToAdd, AmountToAdd);
-	}
-	else
-	{
-		Inventory.Emplace(ItemToAdd, Inventory[ItemToAdd] + AmountToAdd);
-	}
-
-	if (BottomBar)
-	{
-		BottomBar->Refresh();
-	}
-	
-	if (UIPlayerInventory)
-	{
-		UIPlayerInventory->Refresh();
-	}
-		
-}
+//void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
+//{
+//	/*ItemToAdd is ID of item that we want to add to inventory.*/
+//
+//	// if we have atleast one instance of ItemToAdd in inventory
+//	if (!Inventory.Contains(ItemToAdd))
+//	{
+//		Inventory.Add(ItemToAdd, AmountToAdd);
+//	}
+//	else
+//	{
+//		Inventory.Emplace(ItemToAdd, Inventory[ItemToAdd] + AmountToAdd);
+//	}
+//
+//	if (BottomBar)
+//	{
+//		BottomBar->Refresh();
+//	}
+//	
+//	if (UIPlayerInventory)
+//	{
+//		UIPlayerInventory->Refresh();
+//	}
+//		
+//}
 
 // Called on key press
 void AStoneAgeColonyCharacter::ChangeState()

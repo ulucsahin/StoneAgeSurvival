@@ -13,6 +13,7 @@
 #include "CraftingStation.h"
 #include "House.h"
 #include "Farm.h"
+#include "Inventory.h"
 //#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
 
 GameSaver::GameSaver()
@@ -37,7 +38,7 @@ void GameSaver::SaveGame(APawn* InstigatorPawn)
 	Communicator::GetInstance().PlayerLevel = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Level;
 	Communicator::GetInstance().PlayerExperience = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Experience;
 	Communicator::GetInstance().PlayerGold = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold;
-	Communicator::GetInstance().PlayerInventory = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory;
+	Communicator::GetInstance().PlayerInventory = ((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory->Items;
 
 	// Iterate over actors in world to get details of spawned actors.
 	// Saves actors to communicator.

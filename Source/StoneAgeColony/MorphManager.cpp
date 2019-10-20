@@ -12,28 +12,22 @@ UMorphManager::UMorphManager()
 
 }
 
-
 // Called when the game starts
 void UMorphManager::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
-
 
 // Called every frame
 void UMorphManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }
 
 void UMorphManager::SetupManager(ACharacter* Owner)
 {
 	/* Initial setup when creating new character */
-	
 	this->Owner = Owner;
-	
 	RandomizeFace();
 }
 
@@ -46,14 +40,16 @@ void UMorphManager::RandomizeFace()
 		if (Mesh)
 		{
 			USkeletalMesh* SkelMesh = Mesh->SkeletalMesh;
-
-			for (auto x : SkelMesh->MorphTargetIndexMap)
+			if (SkelMesh)
 			{
-				auto MorphName = x.Key;
-				float MorphValue = FMath::FRandRange(-0.5f, 0.9f); // we should limit a bit otherwise we have troglodytes
-				Mesh->SetMorphTarget(*MorphName.ToString(), MorphValue);
+				for (auto x : SkelMesh->MorphTargetIndexMap)
+				{
+					auto MorphName = x.Key;
+					float MorphValue = FMath::FRandRange(-0.5f, 0.9f); // we should limit a bit otherwise we have troglodytes
+					Mesh->SetMorphTarget(*MorphName.ToString(), MorphValue);
+					FaceDetails.Emplace(MorphName, MorphValue);
+				}
 
-				FaceDetails.Emplace(MorphName, MorphValue);
 			}
 
 		}

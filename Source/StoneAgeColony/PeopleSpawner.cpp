@@ -6,6 +6,7 @@
 #include "StoneAgeColonyCharacter.h"
 #include "EnemyCharacter.h"
 #include "SettlementMember.h"
+#include "Inventory.h"
 //#include "Spawner.h"
  
 void APeopleSpawner::BeginPlay()
@@ -21,7 +22,7 @@ void APeopleSpawner::OnUsed(APawn* InstigatorPawn)
 	if (((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold >= 10)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("APeopleSpawner::OnUsed hehee"));
-		((AStoneAgeColonyCharacter*)InstigatorPawn)->AddToInventory(this->ID, 1);
+		((AStoneAgeColonyCharacter*)InstigatorPawn)->Inventory->AddItem(this->ID, 1);
 		((AStoneAgeColonyCharacter*)InstigatorPawn)->Gold -= 10;
 		SpawnCharacter(true);
 	}

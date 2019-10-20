@@ -12,6 +12,7 @@
 #include "ObjectFactory.h"
 #include "StoneAgeColonyCharacter.h"
 #include "UIPlayerInventory.h"
+#include "Inventory.h"
 #include "UIBottomBar.h"
 
 UUIInventoryItem::UUIInventoryItem(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -43,8 +44,8 @@ void UUIInventoryItem::Use()
 		auto ItemToUse = Factory->CreateObjectBetter(ItemID);
 		ItemToUse->OnUsedFromInventory(PlayerCharacter);
 
-		PlayerCharacter->Inventory.Emplace(ItemID, PlayerCharacter->Inventory[ItemID] - 1);
-		ItemAmount = PlayerCharacter->Inventory[ItemID];
+		PlayerCharacter->Inventory->Emplace(ItemID, PlayerCharacter->Inventory->GetItems()[ItemID] - 1);
+		ItemAmount = PlayerCharacter->Inventory->GetItems()[ItemID];
 		PlayerCharacter->UIPlayerInventory->Refresh();
 		PlayerCharacter->BottomBar->Refresh();
 	}
@@ -81,8 +82,8 @@ void UUIInventoryItem::PlaceItem()
 	SpawnedItem->SetMeshToDefault();
 
 	// Adjust player inventory since item is used
-	PlayerCharacter->Inventory.Emplace(ItemID, PlayerCharacter->Inventory[ItemID] - 1);
-	ItemAmount = PlayerCharacter->Inventory[ItemID];
+	PlayerCharacter->Inventory->Emplace(ItemID, PlayerCharacter->Inventory->Items[ItemID] - 1);
+	ItemAmount = PlayerCharacter->Inventory->Items[ItemID];
 	PlayerCharacter->UIPlayerInventory->Refresh();
 
 	PlayerCharacter->InteractPickup(SpawnedItem);

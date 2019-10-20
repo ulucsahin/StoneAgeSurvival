@@ -7,6 +7,7 @@
 #include "UsableActor.h"
 #include "Blueprint/UserWidget.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Inventory.h"
 
 void UBottomBarItem::SetupBarItem(UUIBottomBar* BottomBar, int32 Index)
 {
@@ -33,7 +34,7 @@ void UBottomBarItem::UseBarItem()
 		auto BarItem = Factory->CreateObjectBetter(ItemID);
 		BarItem->OnUsedFromInventory(BottomBar->Player);
 		//Communicator::GetInstance().UsableItemIDMap[ItemID]->OnUsedFromInventory(BottomBar->Player);
-		ItemAmount = BottomBar->Player->Inventory[ItemID];
+		ItemAmount = BottomBar->Player->Inventory->Items[ItemID];
 	}
 	
 }
@@ -46,9 +47,9 @@ void UBottomBarItem::Refresh()
 		{
 			auto PlayerInventory = BottomBar->Player->Inventory;
 
-			if (PlayerInventory.Contains(ItemID))
+			if (PlayerInventory->Contains(ItemID))
 			{
-				ItemAmount = PlayerInventory[ItemID];
+				ItemAmount = PlayerInventory->Items[ItemID];
 				//NotifyBottomBar();
 			}
 			else 

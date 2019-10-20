@@ -13,6 +13,8 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "CraftingStationMenu.h"
 #include "StoneAgeColonyCharacter.h"
+#include "HumanCharacter.h"
+#include "Inventory.h"
 #include "ObjectFactory.h"
 #include "Communicator.h"
 
@@ -30,8 +32,8 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 
 void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 {
+	/* When player interacts, not for NPCs*/
 	Super::OnUsed(InstigatorPawn);
-
 	Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	OpenMenu(InstigatorPawn);
 }
@@ -91,54 +93,11 @@ void ACraftingStation::SetupType(FString Type)
 	DefaultMesh = Data->Mesh.Get();
 }
 
-
-// NOT CALLED, now handled in settlement OnOverlapBegin
-void ACraftingStation::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ACraftingStation::StartCrafting(float CraftingTime, APawn* InstigatorPawn)
 {
-	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-	//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapBegin"));
-	if (OtherActor != this)
-	{
-		if (OtherActor != nullptr)
-		{
-			auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
-			if (OtherActorCompName == "SettlementArea")
-			{
-				((ASettlement*)OtherActor)->RegisterStructure(this);
-				UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd ----> RegisterStructure"));
-			}
-			
-		}
+	/* Set the character that does the crafting. Can be player or npcs. */
+	CraftingCharacter = Cast<AHumanCharacter>(InstigatorPawn);
 
-	}
-
-}
-
-// NOT CALLED, now handled in settlement OnOverlapEnd
-void ACraftingStation::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Super::OnOverlapEnd(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
-	//UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd"));
-	if (OtherActor != this)
-	{
-		if (OtherActor != nullptr)
-		{
-			auto OtherActorCompName = OtherComp->GetFName().ToString(); //OtherActor->GetClass()->GetFName().ToString();
-			if (OtherActorCompName == "SettlementArea")
-			{
-				((ASettlement*)OtherActor)->DeRegisterStructure(this);
-				UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::OnOverlapEnd--> DeRegisterStructure"));
-			}
-
-		}
-
-	}
-
-}
-
-
-void ACraftingStation::StartCrafting(float CraftingTime)
-{
 	((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(true);
 	FTimerDelegate TimerDel;
 
@@ -177,7 +136,7 @@ void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
 			}
 
 			// Add crafted items to player inventory
-			Player->AddToInventory(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
+			Player->Inventory->AddItem(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
 			
 		}
 
@@ -208,9 +167,9 @@ bool ACraftingStation::CraftingRequirementsMet()
 			int32 RequiredAmount = Requirement.Value * CraftAmount;
 
 			// if player don't have enough of this item
-			if (PlayerInventory.Contains(RequiredItem))
+			if (PlayerInventory->Contains(RequiredItem))
 			{
-				if (PlayerInventory[RequiredItem] < RequiredAmount)
+				if (PlayerInventory->GetItems()[RequiredItem] < RequiredAmount)
 				{
 					RequirementsMet = false;
 					break;

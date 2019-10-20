@@ -7,6 +7,7 @@
 #include "ObjectFactory.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Materials/Material.h"
+#include "Inventory.h"
 
 // Sets default values
 AUsableActor::AUsableActor(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -75,7 +76,7 @@ void AUsableActor::OnUsed(APawn* InstigatorPawn)
 	AStoneAgeColonyCharacter* PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(Communicator::GetInstance().World, 0);
 	if (PlayerCharacter)
 	{
-		PlayerCharacter->AddToInventory(this->ID, 1);
+		PlayerCharacter->Inventory->AddItem(this->ID, 1);
 	}
 	else
 	{

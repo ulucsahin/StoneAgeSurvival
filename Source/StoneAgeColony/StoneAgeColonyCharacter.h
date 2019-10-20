@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "HumanCharacter.h"
 #include "StoneAgeColonyCharacter.generated.h"
 
 // forward declare to prevent circular dependency
@@ -20,6 +21,7 @@ class UUserWidget;
 class USurvivalWidget;
 class AStructure;
 class ASettlementMember;
+class UInventory;
 
 enum class EPlayerStates : uint8
 {
@@ -30,7 +32,7 @@ enum class EPlayerStates : uint8
 
 
 UCLASS(config=Game)
-class AStoneAgeColonyCharacter : public ACharacter
+class AStoneAgeColonyCharacter : public AHumanCharacter
 {
 	GENERATED_BODY()
 
@@ -67,7 +69,7 @@ class AStoneAgeColonyCharacter : public ACharacter
 	class UMotionControllerComponent* L_MotionController;
 
 public:
-	AStoneAgeColonyCharacter();
+	AStoneAgeColonyCharacter(const FObjectInitializer& ObjectInitializer);
 
 	template <typename T>
 	T* GetActorInView(float Range);
@@ -78,15 +80,20 @@ public:
 	class AUsableActor* FocusedUsableActor;
 	void RegisterSaveData();
 	void InitializeWidgets();
-	void AddToInventory(int, int);
+	//void AddToInventory(int, int);
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	UInventory* GetInventory();
+	//TMap<int, int> GetInventory();
+
+	// Inventory, with starting items
+	UInventory* Inventory;
+	//TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {402, 5}, {506, 25}, {490,2}, {450, 3}, {700, 10} };
 
 	// States operations
 	EPlayerStates PlayerStates;
 	void ChangeState(EPlayerStates NewState);
 	void UpdateStateDisplay();
-
-	// Inventory, with starting items
-	TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {402, 5}, {506, 25}, {490,2}, {450, 3}, {700, 10} }; 
 
 	// Building System Variables
 	UBuildingManager* BuildingManager;
@@ -141,8 +148,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	int GetLevel();
 
-	UFUNCTION(BlueprintPure, Category = "Inventory")
-	TMap<int, int> GetInventory();
+
 
 	void ConsumeItemFromInventory(int32 ItemID, int32 Amount);
 

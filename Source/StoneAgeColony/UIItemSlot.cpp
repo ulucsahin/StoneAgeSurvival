@@ -6,6 +6,7 @@
 #include "StoneAgeColonyCharacter.h"
 #include "ObjectFactory.h"
 #include "UsableActor.h"
+#include "Inventory.h"
 
 UUIItemSlot::UUIItemSlot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -27,9 +28,9 @@ void UUIItemSlot::SetupInventoryItemCell()
 		InventoryTexture = SlotObject->InventoryTexture;
 		ItemName = Factory->GetObjectNameFromID(ItemID);
 
-		if (PlayerCharacter->Inventory.Contains(ItemID))
+		if (PlayerCharacter->Inventory->Contains(ItemID))
 		{
-			ItemAmount = PlayerCharacter->Inventory[ItemID];
+			ItemAmount = PlayerCharacter->Inventory->Items[ItemID];
 		}
 		else
 		{

@@ -4,6 +4,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/UMG/Public/Components/WrapBox.h"
 #include "UIInventoryItem.h"
+#include "Inventory.h"
 #include "StoneAgeColonyCharacter.h"
 //#include "Runtime/UMG/Public/Blueprint/WidgetTree.h"
 
@@ -29,7 +30,7 @@ void UUIPlayerInventory::RegisterToPlayer(AStoneAgeColonyCharacter* Player)
 // Called in blueprint
 void UUIPlayerInventory::AddItems()
 {
-	for (auto item : Player->GetInventory())
+	for (auto item : Player->GetInventory()->GetItems())
 	{
 		// If item amount is 0 or less(should never be less than 0) just skip to next item in player inventory
 		if (item.Value <= 0) continue;

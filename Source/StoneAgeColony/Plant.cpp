@@ -13,6 +13,7 @@
 #include "Camera/CameraComponent.h"
 #include "PlantProgressBar.h"
 #include "StoneAgeColonyCharacter.h"
+#include "Inventory.h"
 
 APlant::APlant(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -100,7 +101,7 @@ void APlant::Gather(APawn* InstigatorPawn)
 		int32 ItemTypeCount = YieldedItems.Num();
 		int32 Index = ItemTypeCount * (CurrentStage) + i; // calculations needed since we represent a 2D array as 1D (unreal does not support 2D arrays)
 
-		Player->AddToInventory(Item, YieldAmounts[Index]);
+		Player->Inventory->AddItem(Item, YieldAmounts[Index]);
 	}
 
 	OwnerFarm->RemovePlant(OwnerSocket);
