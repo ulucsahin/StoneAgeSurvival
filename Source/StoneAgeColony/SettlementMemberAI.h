@@ -34,6 +34,6 @@ public:
 	uint8 EnemyKeyID;
 	ASettlementMember* Possessed;
 	bool ShouldUpdate;
-	EActivity Activity;
+	//EActivity Activity;
 
 };

@@ -15,7 +15,7 @@
 ASettlementMemberAI::ASettlementMemberAI() 
 {
 	ShouldUpdate = false;
-	Activity = EActivity::VE_Idle;
+	
 }
 
 void ASettlementMemberAI::Possess(APawn *InPawn)
@@ -23,6 +23,7 @@ void ASettlementMemberAI::Possess(APawn *InPawn)
 	Super::Possess(InPawn);
 	ASettlementMember *Char = Cast<ASettlementMember>(InPawn);
 	Possessed = Char;
+	//Possessed->Activity = EActivity::VE_Idle;
 	//Communicator::GetInstance().World->GetTimerManager().SetTimer(TimerHandle, this, &ASettlementMemberAI::Act, 1.0f, true);
 }
 

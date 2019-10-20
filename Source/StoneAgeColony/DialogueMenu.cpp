@@ -28,10 +28,9 @@ void UDialogueMenu::InitialSetup()
 void UDialogueMenu::CloseMenu()
 {
 	Super::CloseMenu();
-	auto Controller = Owner->AIController;
-	if (Controller)
+	if (Owner)
 	{
-		Controller->Activity = EActivity::VE_Idle;
+		Owner->Activity = EActivity::VE_Idle;
 	}
 
 	Owner->Act();

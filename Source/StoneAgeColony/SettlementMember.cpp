@@ -199,7 +199,7 @@ void ASettlementMember::Act()
 
 void ASettlementMember::GetNotification()
 {
-	Act();
+	if(Activity != EActivity::VE_Talking) Act();
 }
 
 void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
@@ -210,7 +210,7 @@ void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 		if (AIController)
 		{
 			Controller->StopMovement();
-			AIController->Activity = EActivity::VE_Talking;
+			Activity = EActivity::VE_Talking;
 			
 			// Face Player
 			auto x = Player->GetActorRotation();
@@ -223,7 +223,7 @@ void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 		DialogueMenu->Owner = this;
 		DialogueMenu->StartingChoiceIDs = { 20000 };
 		DialogueMenu->InitialSetup();
-		AIController->Activity = EActivity::VE_Talking;
+		Activity = EActivity::VE_Talking;
 	}
 }
 

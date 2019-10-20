@@ -37,7 +37,7 @@ void AStationWorkerAI::MoveToStation()
 				{
 					x->WorkingMember = (ASettlementMember*)GetPawn();
 					MoveToLocation(x->GetActorLocation());
-					Activity = EActivity::VE_Working;
+					Possessed->Activity = EActivity::VE_Working;
 					break;
 				}
 				

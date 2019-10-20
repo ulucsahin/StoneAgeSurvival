@@ -18,7 +18,7 @@ void ANightRegularAI::Act()
 
 void ANightRegularAI::GoHome()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ANightRegularAI::GoHome"));
+	UE_LOG(LogTemp, Warning, TEXT("ANightRegularAI:: GoHome"));
 
 	auto PossessedHomeID = Possessed->HomeSpecialID;
 

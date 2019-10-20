@@ -6,9 +6,10 @@
 #include "HumanCharacter.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "SettlementMemberProfession.h"
+#include "SettlementMemberAI.h"
 #include "SettlementMember.generated.h"
 
-class ASettlementMemberAI;
+//class ASettlementMemberAI;
 class ASettlement;
 class AHouse;
 
@@ -72,6 +73,7 @@ public:
 
 	ASettlementMemberAI* AIController;
 	ASettlementMemberAI* MorningAIController;
+	EActivity Activity;
 private:
 	float FollowRadius;
 	FString DialogueMenuRef;

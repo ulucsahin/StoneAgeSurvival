@@ -26,7 +26,7 @@ void AUnoccupiedAI::Act()
 	UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Act"));
 	
 
-	if (Activity == EActivity::VE_Idle)
+	if (Possessed->Activity == EActivity::VE_Idle)
 	{
 		// with 5% chance move around
 		auto RandomValue = MyUtility::RandomFloat(0.f, 1.f);
@@ -45,16 +45,16 @@ void AUnoccupiedAI::CheckStatus()
 	UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::CheckStatus"));
 
 	// Get Activity
-	if (Activity != EActivity::VE_Talking)
+	if (Possessed->Activity != EActivity::VE_Talking)
 	{
-		if (GetMoveStatus() == EPathFollowingStatus::Idle) Activity = EActivity::VE_Idle;
-		else if (GetMoveStatus() == EPathFollowingStatus::Waiting) Activity = EActivity::VE_Idle;
-		else if (GetMoveStatus() == EPathFollowingStatus::Moving) Activity = EActivity::VE_Moving;
+		if (GetMoveStatus() == EPathFollowingStatus::Idle) Possessed->Activity = EActivity::VE_Idle;
+		else if (GetMoveStatus() == EPathFollowingStatus::Waiting) Possessed->Activity = EActivity::VE_Idle;
+		else if (GetMoveStatus() == EPathFollowingStatus::Moving) Possessed->Activity = EActivity::VE_Moving;
 	}
 	
-	if (Activity == EActivity::VE_Idle)
+	if (Possessed->Activity == EActivity::VE_Idle)
 	{
-		Activity = EActivity::VE_Moving;
+		Possessed->Activity = EActivity::VE_Moving;
 		auto RandomValue = MyUtility::RandomFloat(0.f, 1.f);
 		UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::CheckStatus RandomValue: %f"), RandomValue);
 		if (RandomValue > 0.50f)
@@ -68,7 +68,7 @@ void AUnoccupiedAI::WanderAround()
 {
 	if (Possessed->BelongingSettlement)
 	{
-		Activity = EActivity::VE_Moving;
+		Possessed->Activity = EActivity::VE_Moving;
 		
 		auto SettlementLocation = Possessed->BelongingSettlement->GetActorLocation();
 		auto Radius = Possessed->BelongingSettlement->AreaRadius;
