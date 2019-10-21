@@ -27,6 +27,20 @@ void ASettlementMemberAI::Possess(APawn *InPawn)
 	//Communicator::GetInstance().World->GetTimerManager().SetTimer(TimerHandle, this, &ASettlementMemberAI::Act, 1.0f, true);
 }
 
+void ASettlementMemberAI::CheckStatus()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMemberAI::CheckStatus"));
+
+	// Get Activity
+	if (Possessed->Activity != EActivity::VE_Talking)
+	{
+		if (GetMoveStatus() == EPathFollowingStatus::Idle) Possessed->Activity = EActivity::VE_Idle;
+		else if (GetMoveStatus() == EPathFollowingStatus::Waiting) Possessed->Activity = EActivity::VE_Idle;
+		else if (GetMoveStatus() == EPathFollowingStatus::Moving) Possessed->Activity = EActivity::VE_Moving;
+	}
+
+}
+
 
 void ASettlementMemberAI::Act()
 {	

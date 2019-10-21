@@ -12,7 +12,7 @@ class ASettlementMember;
 UENUM()
 enum class EActivity : uint8
 {
-	VE_Idle, VE_Moving, VE_Working, VE_Talking,
+	VE_Idle, VE_Moving, VE_Working, VE_Talking, VE_GoingToStation,
 };
 
 UCLASS()
@@ -27,6 +27,8 @@ public:
 
 	UFUNCTION()
 	virtual void Act();
+
+	virtual void CheckStatus();
 
 	void StopTimerHandle();
 

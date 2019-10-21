@@ -1,11 +1,9 @@
 
 #include "StoneAgeColonyCharacter.h"
 #include "Camera/CameraComponent.h"
-
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/TimelineComponent.h"
-
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
@@ -14,26 +12,18 @@
 #include "UsableActor.h"
 #include "PickupManager.h"
 #include "Inventory.h"
-
 #include "Building.h"
 #include "BuildingManager.h"
 #include "FPAnimationManager.h"
 #include "Runtime/UMG/Public/Blueprint/UserWidget.h"
 #include "ObjectFactory.h"
 #include "Components/SphereComponent.h"
-
 #include "Settlement.h"
-
 #include "UIPlayerInventory.h"
 #include "UIBottomBar.h"
 #include "BottomBarItem.h"
 #include "SurvivalWidget.h"
-
 #include "SettlementMember.h"
-
-//#include "InstancedFoliageActor.h"
-//#include "FoliageType.h"
-//#include "InstancedFoliage.h"
 
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
@@ -128,9 +118,7 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter(const class FObjectInitialize
 	// Set default player state
 	PlayerStates = EPlayerStates::VE_Combat;
 
-	// Initialize Inventory
-	Inventory = NewObject<UInventory>();
-	Inventory->Owner = this;
+
 
 	// Initialize BuildingManager
 	BuildingManager = NewObject<UBuildingManager>();
@@ -149,7 +137,6 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter(const class FObjectInitialize
 	AnimationManager->SetupManager(this, GetWorld());
 	AnimationManager->AddToRoot(); // stupid gc
 
-
 	InventoryOn = false;
 	InitializeWidgets();
 }
@@ -158,6 +145,20 @@ void AStoneAgeColonyCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+
+
+	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::BeginPlay AStoneAgeColonyCharacter::BeginPlay AStoneAgeColonyCharacter::BeginPlay"));
+
+	if (Inventory)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::BeginPlay INVENTORY NOT NULL"));
+		Inventory->Contains(123);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::BeginPlay INVENTORY  NULL"));
+	}
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
@@ -668,31 +669,31 @@ int AStoneAgeColonyCharacter::GetLevel()
 //	return Communicator::GetInstance().UsableItemIDMap[ItemIDatIndex];
 //}
 
-UInventory* AStoneAgeColonyCharacter::GetInventory()
-{
-	return Inventory;
-}
+//UInventory* AStoneAgeColonyCharacter::GetInventory()
+//{
+//	return Inventory;
+//}
 
 // we cannot(?) return TMap pointer, so instead we are accessing inventory from here when we want to increase number of item in player inventory from another class
-void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amount)
-{
-	if (Inventory->Contains(ItemID))
-	{
-		Inventory->Emplace(ItemID, Inventory->Items[ItemID] - Amount);
-
-		if (BottomBar)
-		{
-			BottomBar->Refresh();
-		}
-
-		if (UIPlayerInventory)
-		{
-			UIPlayerInventory->Refresh();
-		}
-
-	}
-	
-}
+//void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amount)
+//{
+//	if (Inventory->Contains(ItemID))
+//	{
+//		Inventory->Emplace(ItemID, Inventory->Items[ItemID] - Amount);
+//
+//		if (BottomBar)
+//		{
+//			BottomBar->Refresh();
+//		}
+//
+//		if (UIPlayerInventory)
+//		{
+//			UIPlayerInventory->Refresh();
+//		}
+//
+//	}
+//	
+//}
 
 //void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
 //{
@@ -858,6 +859,8 @@ void AStoneAgeColonyCharacter::HideFirstPersonHands(bool Hide)
 {
 	Mesh1P->SetHiddenInGame(Hide, true);
 	AnimationManager->PlayAnimation(EAnimations::VE_Idle);
+
+	//Inventory;
 }
 
 void AStoneAgeColonyCharacter::Debug()

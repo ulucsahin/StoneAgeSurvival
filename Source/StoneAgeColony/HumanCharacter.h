@@ -13,6 +13,7 @@
 
 class UEquipmentManager;
 class UMorphManager;
+class UInventory;
 
 USTRUCT(BlueprintType)
 struct FHumanCharacterDetails
@@ -72,6 +73,13 @@ public:
 	USkeletalMeshComponent* FeetEquipmentComponent;
 	USkeletalMeshComponent* Ring1EquipmentComponent;
 	USkeletalMeshComponent* Ring2EquipmentComponent;
+
+	// Inventory
+	UPROPERTY()
+	UInventory* Inventory;
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	UInventory* GetInventory();
 
 	// Equipment Type-Component Mapping
 	TMap<EEquipmentSlots, USkeletalMeshComponent*> EquipmentMapping;

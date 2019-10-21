@@ -76,3 +76,29 @@ void UInventory::Emplace(int32 ItemToEmplace, int32 EmplaceWith)
 {
 	Items.Emplace(ItemToEmplace, EmplaceWith);
 }
+
+void UInventory::ConsumeItem(int32 ItemID, int32 Amount)
+{
+	if (Contains(ItemID))
+	{
+		Emplace(ItemID, Items[ItemID] - Amount);
+
+		// Refresh bottom bar and inventory menu if consuming item from player's inventory
+		AStoneAgeColonyCharacter* Player = Cast<AStoneAgeColonyCharacter>(Owner);
+		if (Player)
+		{
+			if (Player->BottomBar)
+			{
+				Player->BottomBar->Refresh();
+			}
+
+			if (Player->UIPlayerInventory)
+			{
+				Player->UIPlayerInventory->Refresh();
+			}
+
+		}
+
+	}
+	
+}

@@ -26,7 +26,7 @@ void UUIItemSlot::SetupInventoryItemCell()
 		AObjectFactory* Factory = NewObject<AObjectFactory>();
 		auto SlotObject =  Factory->CreateObjectBetter(ItemID);
 		InventoryTexture = SlotObject->InventoryTexture;
-		ItemName = Factory->GetObjectNameFromID(ItemID);
+		ItemName = Factory->GetObjectNameFromID(ItemID);	
 
 		if (PlayerCharacter->Inventory->Contains(ItemID))
 		{

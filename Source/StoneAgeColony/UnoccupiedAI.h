@@ -21,7 +21,7 @@ public:
 
 	virtual void Act() override;
 
-	void CheckStatus();
+	virtual void CheckStatus() override;
 
 	void WanderAround();
 };

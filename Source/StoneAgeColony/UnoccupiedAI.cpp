@@ -17,7 +17,8 @@ void AUnoccupiedAI::Possess(APawn *InPawn)
 
 	UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Possess"));
 
-	Communicator::GetInstance().World->GetTimerManager().SetTimer(TimerHandle, this, &AUnoccupiedAI::CheckStatus, 1.0f, true);
+	//Communicator::GetInstance().World->GetTimerManager().SetTimer(TimerHandle, this, &AUnoccupiedAI::CheckStatus, 1.0f, true);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AUnoccupiedAI::CheckStatus, 1.0f, true);
 }
 
 void AUnoccupiedAI::Act()
@@ -42,16 +43,8 @@ void AUnoccupiedAI::Act()
 
 void AUnoccupiedAI::CheckStatus()
 {
+	Super::CheckStatus();
 	UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::CheckStatus"));
-
-	// Get Activity
-	if (Possessed->Activity != EActivity::VE_Talking)
-	{
-		if (GetMoveStatus() == EPathFollowingStatus::Idle) Possessed->Activity = EActivity::VE_Idle;
-		else if (GetMoveStatus() == EPathFollowingStatus::Waiting) Possessed->Activity = EActivity::VE_Idle;
-		else if (GetMoveStatus() == EPathFollowingStatus::Moving) Possessed->Activity = EActivity::VE_Moving;
-	}
-	
 	if (Possessed->Activity == EActivity::VE_Idle)
 	{
 		Possessed->Activity = EActivity::VE_Moving;
@@ -61,7 +54,9 @@ void AUnoccupiedAI::CheckStatus()
 		{
 			WanderAround();
 		}
+
 	}
+
 }
 
 void AUnoccupiedAI::WanderAround()

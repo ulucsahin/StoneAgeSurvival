@@ -4,8 +4,8 @@
 #include "Equipment.h"
 #include "EquipmentManager.h"
 #include "MorphManager.h"
-//#include "Communicator.h"
 #include "ObjectFactory.h"
+#include "Inventory.h"
 #include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 
 // Sets default values
@@ -46,6 +46,10 @@ AHumanCharacter::AHumanCharacter(const class FObjectInitializer& ObjectInitializ
 void AHumanCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Initialize Inventory
+	Inventory = NewObject<UInventory>();
+	Inventory->Owner = this;
 
 	// Set MorphManager 
 	MorphManager = NewObject<UMorphManager>();
@@ -91,4 +95,9 @@ void AHumanCharacter::CreateSubObjectMesh(USkeletalMeshComponent* Comp, FName Na
 	Comp->SetMasterPoseComponent(GetMesh());
 
 	//EquipmentMapping.Emplace(EEquipmentSlots::VE_Feet, Comp);
+}
+
+UInventory* AHumanCharacter::GetInventory()
+{
+	return Inventory;
 }

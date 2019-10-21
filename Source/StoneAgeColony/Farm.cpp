@@ -124,7 +124,7 @@ APlant* AFarm::Plant(int32 ItemIDToPlant, FName SocketName, bool FromSave)
 			{
 				if (PlayerInventory->Items[ItemIDToPlant] > 0)
 				{
-					Player->ConsumeItemFromInventory(ItemIDToPlant, 1); // consume 1 from player inventory
+					Player->Inventory->ConsumeItem(ItemIDToPlant, 1); // consume 1 from player inventory
 				}
 				else
 				{

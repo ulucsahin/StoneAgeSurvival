@@ -7,7 +7,6 @@
 #include "HumanCharacter.h"
 #include "StoneAgeColonyCharacter.generated.h"
 
-// forward declare to prevent circular dependency
 class UInputComponent;
 class UBuildingManager; 
 class UFPAnimationManager;
@@ -82,12 +81,12 @@ public:
 	void InitializeWidgets();
 	//void AddToInventory(int, int);
 
-	UFUNCTION(BlueprintPure, Category = "Inventory")
-	UInventory* GetInventory();
+	//UFUNCTION(BlueprintPure, Category = "Inventory")
+	//UInventory* GetInventory();
 	//TMap<int, int> GetInventory();
 
 	// Inventory, with starting items
-	UInventory* Inventory;
+	//UInventory* Inventory = NewObject<UInventory>();
 	//TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {402, 5}, {506, 25}, {490,2}, {450, 3}, {700, 10} };
 
 	// States operations
@@ -150,7 +149,7 @@ public:
 
 
 
-	void ConsumeItemFromInventory(int32 ItemID, int32 Amount);
+	//void ConsumeItemFromInventory(int32 ItemID, int32 Amount);
 
 	//UFUNCTION(BlueprintPure, Category = "Inventory")
 	//AUsableActor* GetInventoryItem(int InventoryItemIndex);

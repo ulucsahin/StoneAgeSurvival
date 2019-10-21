@@ -105,19 +105,6 @@ void ASettlementMember::OnHearNoise(APawn* PawnInstigator, const FVector& Locati
 void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 {
 	StartDialogue(InstigatorPawn);
-	//UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed MY SPECIAL ID: %s"), *SpecialID);
-	//Act();
-	if (BelongingSettlement)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed HAS Settlement."));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed no settlement bro wtf you homeless bitch faggot."));
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OnUsed SPECIAL ID: %s"), *SpecialID);
-
 	SetupHome();
 }
 

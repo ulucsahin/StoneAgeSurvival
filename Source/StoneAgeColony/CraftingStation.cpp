@@ -95,7 +95,7 @@ void ACraftingStation::SetupType(FString Type)
 
 void ACraftingStation::StartCrafting(float CraftingTime, APawn* InstigatorPawn)
 {
-	/* Set the character that does the crafting. Can be player or npcs. */
+	// Set the character that does the crafting. Can be player or npcs.
 	CraftingCharacter = Cast<AHumanCharacter>(InstigatorPawn);
 
 	((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(true);
@@ -122,7 +122,7 @@ void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
 		StopCrafting();
 
 		// Consume items from player inventory after crafting is finished.
-		if (Player)
+		if (CraftingCharacter)
 		{
 			auto PlayerInventory = Player->GetInventory();
 
@@ -131,12 +131,12 @@ void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
 			{
 				int32 UsedItemID = Requirement.Key;
 				int32 ConsumedAmount = Requirement.Value * CraftAmount;
-				Player->ConsumeItemFromInventory(UsedItemID, ConsumedAmount);
+				CraftingCharacter->Inventory->ConsumeItem(UsedItemID, ConsumedAmount);
 			
 			}
 
 			// Add crafted items to player inventory
-			Player->Inventory->AddItem(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
+			CraftingCharacter->Inventory->AddItem(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
 			
 		}
 
@@ -159,7 +159,7 @@ bool ACraftingStation::CraftingRequirementsMet()
 
 	if (Player)
 	{
-		auto PlayerInventory = Player->GetInventory();
+		auto Inventory = Player->GetInventory();
 
 		for (auto Requirement : CurrentItem->CraftRequirements)
 		{
@@ -167,9 +167,9 @@ bool ACraftingStation::CraftingRequirementsMet()
 			int32 RequiredAmount = Requirement.Value * CraftAmount;
 
 			// if player don't have enough of this item
-			if (PlayerInventory->Contains(RequiredItem))
+			if (Inventory->Contains(RequiredItem))
 			{
-				if (PlayerInventory->GetItems()[RequiredItem] < RequiredAmount)
+				if (Inventory->GetItems()[RequiredItem] < RequiredAmount)
 				{
 					RequirementsMet = false;
 					break;
