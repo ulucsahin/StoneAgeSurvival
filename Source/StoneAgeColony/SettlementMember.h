@@ -43,6 +43,7 @@ public:
 	void OnUsed(APawn* InstigatorPawn);
 	void StartDialogue(APawn* InstigatorPawn);
 	void GetNotification();
+	void GetCraftingFinishedNotification();
 	void SetupAIController();
 
 	// Save-Load Methods
@@ -67,6 +68,7 @@ public:
 	ASettlement* BelongingSettlement;
 	AHouse* Home;
 	FString LastWorkingStationSpecialID;
+	TMap<int32, int32> CraftList; // which items to craft, and how many. npc repeats crafting this list.
 
 	UPROPERTY()
 	FString HomeSpecialID;

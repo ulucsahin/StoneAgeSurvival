@@ -68,7 +68,9 @@ public:
 
 	TArray<int32> CraftableItems;
 
-	void StartCrafting(float CraftingTime, APawn* InstigatorPawn);
+	void SetCraftingCharacter(APawn* Character);
+
+	void StartCrafting(float CraftingTime);
 
 	UFUNCTION() // ufunction needed for timer
 	void CraftingStep(float CraftingTime, float UpdateFrequency); // update progress bar of CraftingStationMenu
@@ -96,7 +98,7 @@ protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 
 private:
-	AStoneAgeColonyCharacter* Player;
+	//AStoneAgeColonyCharacter* Player;
 	int32 ID;
 	FName CraftingStationType;
 	FStructureData* Data;

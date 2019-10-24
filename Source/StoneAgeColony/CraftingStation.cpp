@@ -23,18 +23,19 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/CraftingStationsDataTable.CraftingStationsDataTable'"));
 	if (PropertiesDataObject.Succeeded())
 	{
-		PropertiesDataTable = PropertiesDataObject.Object;
+	PropertiesDataTable = PropertiesDataObject.Object;
 	}
 
 	CraftAmount = 1; // TODO: craft how many?
-	
+
 }
 
 void ACraftingStation::OnUsed(APawn* InstigatorPawn)
 {
 	/* When player interacts, not for NPCs*/
 	Super::OnUsed(InstigatorPawn);
-	Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
+	SetCraftingCharacter(InstigatorPawn);
+	//CraftingCharacter = (AStoneAgeColonyCharacter*)InstigatorPawn;
 	OpenMenu(InstigatorPawn);
 }
 
@@ -54,7 +55,7 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 		Menu = ((AStoneAgeColonyCharacter*)InstigatorPawn)->OpenMenu(MenuRef, this, OwnerSettlement);
 
 		// Set bar visible if currently crafting
-		((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting); 
+		((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(CurrentlyCrafting);
 		MenuOpen = true;
 	}
 	else
@@ -70,6 +71,11 @@ void ACraftingStation::OpenMenu(APawn* InstigatorPawn)
 	}
 }
 
+void ACraftingStation::SetCraftingCharacter(APawn* Character)
+{
+	CraftingCharacter = Cast<AHumanCharacter>(Character);
+}
+
 void ACraftingStation::SetupType(FString Type)
 {
 	CraftingStationType = FName(*Type);
@@ -80,7 +86,7 @@ void ACraftingStation::SetupType(FString Type)
 	ID = Data->ID;
 	CraftableItems = Data->CraftableItems;
 	MenuRef = Data->Menu;
-	
+
 	// Required for loading icon from TAssetPtr with Get()
 	if (Data->Mesh.IsPending())
 	{
@@ -93,12 +99,16 @@ void ACraftingStation::SetupType(FString Type)
 	DefaultMesh = Data->Mesh.Get();
 }
 
-void ACraftingStation::StartCrafting(float CraftingTime, APawn* InstigatorPawn)
+void ACraftingStation::StartCrafting(float CraftingTime)
 {
 	// Set the character that does the crafting. Can be player or npcs.
-	CraftingCharacter = Cast<AHumanCharacter>(InstigatorPawn);
+	//CraftingCharacter = Cast<AHumanCharacter>(InstigatorPawn);
 
-	((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(true);
+	if (Cast<UCraftingStationMenu>(Menu))
+	{
+		Cast<UCraftingStationMenu>(Menu)->SetProgressBarVisibility(true);
+	}
+
 	FTimerDelegate TimerDel;
 
 	//Binding the function with specific values
@@ -109,12 +119,18 @@ void ACraftingStation::StartCrafting(float CraftingTime, APawn* InstigatorPawn)
 
 	CurrentlyCrafting = true;
 
+	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::StartCrafting CRAFTING BRU"));
+	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::StartCrafting Item ID : %d"), CurrentItemID);
+
 }
 
 void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
 {
 	CraftingProgress += 1 / CraftingTime * UpdateFrequency;
-	((UCraftingStationMenu*)Menu)->UpdateProgressBar(CraftingProgress);
+	if (Cast<UCraftingStationMenu>(Menu))
+	{
+		Cast<UCraftingStationMenu>(Menu)->UpdateProgressBar(CraftingProgress);
+	}
 	
 	// Crafting Completed
 	if (CraftingProgress >= 1.f)
@@ -124,7 +140,7 @@ void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
 		// Consume items from player inventory after crafting is finished.
 		if (CraftingCharacter)
 		{
-			auto PlayerInventory = Player->GetInventory();
+			//auto PlayerInventory = CraftingCharacter->GetInventory();
 
 			// Consume items from player inventory
 			for (auto Requirement : CurrentItem->CraftRequirements)
@@ -137,6 +153,12 @@ void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
 
 			// Add crafted items to player inventory
 			CraftingCharacter->Inventory->AddItem(CurrentItemID, CraftAmount * CurrentItem->YieldAmount);
+			// if crafting character is a settlement member
+			auto SettlementMember = Cast<ASettlementMember>(CraftingCharacter);
+			if (SettlementMember)
+			{
+				SettlementMember->GetCraftingFinishedNotification();
+			}
 			
 		}
 
@@ -145,7 +167,11 @@ void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
 
 void ACraftingStation::StopCrafting()
 {
-	((UCraftingStationMenu*)Menu)->SetProgressBarVisibility(false);
+	if (Cast<UCraftingStationMenu>(Menu))
+	{
+		Cast<UCraftingStationMenu>(Menu)->SetProgressBarVisibility(false);
+	}
+	
 	CraftingProgress = 0.f;
 	CurrentlyCrafting = false;
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
@@ -155,11 +181,11 @@ bool ACraftingStation::CraftingRequirementsMet()
 {
 	/* Checks if required items are in player inventory for crafting the item of this button. */
 
-	bool RequirementsMet = true;
-
-	if (Player)
+	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::CraftingRequirementsMet ???"));
+	if (CraftingCharacter)
 	{
-		auto Inventory = Player->GetInventory();
+		UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::CraftingRequirementsMet CraftingCharacter not null"));
+		auto Inventory = CraftingCharacter->GetInventory();
 
 		for (auto Requirement : CurrentItem->CraftRequirements)
 		{
@@ -171,20 +197,20 @@ bool ACraftingStation::CraftingRequirementsMet()
 			{
 				if (Inventory->GetItems()[RequiredItem] < RequiredAmount)
 				{
-					RequirementsMet = false;
-					break;
+					return false;
 				}
 			}
 			else
 			{
-				RequirementsMet = false;
+				return false;
 			}
 
 		}
 
 	}
 
-	return RequirementsMet;
+	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::CraftingRequirementsMet Requirements Met"));
+	return true;
 }
 
 

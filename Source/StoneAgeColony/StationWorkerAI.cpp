@@ -6,6 +6,7 @@
 #include "CraftingStation.h"
 //#include "MyUtility.h"
 #include "Communicator.h"
+#include "ObjectFactory.h"
 
 AStationWorkerAI::AStationWorkerAI()
 {
@@ -29,9 +30,9 @@ void AStationWorkerAI::Act()
 void AStationWorkerAI::CheckStatus()
 {
 	//Super::CheckStatus();
-	UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::CheckStatus"));
+	//UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::CheckStatus"));
 
-	if (Possessed->Activity == EActivity::VE_GoingToStation)
+	if (Possessed->Activity == EActivity::VE_GoingToStation || Possessed->Activity == EActivity::VE_Idle)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::CheckStatus Distance to workstation: %f"), GetDistanceToWorkstation());
 		if (GetDistanceToWorkstation() < 200.f)
@@ -40,7 +41,9 @@ void AStationWorkerAI::CheckStatus()
 			Possessed->Activity = EActivity::VE_Working;
 			StartCrafting();
 		}
+
 	}
+	
 }
 
 void AStationWorkerAI::MoveToStation()
@@ -79,9 +82,25 @@ void AStationWorkerAI::MoveToStation()
 
 void AStationWorkerAI::StartCrafting()
 {
+	UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::StartCrafting Trying Crafting"));
 	if (WorkStation)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::StartCrafting  Work Station not null"));
+		Possessed->Activity = EActivity::VE_Working;
+		auto CraftableItems = WorkStation->CraftableItems;
+		AObjectFactory* Factory = NewObject<AObjectFactory>();
+
+		// Currently creates first item on the Station's CraftableItems list. Need a way to select which one.
+		auto ItemToCraft = Factory->CreateObjectBetter(CraftableItems[1]);
+		WorkStation->CurrentItem = ItemToCraft;
+		WorkStation->CurrentItemID = ItemToCraft->GetID(); // does this work?
+		WorkStation->SetCraftingCharacter(Possessed);
+	
+		if (WorkStation->CraftingRequirementsMet())
+		{
+			WorkStation->StartCrafting(5.f); // how to get time to craft?
+		}
+		
 	}
 	else
 	{

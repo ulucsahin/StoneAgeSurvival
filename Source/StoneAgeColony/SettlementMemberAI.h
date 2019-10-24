@@ -12,7 +12,12 @@ class ASettlementMember;
 UENUM()
 enum class EActivity : uint8
 {
-	VE_Idle, VE_Moving, VE_Working, VE_Talking, VE_GoingToStation,
+	VE_Idle, // waiting with no purpose
+	VE_Moving, // moving around aimlessly
+	VE_Working, // currently crafting
+	VE_Talking, // Talking with player (or other npcs later on?)
+	VE_GoingToStation, // moving to its working station
+	VE_FinishedJob, // finished crafting, ready for crafting more or going home
 };
 
 UCLASS()

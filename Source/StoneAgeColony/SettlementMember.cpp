@@ -24,6 +24,7 @@
 #include "SettlementMemberProfession.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "SurvivalGameState.h"
+#include "Inventory.h"
 
 ASettlementMember::ASettlementMember(const class FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -106,6 +107,9 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 {
 	StartDialogue(InstigatorPawn);
 	SetupHome();
+
+	// For Debug
+	Inventory->PrintInventory();
 }
 
 void ASettlementMember::SetupBelongingSettlement()
@@ -187,6 +191,11 @@ void ASettlementMember::Act()
 void ASettlementMember::GetNotification()
 {
 	if(Activity != EActivity::VE_Talking) Act();
+}
+
+void ASettlementMember::GetCraftingFinishedNotification()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::GetCraftingFinishedNotification"));
 }
 
 void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
@@ -305,26 +314,16 @@ void ASettlementMember::RegisterActorDetailsToSave()
 	FHumanCharacterDetails Details;
 
 	// Assign details to struct.
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 0"));
 	Details.Transform = GetActorTransform();
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 1"));
 	Details.FaceDetails = MorphManager->FaceDetails;
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 2"));
-	//FString asd = "asd";
-	//UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave SPECIAL ID %s"), *asd);
 	Details.SpecialID = SpecialID;
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 3"));
 	Details.HomeSpecialID = HomeSpecialID;
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 4"));
 	Details.ProfessionType = Profession.Type;
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 5"));
 	
 	// Save equipments
 	Details.EquippedItems = EquipmentManager->EquippedItems;
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave  6"));
 	// Save details as struct to communicator. Which will be used during saving.
 	Communicator::GetInstance().SpawnedCharacterDetails.Add(Details);
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::RegisterActorDetailsToSave 7"));
 }
 
 void ASettlementMember::EmptyCommunicatorDetailsArray()

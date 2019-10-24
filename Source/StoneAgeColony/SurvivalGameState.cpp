@@ -55,7 +55,7 @@ bool ASurvivalGameState::GetAndUpdateIsNight()
 
 void ASurvivalGameState::UpdateNPCAI()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI"));
+	//UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI"));
 	
 	static bool AlreadyMorningAI = false;
 	static bool AlreadyRealAI = false;
@@ -66,7 +66,7 @@ void ASurvivalGameState::UpdateNPCAI()
 
 	if ((GetTimeOfDay() < 60.f * 8.f) && (GetTimeOfDay() > 60.f * 6.f) && !AlreadyMorningAI) // between 6 am - 8 am
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI SET MORNING AI"));
+		//UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI SET MORNING AI"));
 		AlreadyMorningAI = true;
 		AlreadyRealAI = false;
 		AlreadyNightAI = false;
@@ -79,7 +79,7 @@ void ASurvivalGameState::UpdateNPCAI()
 	}
 	else if ((GetTimeOfDay() > 60.f * 8.f) && (GetTimeOfDay() < 60.f * 20.f) && !AlreadyRealAI) // between 8am-8pm
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI  SET REAL AI "));
+		//UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI  SET REAL AI "));
 		AlreadyMorningAI = false;
 		AlreadyRealAI = true;
 		AlreadyNightAI = false;
@@ -92,7 +92,7 @@ void ASurvivalGameState::UpdateNPCAI()
 	}
 	else if (((GetTimeOfDay() < 60.f * 6.f) || (GetTimeOfDay() > 60.f * 22.f))  && !AlreadyNightAI) // between 10pm - 6am
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI SET NIGHT AI "));
+		//UE_LOG(LogTemp, Warning, TEXT("ASurvivalGameState::UpdateNPCAI SET NIGHT AI "));
 		AlreadyMorningAI = false;
 		AlreadyRealAI = false;
 		AlreadyNightAI = true;

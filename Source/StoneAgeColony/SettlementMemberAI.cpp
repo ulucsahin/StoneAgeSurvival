@@ -29,16 +29,28 @@ void ASettlementMemberAI::Possess(APawn *InPawn)
 
 void ASettlementMemberAI::CheckStatus()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMemberAI::CheckStatus"));
+	//UE_LOG(LogTemp, Warning, TEXT("ASettlementMemberAI::CheckStatus"));
+
+	if (Possessed->Activity == EActivity::VE_Talking)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Talkin bic"));
+	}
+	else if (Possessed->Activity == EActivity::VE_Working)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Workin bic"));
+	}
+
 
 	// Get Activity
-	if (Possessed->Activity != EActivity::VE_Talking)
+	if (Possessed->Activity != EActivity::VE_Talking && Possessed->Activity != EActivity::VE_Working)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMemberAI::CheckStatus inside if"));
+		
 		if (GetMoveStatus() == EPathFollowingStatus::Idle) Possessed->Activity = EActivity::VE_Idle;
 		else if (GetMoveStatus() == EPathFollowingStatus::Waiting) Possessed->Activity = EActivity::VE_Idle;
 		else if (GetMoveStatus() == EPathFollowingStatus::Moving) Possessed->Activity = EActivity::VE_Moving;
 	}
-
+	
 }
 
 

@@ -102,3 +102,13 @@ void UInventory::ConsumeItem(int32 ItemID, int32 Amount)
 	}
 	
 }
+
+void UInventory::PrintInventory()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UInventory::PrintInventory"));
+	
+	for (auto Item : Items)
+	{
+		UE_LOG(LogTemp,Warning,TEXT("Inventory Item: %d %d"), Item.Key, Item.Value);
+	}
+}

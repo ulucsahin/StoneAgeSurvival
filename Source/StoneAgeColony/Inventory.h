@@ -29,6 +29,7 @@ public:
 	bool Contains(int32);
 	void Emplace(int32, int32);
 	void ConsumeItem(int32 ItemID, int32 Amount);
+	void PrintInventory();
 	TMap<int32, int32> GetItems();
 
 	AHumanCharacter* Owner;

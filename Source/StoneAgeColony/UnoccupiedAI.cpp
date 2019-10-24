@@ -15,7 +15,7 @@ void AUnoccupiedAI::Possess(APawn *InPawn)
 {
 	Super::Possess(InPawn);
 
-	UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Possess"));
+	//UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Possess"));
 
 	//Communicator::GetInstance().World->GetTimerManager().SetTimer(TimerHandle, this, &AUnoccupiedAI::CheckStatus, 1.0f, true);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AUnoccupiedAI::CheckStatus, 1.0f, true);
@@ -24,14 +24,14 @@ void AUnoccupiedAI::Possess(APawn *InPawn)
 void AUnoccupiedAI::Act()
 {	
 	//WanderAround();
-	UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Act"));
+	//UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Act"));
 	
 
 	if (Possessed->Activity == EActivity::VE_Idle)
 	{
 		// with 5% chance move around
 		auto RandomValue = MyUtility::RandomFloat(0.f, 1.f);
-		UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Act RandomValue: %f"), RandomValue);
+		//UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::Act RandomValue: %f"), RandomValue);
 		if (RandomValue > 0.50f)
 		{
 			WanderAround();
@@ -44,12 +44,11 @@ void AUnoccupiedAI::Act()
 void AUnoccupiedAI::CheckStatus()
 {
 	Super::CheckStatus();
-	UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::CheckStatus"));
+	//UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::CheckStatus"));
 	if (Possessed->Activity == EActivity::VE_Idle)
 	{
-		Possessed->Activity = EActivity::VE_Moving;
 		auto RandomValue = MyUtility::RandomFloat(0.f, 1.f);
-		UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::CheckStatus RandomValue: %f"), RandomValue);
+		//UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::CheckStatus RandomValue: %f"), RandomValue);
 		if (RandomValue > 0.50f)
 		{
 			WanderAround();
@@ -71,7 +70,7 @@ void AUnoccupiedAI::WanderAround()
 		FVector TargetLocation = FVector(MyUtility::RandomFloat(-Radius, Radius), MyUtility::RandomFloat(-Radius, Radius), 0.f);
 		MoveToLocation(TargetLocation + SettlementLocation);
 		
-		UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::WanderAround TargetLocation %f, %f, %f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z);
-		UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::WanderAround SettlementLocation %f, %f, %f"), SettlementLocation.X, SettlementLocation.Y, SettlementLocation.Z);
+		//UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::WanderAround TargetLocation %f, %f, %f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z);
+		//UE_LOG(LogTemp, Warning, TEXT("AUnoccupiedAI::WanderAround SettlementLocation %f, %f, %f"), SettlementLocation.X, SettlementLocation.Y, SettlementLocation.Z);
 	}
 }
