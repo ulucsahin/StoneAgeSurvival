@@ -9,6 +9,9 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Internationalization/Regex.h"
 #include "SettlementMemberProfession.h"
+#include "StoneAgeColonyCharacter.h"
+#include "Kismet/GameplayStatics.h"
+#include "UISpecifyCrafting.h"
 
 
 void UDialogueChoiceButton::InitialSetup()
@@ -33,9 +36,9 @@ void UDialogueChoiceButton::SetupType(FString ID_as_String)
 
 void UDialogueChoiceButton::OnButtonClick()
 {
-	OwnerDialogueMenu->SetText(GenerateResponse());
+	OwnerDialogueMenu->SetText(ActAndReturnResponse());
 	OwnerDialogueMenu->AddChoices(Next);
-
+	OwnerDialogueMenu->SetChoiceButtonsEnabled(NextButtonsEnabled);
 }
 
 void UDialogueChoiceButton::OnButtonHover()
@@ -51,8 +54,9 @@ void UDialogueChoiceButton::SetOwnerMemberProfession(EProfession Profession)
 	OwnerMember->ChangeProfession(NewProfession);
 }
 
-FString UDialogueChoiceButton::GenerateResponse()
+FString UDialogueChoiceButton::ActAndReturnResponse()
 {
+	UE_LOG(LogTemp, Warning, TEXT("UDialogueChoiceButton:: ActAndReturnResponse after new windows"));
 	if (Type == EButtonTypes::VE_Introduction)
 	{
 		return Response + OwnerDialogueMenu->Owner->Name + ".";
@@ -69,6 +73,28 @@ FString UDialogueChoiceButton::GenerateResponse()
 	}
 	else if (Type == EButtonTypes::VE_OpenMenu)
 	{
+		return "";
+	}
+	else if (Type == EButtonTypes::VE_OpenSpecifyCraftingMenu)
+	{
+		// VE_OpenSpecifyCraftingMenu is currently only for SpecifyCraftingMenu. For other menus different enums will be added.
+		AStoneAgeColonyCharacter* Player = Cast<AStoneAgeColonyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (Player)
+		{
+			// Do not open if already on
+			if (OwnerDialogueMenu->Owner->SpecifyCratingMenuOn == false)
+			{
+				OwnerDialogueMenu->Owner->SpecifyCratingMenuOn = true;
+				NextButtonsEnabled = false;
+				auto Menu = (UUISpecifyCrafting*)Player->OpenMenu(Payload, nullptr, nullptr);
+				Menu->OwnerDialogueMenu = OwnerDialogueMenu;
+				Menu->InitializeCraftListItems();
+				OwnerDialogueMenu->SetVisibility(ESlateVisibility::Hidden);
+			
+			}
+
+		}
+
 		return "";
 	}
 	else

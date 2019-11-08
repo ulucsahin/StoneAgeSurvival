@@ -109,26 +109,20 @@ void ASettlementMember::OnUsed(APawn* InstigatorPawn)
 	SetupHome();
 
 	// For Debug
-	Inventory->PrintInventory();
+	//Inventory->PrintInventory();
 }
 
 void ASettlementMember::SetupBelongingSettlement()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 0"));
 	TArray<AActor*> FoundSettlements;
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 1"));
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASettlement::StaticClass(), FoundSettlements);
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 2"));
+
 	for (auto Settlement : FoundSettlements)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 3"));
 		if (((ASettlement*)Settlement)->IsActiveSettlement)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 4"));
 			BelongingSettlement = (ASettlement*)Settlement;
-			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 5"));
 			BelongingSettlement->RegisterMember(this);
-			UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupBelongingSettlement 6"));
 		}
 
 	}
@@ -140,10 +134,8 @@ void ASettlementMember::SetupHome()
 	// Do nothing if this character already has a home 
 	if (Home) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome Already has a home, exiting method."));
 		return;
 	}
-
 
 	if (BelongingSettlement)
 	{
@@ -157,7 +149,6 @@ void ASettlementMember::SetupHome()
 				{
 					ProbableHome->Occupants.Add(SpecialID);
 					Home = ProbableHome;
-					UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome Home restored from save game."));
 					return;
 				}
 
@@ -167,14 +158,16 @@ void ASettlementMember::SetupHome()
 					ProbableHome->Occupants.Add(SpecialID);
 					HomeSpecialID = ProbableHome->SpecialID;
 					Home = ProbableHome;
-					UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome New home set, exiting method."));
 					return;
 				}
 			}
 		}
 	}
+}
 
-	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupHome no house available bitch."));
+void ASettlementMember::OpenSpecifyCraftingMenu()
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::OpenSpecifyCraftingMenu"));
 }
 
 void ASettlementMember::ChangeProfession(FProfession NewProfession)
@@ -196,11 +189,15 @@ void ASettlementMember::GetNotification()
 void ASettlementMember::GetCraftingFinishedNotification()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::GetCraftingFinishedNotification"));
+	Activity = EActivity::VE_Idle;
 }
 
 void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 {
 	AStoneAgeColonyCharacter* Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
+
+	if (Activity == EActivity::VE_Talking) return;
+
 	if (Player)
 	{
 		if (AIController)
@@ -213,13 +210,14 @@ void ASettlementMember::StartDialogue(APawn* InstigatorPawn)
 			x.Yaw += 180.f;
 			SetActorRotation(x);
 
+			auto DialogueMenu = (UDialogueMenu*)Player->OpenMenu(DialogueMenuRef, NULL, NULL);
+			DialogueMenu->Owner = this;
+			DialogueMenu->StartingChoiceIDs = { 20000 };
+			DialogueMenu->InitialSetup();
 		}
 
-		auto DialogueMenu = (UDialogueMenu*)Player->OpenMenu(DialogueMenuRef, NULL, NULL);
-		DialogueMenu->Owner = this;
-		DialogueMenu->StartingChoiceIDs = { 20000 };
-		DialogueMenu->InitialSetup();
-		Activity = EActivity::VE_Talking;
+		
+		//Activity = EActivity::VE_Talking;
 	}
 }
 

@@ -24,7 +24,7 @@ void AStationWorkerAI::Act()
 	MoveToStation();
 
 	// TEST
-	StartCrafting();
+	//StartCrafting();
 }
 
 void AStationWorkerAI::CheckStatus()
@@ -85,26 +85,21 @@ void AStationWorkerAI::StartCrafting()
 	UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::StartCrafting Trying Crafting"));
 	if (WorkStation)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::StartCrafting  Work Station not null"));
-		Possessed->Activity = EActivity::VE_Working;
 		auto CraftableItems = WorkStation->CraftableItems;
 		AObjectFactory* Factory = NewObject<AObjectFactory>();
 
 		// Currently creates first item on the Station's CraftableItems list. Need a way to select which one.
 		auto ItemToCraft = Factory->CreateObjectBetter(CraftableItems[1]);
 		WorkStation->CurrentItem = ItemToCraft;
-		WorkStation->CurrentItemID = ItemToCraft->GetID(); // does this work?
+		WorkStation->CurrentItemID = ItemToCraft->GetID();
 		WorkStation->SetCraftingCharacter(Possessed);
 	
 		if (WorkStation->CraftingRequirementsMet())
 		{
+			Possessed->Activity = EActivity::VE_Working;
 			WorkStation->StartCrafting(5.f); // how to get time to craft?
 		}
 		
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::StartCrafting  Work Station null"));
 	}
 
 }

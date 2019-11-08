@@ -462,9 +462,11 @@ void AStoneAgeColonyCharacter::Use()
 	{
 		ASettlementMember* NPC = GetActorInView<ASettlementMember>(250.f);
 		
+		if (PlayerStates == EPlayerStates::VE_Talking) return;
+
 		if (NPC)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("GetActorInView<ASettlementMember> Success"));
+			ChangeState(EPlayerStates::VE_Talking);
 			NPC->OnUsed(this);
 		}
 
@@ -489,6 +491,7 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructur
 {
 	/* Adds menu to viewport by using String Reference */
 	//UE_LOG(LogTemp, Warning, TEXT("OpenMenu asdasda"));
+
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	
 	// Open CraftingStation Menu
@@ -496,26 +499,36 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructur
 	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
 	auto MenuWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
 
-	if (OwnerStructure)
+	//if(OpenedMenus.Contains(MenuWidget))
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OpenMenu OpenedMenus.Contains"));
+	//	MenuWidget->RemoveFromParent();
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("I've never seen this man in my life before"));
+	//}
+
+	if (MenuWidget)
 	{
-		MenuWidget->OwnerStructure = OwnerStructure;
-		MenuWidget->OwnerSettlement = OwnerSettlement;
+		if (OwnerStructure)
+		{
+			MenuWidget->OwnerStructure = OwnerStructure;
+			MenuWidget->OwnerSettlement = OwnerSettlement;
+		}
+	
+		MenuWidget->AddToViewport();
+		MenuWidget->IsActive = true;
+
+		if (PlayerController)
+		{
+			PlayerController->SetInputMode(FInputModeGameAndUI());
+			PlayerController->bShowMouseCursor = true;
+			PlayerController->bEnableClickEvents = true;
+			PlayerController->bEnableMouseOverEvents = true;
+		}
+		OpenedMenus.Emplace(MenuWidget);
 	}
-
-	MenuWidget->AddToViewport();
-	MenuWidget->IsActive = true;
-
-
-	if (PlayerController)
-	{
-		PlayerController->SetInputMode(FInputModeGameAndUI());
-		PlayerController->bShowMouseCursor = true;
-		PlayerController->bEnableClickEvents = true;
-		PlayerController->bEnableMouseOverEvents = true;
-	}
-
-	OpenedMenus.Emplace(MenuWidget);
-
 	return MenuWidget;
 }
 
@@ -662,64 +675,6 @@ int AStoneAgeColonyCharacter::GetLevel()
 {
 	return Level;
 }
-
-//AUsableActor* AStoneAgeColonyCharacter::GetInventoryItem(int InventoryItemIndex)
-//{
-//	int ItemIDatIndex = Inventory[InventoryItemIndex];
-//	return Communicator::GetInstance().UsableItemIDMap[ItemIDatIndex];
-//}
-
-//UInventory* AStoneAgeColonyCharacter::GetInventory()
-//{
-//	return Inventory;
-//}
-
-// we cannot(?) return TMap pointer, so instead we are accessing inventory from here when we want to increase number of item in player inventory from another class
-//void AStoneAgeColonyCharacter::ConsumeItemFromInventory(int32 ItemID, int32 Amount)
-//{
-//	if (Inventory->Contains(ItemID))
-//	{
-//		Inventory->Emplace(ItemID, Inventory->Items[ItemID] - Amount);
-//
-//		if (BottomBar)
-//		{
-//			BottomBar->Refresh();
-//		}
-//
-//		if (UIPlayerInventory)
-//		{
-//			UIPlayerInventory->Refresh();
-//		}
-//
-//	}
-//	
-//}
-
-//void AStoneAgeColonyCharacter::AddToInventory(int ItemToAdd, int AmountToAdd)
-//{
-//	/*ItemToAdd is ID of item that we want to add to inventory.*/
-//
-//	// if we have atleast one instance of ItemToAdd in inventory
-//	if (!Inventory.Contains(ItemToAdd))
-//	{
-//		Inventory.Add(ItemToAdd, AmountToAdd);
-//	}
-//	else
-//	{
-//		Inventory.Emplace(ItemToAdd, Inventory[ItemToAdd] + AmountToAdd);
-//	}
-//
-//	if (BottomBar)
-//	{
-//		BottomBar->Refresh();
-//	}
-//	
-//	if (UIPlayerInventory)
-//	{
-//		UIPlayerInventory->Refresh();
-//	}
-//		
-//}
 
 // Called on key press
 void AStoneAgeColonyCharacter::ChangeState()

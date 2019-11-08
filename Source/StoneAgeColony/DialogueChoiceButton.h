@@ -14,11 +14,17 @@ class UDialogueMenu;
 UENUM()
 enum class EButtonTypes : uint32
 {
-	VE_Introduction  UMETA(DisplayName = "Introduction"), 
-	VE_AskJob   UMETA(DisplayName = "AskJob"),  // displays profession
-	VE_OpenMenu UMETA(DisplayName = "OpenMenu"), // Just displays different choices
-	VE_AssignJob UMETA(DisplayName = "AssignJob"), // sets profession
-	
+	// Introduction
+	VE_Introduction						UMETA(DisplayName = "Introduction"), 
+	// Displays profession
+	VE_AskJob							UMETA(DisplayName = "AskJob"),  
+	// Just displays different choices
+	VE_OpenMenu							UMETA(DisplayName = "OpenMenu"), 
+	// Opens a user interface menu
+	VE_OpenSpecifyCraftingMenu			UMETA(DisplayName = "OpenSpecifyCraftingMenu"),
+	// Sets profession
+	VE_AssignJob						UMETA(DisplayName = "AssignJob"), 
+
 };
 
 USTRUCT(BlueprintType)
@@ -72,7 +78,7 @@ public:
 
 	virtual void InitialSetup() override;
 	void SetOwnerMemberProfession(EProfession Profession);
-	FString GenerateResponse();
+	FString ActAndReturnResponse();
 	EProfession GetJobFromQuery();
 
 
@@ -87,5 +93,6 @@ public:
 	FString Response;
 	TArray<int32> Next;
 	TArray<int32> Previous;
+	bool NextButtonsEnabled = true;
 
 };

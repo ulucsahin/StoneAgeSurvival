@@ -21,8 +21,7 @@ UDialogueMenu::UDialogueMenu(const FObjectInitializer& ObjectInitializer) : Supe
 void UDialogueMenu::InitialSetup()
 {
 	Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-
-	AddChoices(StartingChoiceIDs); // currently only with ID 20000.
+	AddChoices(StartingChoiceIDs); // currently only with ID 20000.	
 }
 
 void UDialogueMenu::CloseMenu()
@@ -31,11 +30,10 @@ void UDialogueMenu::CloseMenu()
 	if (Owner)
 	{
 		Owner->Activity = EActivity::VE_Idle;
+		Player->ChangeState(EPlayerStates::VE_Combat); // regular state
 	}
 
 	Owner->Act();
-
-	//Owner->AIController->Activity = EActivity::VE_Idle;
 
 }
 
@@ -53,6 +51,9 @@ void UDialogueMenu::AddChoices(TArray<int32> ChoiceIDs)
 		DialogueChoiceButton->InitialSetup();
 		DialogueChoiceButton->SetupType(*FString::FromInt(ID));
 	}
+
+	
+
 }
 
 void UDialogueMenu::SetText(FString Text)
@@ -61,18 +62,17 @@ void UDialogueMenu::SetText(FString Text)
 	DialogueTextBox->SetText(Dialogue_);
 }
 
+void UDialogueMenu::SetChoiceButtonsEnabled(bool Enabled)
+{
+	UE_LOG(LogTemp, Warning, TEXT("UDialogueMenu::SetChoiceButtonsEnabled"));
+	int32 ButtonCount = ChoicesVerticalBox->GetChildrenCount();
+	for (int i = 0; i < ButtonCount; i++)
+	{
+		auto x = Cast<UDialogueChoiceButton>(ChoicesVerticalBox->GetChildAt(i));
+		if (x)
+		{
+			x->SetIsEnabled(Enabled);
+		}
+	}
 
-//// Called in blueprint
-//void UDialogueMenu::AddItems(int32 CraftStationID)
-//{
-//	for (int32 Item : ((ACraftingStation*)OwnerStructure)->CraftableItems)
-//	{
-//		auto CraftListButton = CreateWidget<UCraftListButton>((APlayerController*)Player->GetController(), CraftMenuItem);
-//		CraftListButton->ItemID = Item;
-//		CraftListButton->SetupInventoryItemCell();
-//		CraftListButton->SetStationMenu(this);
-//
-//		// WrapBox assigned from blueprint
-//		VerticalBox->AddChild(CraftListButton);
-//	}
-//}
+}

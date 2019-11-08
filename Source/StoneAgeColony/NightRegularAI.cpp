@@ -22,19 +22,23 @@ void ANightRegularAI::GoHome()
 
 	auto PossessedHomeID = Possessed->HomeSpecialID;
 
-	for (auto Structure : Possessed->BelongingSettlement->Structures)
+	if (Possessed->BelongingSettlement)
 	{
-		AHouse* House = Cast<AHouse>(Structure);
-		if (House)
+		for (auto Structure : Possessed->BelongingSettlement->Structures)
 		{
-			if (House->SpecialID == PossessedHomeID)
+			AHouse* House = Cast<AHouse>(Structure);
+			if (House)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("ANightRegularAI::GoHome HOUSE FOUND"));
-				MoveToLocation(House->GetActorLocation());
-				return;
+				if (House->SpecialID == PossessedHomeID)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("ANightRegularAI::GoHome yankee HOUSE FOUND"));
+					MoveToLocation(House->GetActorLocation());
+					return;
+				}
+
 			}
 
 		}
-
 	}
+	
 }

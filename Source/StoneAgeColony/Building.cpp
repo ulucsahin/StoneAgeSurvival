@@ -141,6 +141,9 @@ void ABuilding::SetBoxComponent(bool Init)
 		Box->OnComponentBeginOverlap.AddDynamic(this, &ABuilding::OnOverlapBegin);
 		Box->OnComponentEndOverlap.AddDynamic(this, &ABuilding::OnOverlapEnd);
 		Box->SetCollisionProfileName("Overlap All");
+
+		
+
 	}
 	
 

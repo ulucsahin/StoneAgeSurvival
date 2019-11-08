@@ -45,6 +45,9 @@ public:
 	void GetNotification();
 	void GetCraftingFinishedNotification();
 	void SetupAIController();
+	void OpenSpecifyCraftingMenu();
+
+	bool SpecifyCratingMenuOn = false;
 
 	// Save-Load Methods
 	virtual void RegisterActorDetailsToSave() override;

@@ -32,9 +32,11 @@ public:
 	void AddChoices(TArray<int32> ChoiceIDs);
 	void SetText(FString Text);
 	virtual void CloseMenu() override;
+	void SetChoiceButtonsEnabled(bool Enabled);
 
 	TArray<int32> StartingChoiceIDs;
+	AStoneAgeColonyCharacter* Player;
 private:
 	TSubclassOf<UDialogueChoiceButton> DialogueChoiceButtonWidget;
-	AStoneAgeColonyCharacter* Player;
+	
 };

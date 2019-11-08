@@ -27,6 +27,7 @@ enum class EPlayerStates : uint8
 	VE_Combat 	UMETA(DisplayName = "Combat"),
 	VE_Building UMETA(DisplayName = "Building"),
 	VE_Pickup   UMETA(DisplayName = "Pickup"),
+	VE_Talking  UMETA(DisplayName = "Talking"),
 };
 
 
