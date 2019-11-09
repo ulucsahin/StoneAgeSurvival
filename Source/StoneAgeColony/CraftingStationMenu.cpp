@@ -59,19 +59,18 @@ void UCraftingStationMenu::AddItems(int32 CraftStationID)
 void UCraftingStationMenu::ReceiveInformationFromButton(AUsableActor* RepresentedItem, int32 ItemID)
 {
 	// wtf are those casts
-
+	ACraftingStation* OwnerStructure_ = (ACraftingStation*)OwnerStructure;
 	// do nothing if currently crafting
-	if(!((ACraftingStation*)OwnerStructure)->CurrentlyCrafting)
+	if(!OwnerStructure_->CurrentlyCrafting)
 	{
-		((ACraftingStation*)OwnerStructure)->CurrentItem = RepresentedItem;
-		((ACraftingStation*)OwnerStructure)->CurrentItemID = ItemID;
-		((ACraftingStation*)OwnerStructure)->SetCraftingCharacter(Player);
-		/*this->CurrentItem = RepresentedItem;
-		this->CurrentItemID = ItemID;*/
-		if (((ACraftingStation*)OwnerStructure)->CraftingRequirementsMet())
+		OwnerStructure_->CurrentItem = RepresentedItem;
+		OwnerStructure_->CurrentItemID = ItemID;
+		OwnerStructure_->SetCraftingCharacter(Player);
+
+		if (OwnerStructure_->CraftingRequirementsMet())
 		{
 			
-			((ACraftingStation*)OwnerStructure)->StartCrafting(5.f); // Crafting time should be different for items.
+			OwnerStructure_->StartCrafting(5.f); // Crafting time should be different for items.
 		}
 	}
 	

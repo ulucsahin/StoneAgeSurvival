@@ -38,7 +38,7 @@ void UUISpecifyCrafting::CloseMenu()
 
 void UUISpecifyCrafting::InitializeCraftListItems()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UUISpecifyCrafting::InitializeCraftListItems"));
+	UE_LOG(LogTemp, Warning, TEXT("UUISpecifyCrafting: :InitializeCraftListItems"));
 
 	AObjectFactory* Factory = NewObject<AObjectFactory>();
 
@@ -50,28 +50,18 @@ void UUISpecifyCrafting::InitializeCraftListItems()
 		if (WorkstationID != -1) // -1 means this settlement member has no workstation
 		{
 			ACraftingStation* Station = Cast<ACraftingStation>(Factory->CreateObjectBetter(OwnerMember->Profession.WorkstationTypeID));
-			UE_LOG(LogTemp, Warning, TEXT("1"));
 			if (Station)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("2"));
-				for (auto Item : Station->CraftableItems)
+				for (auto ItemID : Station->CraftableItems)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("3"));
 					auto Controller = (APlayerController*)OwnerDialogueMenu->Player->GetController();
-					UE_LOG(LogTemp, Warning, TEXT("4"));
 					USpecifyCraftListItem* CraftListItem = CreateWidget<USpecifyCraftListItem>(Controller, ListItemWidget);
-					UE_LOG(LogTemp, Warning, TEXT("5"));
+					CraftListItem->RepresentedItemID = ItemID;
+					CraftListItem->OwnerSpecifyCraftingMenu = this;
 					VerticalBox->AddChild(CraftListItem);
-					UE_LOG(LogTemp, Warning, TEXT("6123"));
 				}
 
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("anan xd"));
-			}
-
-			
+			}		
 
 		}
 		

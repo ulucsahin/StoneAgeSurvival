@@ -8,6 +8,10 @@
 
 class USlider;
 class UTextBlock;
+class UUISpecifyCrafting;
+class ASettlementMember;
+class AUsableActor;
+class UInventory;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTestDelegate);
 
@@ -22,16 +26,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnSliderValueChanged();
 
+	int32 CalculateCraftAmountFromSlider();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Slider")
 	USlider* Slider;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "ItemNameBlock")
 	UTextBlock* ItemNameBlock;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "ItemAmountBlock")
 	UTextBlock* ItemAmountBlock;
-	//UTextBlock* ChoiceTextBox;
 
-	//UPROPERTY(BlueprintAssignable, Category = "Test")
-	//FTestDelegate OnTestDelegate;
-
-	int32 SetAmount;
+	int32 RepresentedItemID;
+	AUsableActor* RepresentedItemInstance;
+	int32 CraftAmount;
+	UUISpecifyCrafting* OwnerSpecifyCraftingMenu;
+	ASettlementMember* OwnerMember;
+	UInventory* OwnerInventory;
 };
