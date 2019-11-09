@@ -12,6 +12,7 @@ class UUISpecifyCrafting;
 class ASettlementMember;
 class AUsableActor;
 class UInventory;
+class UEditableTextBox;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTestDelegate);
 
@@ -26,6 +27,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnSliderValueChanged();
 
+	UFUNCTION(BlueprintCallable)
+	void OnItemAmountBlockValueChanged();
+
+	int32 CalculateMaxCraftAmount();
 	int32 CalculateCraftAmountFromSlider();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Slider")
@@ -36,6 +41,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "ItemAmountBlock")
 	UTextBlock* ItemAmountBlock;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "EditableItemAmountBlock")
+	UEditableTextBox* EditableItemAmountBlock;
 
 	int32 RepresentedItemID;
 	AUsableActor* RepresentedItemInstance;
