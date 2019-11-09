@@ -34,13 +34,17 @@ void UUISpecifyCrafting::CloseMenu()
 	OwnerDialogueMenu->SetVisibility(ESlateVisibility::Visible);
 	OwnerDialogueMenu->Owner->SpecifyCratingMenuOn = false;
 	OwnerDialogueMenu->SetChoiceButtonsEnabled(true);
+	OwnerDialogueMenu->Owner->CraftList = ConstructCraftList();
+	// Give CraftList to Owner SettlementMember
+	//OwnerDialogueMenu->Owner->CraftList =
 }
 
 void UUISpecifyCrafting::InitializeCraftListItems()
 {
-	UE_LOG(LogTemp, Warning, TEXT("UUISpecifyCrafting: :InitializeCraftListItems"));
+	UE_LOG(LogTemp, Warning, TEXT("UUISpecifyCrafting::InitializeCraftListItems"));
 
 	AObjectFactory* Factory = NewObject<AObjectFactory>();
+	CraftListItems.Empty();
 
 	if (OwnerDialogueMenu)
 	{
@@ -59,12 +63,26 @@ void UUISpecifyCrafting::InitializeCraftListItems()
 					CraftListItem->RepresentedItemID = ItemID;
 					CraftListItem->OwnerSpecifyCraftingMenu = this;
 					VerticalBox->AddChild(CraftListItem);
+					CraftListItems.Add(CraftListItem);
 				}
 
 			}		
 
 		}
-		
+
+		//OwnerMember->CraftList = ConstructCraftList();		
 	}	
 
+	
+}
+
+TMap<int32, int32> UUISpecifyCrafting::ConstructCraftList()
+{
+	TMap<int32, int32> CraftList = {};
+	for (auto Item : CraftListItems)
+	{
+		CraftList.Emplace(Item->RepresentedItemID, Item->CraftAmount);
+	}
+
+	return CraftList;
 }

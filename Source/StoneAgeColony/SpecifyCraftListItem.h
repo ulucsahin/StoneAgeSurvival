@@ -24,6 +24,8 @@ class STONEAGECOLONY_API USpecifyCraftListItem : public USurvivalWidget
 public:
 	virtual void InitialSetup() override;
 
+	void InitializeSliderValue();
+
 	UFUNCTION(BlueprintCallable)
 	void OnSliderValueChanged();
 

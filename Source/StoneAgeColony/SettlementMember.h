@@ -71,7 +71,8 @@ public:
 	ASettlement* BelongingSettlement;
 	AHouse* Home;
 	FString LastWorkingStationSpecialID;
-	TMap<int32, int32> CraftList; // which items to craft, and how many. npc repeats crafting this list.
+	TMap<int32, int32> CraftList = {}; // which items to craft, and how many. npc repeats crafting this list.
+	TArray<int32> RemainingCraftList;
 
 	UPROPERTY()
 	FString HomeSpecialID;

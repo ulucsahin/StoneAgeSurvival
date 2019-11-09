@@ -19,6 +19,7 @@ public:
 	virtual void Possess(APawn* InstigatorPawn) override;
 	virtual void CheckStatus() override;
 	void MoveToStation();
+	int32 DecideItemToCraft();
 	void StartCrafting();
 	float GetDistanceToWorkstation();
 	

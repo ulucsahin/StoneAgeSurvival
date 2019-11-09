@@ -25,7 +25,7 @@ public:
 	virtual void InitialSetup() override;
 	virtual void CloseMenu() override;
 	void InitializeCraftListItems();
-
+	TMap<int32, int32> ConstructCraftList();
 
 	UDialogueMenu* OwnerDialogueMenu;
 
@@ -34,6 +34,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "VerticalBoxCpp")
 	UVerticalBox* VerticalBox;
 
+
+	TArray<USpecifyCraftListItem*> CraftListItems;
 private:
 	TSubclassOf<USpecifyCraftListItem> ListItemWidget;
 };

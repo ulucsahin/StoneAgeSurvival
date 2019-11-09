@@ -25,9 +25,14 @@ void USpecifyCraftListItem::InitialSetup()
 	ItemNameBlock->SetText(FText::FromString(ItemName));
 	ItemAmountBlock->SetText(FText::FromString("0"));
 
-	if (CalculateMaxCraftAmount() == 0) Slider->SetIsEnabled(false);
+	if(CalculateMaxCraftAmount() == 0) Slider->SetIsEnabled(false);
 
 
+}
+
+void USpecifyCraftListItem::InitializeSliderValue()
+{
+	/* This method initializes slider value from owner settlement member's current CraftList. */
 }
 
 // Called from blueprint
@@ -36,7 +41,6 @@ void USpecifyCraftListItem::OnSliderValueChanged()
 	CraftAmount = CalculateCraftAmountFromSlider();
 	ItemAmountBlock->SetText(FText::FromString(FString::FromInt(CraftAmount)));
 
-	
 }
 
 // Called from blueprint
