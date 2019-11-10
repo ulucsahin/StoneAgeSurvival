@@ -24,9 +24,7 @@ UUISpecifyCrafting::UUISpecifyCrafting(const FObjectInitializer& ObjectInitializ
 void UUISpecifyCrafting::InitialSetup()
 {
 	UE_LOG(LogTemp, Warning, TEXT("UUISpecifyCrafting::InitialSetup"));
-	
 }
-
 
 void UUISpecifyCrafting::CloseMenu()
 {
@@ -34,15 +32,13 @@ void UUISpecifyCrafting::CloseMenu()
 	RemoveFromParent();
 
 	auto Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	//UE_LOG(LogTemp, Warning, TEXT("OpenedMenus.num: %d"), Player->OpenedMenus.Num());
-	//Player->OpenedMenus.Remove(this);
-	//UE_LOG(LogTemp, Warning, TEXT("OpenedMenus.num: %d"), Player->OpenedMenus.Num());
+	int32 Index = Player->OpenedMenus.IndexOfByKey(this);
+	Player->OpenedMenus[Index] = nullptr;
+	
 	OwnerDialogueMenu->SetVisibility(ESlateVisibility::Visible);
 	OwnerDialogueMenu->Owner->SpecifyCratingMenuOn = false;
 	OwnerDialogueMenu->SetChoiceButtonsEnabled(true);
 	OwnerDialogueMenu->Owner->CraftList = ConstructCraftList();
-	// Give CraftList to Owner SettlementMember
-	//OwnerDialogueMenu->Owner->CraftList =
 }
 
 void UUISpecifyCrafting::InitializeCraftListItems()

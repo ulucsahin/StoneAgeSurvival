@@ -114,14 +114,9 @@ void ACraftingStation::StartCrafting(float CraftingTime)
 	//Binding the function with specific values
 	float UpdateFrequency = 0.1f;
 	TimerDel.BindUFunction(this, FName("CraftingStep"), CraftingTime, UpdateFrequency);
-
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.1f, true);
-
 	CurrentlyCrafting = true;
-
-	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::StartCrafting CRAFTING BRU"));
 	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::StartCrafting Item ID : %d"), CurrentItemID);
-
 }
 
 void ACraftingStation::CraftingStep(float CraftingTime, float UpdateFrequency)
@@ -181,10 +176,8 @@ bool ACraftingStation::CraftingRequirementsMet()
 {
 	/* Checks if required items are in player inventory for crafting the item of this button. */
 
-	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::CraftingRequirementsMet ???"));
 	if (CraftingCharacter)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::CraftingRequirementsMet CraftingCharacter not null"));
 		auto Inventory = CraftingCharacter->GetInventory();
 
 		for (auto Requirement : CurrentItem->CraftRequirements)
@@ -209,7 +202,6 @@ bool ACraftingStation::CraftingRequirementsMet()
 
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("ACraftingStation::CraftingRequirementsMet Requirements Met"));
 	return true;
 }
 

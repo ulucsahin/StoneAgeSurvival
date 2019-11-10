@@ -317,6 +317,8 @@ void ASettlementMember::RegisterActorDetailsToSave()
 	Details.SpecialID = SpecialID;
 	Details.HomeSpecialID = HomeSpecialID;
 	Details.ProfessionType = Profession.Type;
+	Details.CraftList = CraftList;
+	Details.Items = Inventory->GetItems();
 	
 	// Save equipments
 	Details.EquippedItems = EquipmentManager->EquippedItems;
@@ -346,6 +348,8 @@ void ASettlementMember::SpawnLoadedActors()
 		Spawned->SetupBelongingSettlement();
 		Spawned->SpecialID = Details.SpecialID;
 		Spawned->HomeSpecialID = Details.HomeSpecialID;
+		Spawned->Inventory->Items = Details.Items;
+		Spawned->CraftList = Details.CraftList;
 		Spawned->SetupHome(); //this causes crash, but only sometimes wtf?
 		Spawned->ChangeProfession(USettlementMemberProfession::GetProfession(Details.ProfessionType));
 		Spawned->Act();

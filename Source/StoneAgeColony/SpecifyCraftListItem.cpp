@@ -14,7 +14,7 @@
 void USpecifyCraftListItem::InitialSetup()
 {
 	/* Called in blueprint */
-
+	UE_LOG(LogTemp, Warning, TEXT("USpecifyCraftListItem::InitialSetup"));
 	AObjectFactory* Factory = NewObject<AObjectFactory>();
 
 	OwnerMember = OwnerSpecifyCraftingMenu->OwnerDialogueMenu->Owner;
@@ -26,8 +26,7 @@ void USpecifyCraftListItem::InitialSetup()
 	ItemNameBlock->SetText(FText::FromString(ItemName));
 	ItemAmountBlock->SetText(FText::FromString("0"));
 	InitializeSliderValue();
-	if(CalculateMaxCraftAmount() == 0) Slider->SetIsEnabled(false);
-
+	if(MaxCraftAmount == 0) Slider->SetIsEnabled(false);
 
 }
 
@@ -39,8 +38,8 @@ void USpecifyCraftListItem::InitializeSliderValue()
 	{
 		if (Item.Key == RepresentedItemID)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Item.Value: %d, MaxCraftAmount: %d"), Item.Value, MaxCraftAmount);
-			Slider->SetValue(float(Item.Value) / float(MaxCraftAmount));  //Item.Value / MaxCraftAmount
+			// Item.Value is amount to craft
+			Slider->SetValue(float(Item.Value) / float(MaxCraftAmount));
 			OnSliderValueChanged();
 			break;
 		}
@@ -51,6 +50,7 @@ void USpecifyCraftListItem::InitializeSliderValue()
 void USpecifyCraftListItem::OnSliderValueChanged()
 {
 	CraftAmount = CalculateCraftAmountFromSlider();
+	UE_LOG(LogTemp, Warning, TEXT("CraftAmount %d"), CraftAmount);
 	ItemAmountBlock->SetText(FText::FromString(FString::FromInt(CraftAmount)));
 
 }

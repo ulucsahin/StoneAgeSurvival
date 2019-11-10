@@ -37,6 +37,12 @@ struct FHumanCharacterDetails
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
 	TMap<EEquipmentSlots, int32> EquippedItems;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CraftList")
+	TMap<int32, int32> CraftList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InventoryItems")
+	TMap<int32, int32> Items;
 };
 
 UCLASS()
