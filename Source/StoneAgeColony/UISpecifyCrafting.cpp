@@ -9,6 +9,7 @@
 #include "StoneAgeColonyCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/UMG/Public/Components/VerticalBox.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 
 UUISpecifyCrafting::UUISpecifyCrafting(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -31,6 +32,11 @@ void UUISpecifyCrafting::CloseMenu()
 {
 	IsActive = false;
 	RemoveFromParent();
+
+	auto Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	//UE_LOG(LogTemp, Warning, TEXT("OpenedMenus.num: %d"), Player->OpenedMenus.Num());
+	//Player->OpenedMenus.Remove(this);
+	//UE_LOG(LogTemp, Warning, TEXT("OpenedMenus.num: %d"), Player->OpenedMenus.Num());
 	OwnerDialogueMenu->SetVisibility(ESlateVisibility::Visible);
 	OwnerDialogueMenu->Owner->SpecifyCratingMenuOn = false;
 	OwnerDialogueMenu->SetChoiceButtonsEnabled(true);

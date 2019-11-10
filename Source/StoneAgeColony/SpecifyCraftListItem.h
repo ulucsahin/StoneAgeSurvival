@@ -50,6 +50,7 @@ public:
 	int32 RepresentedItemID;
 	AUsableActor* RepresentedItemInstance;
 	int32 CraftAmount;
+	int32 MaxCraftAmount;
 	UUISpecifyCrafting* OwnerSpecifyCraftingMenu;
 	ASettlementMember* OwnerMember;
 	UInventory* OwnerInventory;

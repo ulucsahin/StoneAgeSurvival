@@ -534,16 +534,22 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructur
 
 void AStoneAgeColonyCharacter::CloseAllMenus()
 {
-	for (auto x : OpenedMenus)
-	{
-		if (x)
-		{	
-			x->CloseMenu();
-		}
-		
-	}
-	OpenedMenus.Empty();
 	
+	
+	//for (int i = OpenedMenus.Num() - 1; i > 0; i--)
+
+	for (int i = 0; i < OpenedMenus.Num(); i++)
+	{
+		auto Menu = OpenedMenus[i];
+		if (Menu)
+		{
+			Menu->CloseMenu();
+		}
+	}
+
+	// Remove any nullptrs too.
+	OpenedMenus.Empty();
+
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (PlayerController)
 	{
@@ -584,14 +590,15 @@ void AStoneAgeColonyCharacter::OpenInventory()
 	else
 	{
 		// Close Inventory
-		InventoryWidget->RemoveFromParent();
-		if (PlayerController)
-		{
-			PlayerController->SetInputMode(FInputModeGameOnly());
-			PlayerController->bShowMouseCursor = false;
-			PlayerController->bEnableClickEvents = false;
-			PlayerController->bEnableMouseOverEvents = false;
-		}
+		InventoryWidget->CloseMenu();
+		//InventoryWidget->RemoveFromParent();
+		//if (PlayerController)
+		//{
+		//	PlayerController->SetInputMode(FInputModeGameOnly());
+		//	PlayerController->bShowMouseCursor = false;
+		//	PlayerController->bEnableClickEvents = false;
+		//	PlayerController->bEnableMouseOverEvents = false;
+		//}
 		
 		InventoryOn = false;
 	}

@@ -283,6 +283,6 @@ public:
 	void CloseAllMenus();
 
 	UPROPERTY()
-	TSet<USurvivalWidget*> OpenedMenus;
+	TArray<USurvivalWidget*> OpenedMenus;
 
 };

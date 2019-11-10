@@ -196,16 +196,15 @@ void AStationWorkerAI::StartCrafting()
 		auto CraftableItems = WorkStation->CraftableItems;
 		AObjectFactory* Factory = NewObject<AObjectFactory>();
 
-
 		int32 DecidedItem = DecideItemToCraft();
-		UE_LOG(LogTemp, Warning, TEXT("DecidedItem: %d"), DecidedItem);
+		UE_LOG(LogTemp, Warning, TEXT("DecidedItem : %d"), DecidedItem);
 
-		//// If there are not enough items to create or crafting list are all set to 0.
-		//if (DecidedItem < 0 ) return; 
+		// If there are not enough items to create or crafting list are all set to 0.
+		if (DecidedItem < 0 ) return; 
 
 
 		// Currently creates first item on the Station's CraftableItems list. Need a way to select which one.
-		auto ItemToCraft = Factory->CreateObjectBetter(CraftableItems[1]);
+		auto ItemToCraft = Factory->CreateObjectBetter(DecidedItem);
 		WorkStation->CurrentItem = ItemToCraft;
 		WorkStation->CurrentItemID = ItemToCraft->GetID();
 		WorkStation->SetCraftingCharacter(Possessed);

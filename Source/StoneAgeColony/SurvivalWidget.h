@@ -30,7 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	virtual void InitialSetup();
 
-	bool IsActive;
+	bool IsActive = true;
 	AStructure* OwnerStructure;
 	ASettlement* OwnerSettlement; 
 

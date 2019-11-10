@@ -20,11 +20,12 @@ void USpecifyCraftListItem::InitialSetup()
 	OwnerMember = OwnerSpecifyCraftingMenu->OwnerDialogueMenu->Owner;
 	OwnerInventory = OwnerMember->GetInventory();
 	RepresentedItemInstance = Factory->CreateObjectBetter(RepresentedItemID);
+	MaxCraftAmount = CalculateMaxCraftAmount();
 
 	auto ItemName = Factory->GetObjectNameFromID(RepresentedItemID);
 	ItemNameBlock->SetText(FText::FromString(ItemName));
 	ItemAmountBlock->SetText(FText::FromString("0"));
-
+	InitializeSliderValue();
 	if(CalculateMaxCraftAmount() == 0) Slider->SetIsEnabled(false);
 
 
@@ -33,6 +34,17 @@ void USpecifyCraftListItem::InitialSetup()
 void USpecifyCraftListItem::InitializeSliderValue()
 {
 	/* This method initializes slider value from owner settlement member's current CraftList. */
+
+	for (auto Item : OwnerMember->CraftList)
+	{
+		if (Item.Key == RepresentedItemID)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Item.Value: %d, MaxCraftAmount: %d"), Item.Value, MaxCraftAmount);
+			Slider->SetValue(float(Item.Value) / float(MaxCraftAmount));  //Item.Value / MaxCraftAmount
+			OnSliderValueChanged();
+			break;
+		}
+	}
 }
 
 // Called from blueprint
@@ -83,7 +95,7 @@ int32 USpecifyCraftListItem::CalculateCraftAmountFromSlider()
 	*  Floors the value.
 	*/
 
-	int32 Result = CalculateMaxCraftAmount();
+	int32 Result = MaxCraftAmount;
 	Result *= Slider->GetValue();
 	return Result;
 }
