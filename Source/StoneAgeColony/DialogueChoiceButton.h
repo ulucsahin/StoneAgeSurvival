@@ -24,6 +24,8 @@ enum class EButtonTypes : uint32
 	VE_OpenSpecifyCraftingMenu			UMETA(DisplayName = "OpenSpecifyCraftingMenu"),
 	// Sets profession
 	VE_AssignJob						UMETA(DisplayName = "AssignJob"), 
+	// Opens NPC Inventory
+	VE_OpenInventory					UMETA(DisplayName = "OpenInventory"),
 
 };
 
@@ -80,7 +82,6 @@ public:
 	void SetOwnerMemberProfession(EProfession Profession);
 	FString ActAndReturnResponse();
 	EProfession GetJobFromQuery();
-
 
 	class UDataTable* PropertiesDataTable;
 	UDialogueMenu* OwnerDialogueMenu;

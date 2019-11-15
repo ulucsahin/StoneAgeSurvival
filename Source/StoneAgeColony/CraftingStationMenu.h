@@ -16,6 +16,7 @@ class UVerticalBox;
 class UProgressBar;
 class UTimelineComponent;
 class UCurveFloat;
+class AHumanCharacter;
 
 //class FOnTimelineFloat;
 //class FOnTimelineEvent;

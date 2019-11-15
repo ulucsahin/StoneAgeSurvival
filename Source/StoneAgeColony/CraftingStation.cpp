@@ -23,7 +23,7 @@ ACraftingStation::ACraftingStation(const class FObjectInitializer& ObjectInitial
 	static ConstructorHelpers::FObjectFinder<UDataTable> PropertiesDataObject(TEXT("DataTable'/Game/Uluc/DataTables/CraftingStationsDataTable.CraftingStationsDataTable'"));
 	if (PropertiesDataObject.Succeeded())
 	{
-	PropertiesDataTable = PropertiesDataObject.Object;
+		PropertiesDataTable = PropertiesDataObject.Object;
 	}
 
 	CraftAmount = 1; // TODO: craft how many?

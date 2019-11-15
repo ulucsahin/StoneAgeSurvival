@@ -112,8 +112,8 @@ public:
 	UUIBottomBar* BottomBar;
 
 	// UI Player Inventory
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UserInterface")
-	UUIPlayerInventory* UIPlayerInventory;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UserInterface")
+	//UUIPlayerInventory* UIPlayerInventory;
 
 	/*Max distance to use/focus on actors. */
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
@@ -156,7 +156,7 @@ public:
 	//AUsableActor* GetInventoryItem(int InventoryItemIndex);
 
 	// UI Variables
-	USurvivalWidget* InventoryWidget;
+	UUIPlayerInventory* InventoryWidget;
 	USurvivalWidget* CharacterMenuWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MainMenu")
 	UUserWidget* MainMenuWidget;

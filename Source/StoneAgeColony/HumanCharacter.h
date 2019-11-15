@@ -14,6 +14,7 @@
 class UEquipmentManager;
 class UMorphManager;
 class UInventory;
+class UUIPlayerInventory;
 
 USTRUCT(BlueprintType)
 struct FHumanCharacterDetails
@@ -86,6 +87,10 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	UInventory* GetInventory();
+
+	// This is used for NPC Inventory menu aswell.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UserInterface")
+	UUIPlayerInventory* UIPlayerInventory;
 
 	// Equipment Type-Component Mapping
 	TMap<EEquipmentSlots, USkeletalMeshComponent*> EquipmentMapping;

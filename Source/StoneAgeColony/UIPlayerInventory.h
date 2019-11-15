@@ -3,16 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "Blueprint/UserWidget.h"
 #include "SurvivalWidget.h"
-//#include "Runtime/UMG/Public/Components/WrapBox.h"
-//#include "UIInventoryItem.h"
-//#include "StoneAgeColonyCharacter.h"
 #include "UIPlayerInventory.generated.h"
 
 class UWrapBox;
 class UUIInventoryItem;
 class AStoneAgeColonyCharacter;
+//class ASettlementMember;
+class AHumanCharacter;
 /**
  * 
  */
@@ -24,8 +22,13 @@ class STONEAGECOLONY_API UUIPlayerInventory : public USurvivalWidget
 public:
 	UUIPlayerInventory(const FObjectInitializer& ObjectInitializer);
 
+	void InitialSetup(AHumanCharacter* Owner);
+
 	UFUNCTION(BlueprintCallable, Category = "Lol")
-	void RegisterToPlayer(AStoneAgeColonyCharacter* Player);
+	void RegisterToPlayer();
+
+	UFUNCTION(BlueprintCallable, Category = "Lol")
+	void SetOwner(AHumanCharacter* Owner);
 
 	UFUNCTION(BlueprintCallable, Category = "Lol")
 	void AddItems();
@@ -41,7 +44,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "Player")
 	AStoneAgeColonyCharacter* Player;
 
-	void Test();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "SettlementMember")
+	AHumanCharacter* Owner; // this class can show NPC's inventory too. this variable used if so.
 
 	TSubclassOf<UUIInventoryItem> InvItemClass;
 

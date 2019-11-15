@@ -9,7 +9,7 @@
 #include "UIItemSlot.generated.h"
 
 class AStoneAgeColonyCharacter;
-
+class AHumanCharacter;
 
 
 /** Base class for all slot objects in user interface such as items in inventory etc.
@@ -42,5 +42,6 @@ public:
 	virtual void OnClick();
 
 	AStoneAgeColonyCharacter* PlayerCharacter;
+	AHumanCharacter* Owner;
 
 };

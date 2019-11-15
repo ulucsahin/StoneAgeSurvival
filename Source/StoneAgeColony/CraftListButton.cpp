@@ -19,12 +19,10 @@ void UCraftListButton::CreateRequiredObjects()
 	if (Factory == nullptr)
 	{
 		Factory = NewObject<AObjectFactory>();
-		//Factory->AddToRoot();
 	}
 	if (RepresentedItem == nullptr)
 	{
 		RepresentedItem = Factory->CreateObjectBetter(ItemID);
-		//RepresentedItem->AddToRoot();
 	}
 	
 }

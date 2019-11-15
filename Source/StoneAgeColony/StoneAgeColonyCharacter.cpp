@@ -1,4 +1,3 @@
-
 #include "StoneAgeColonyCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -107,6 +106,8 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter(const class FObjectInitialize
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	Inventory = NewObject<UInventory>();
 
 	// Init Stats
 	Health = 100.f;
@@ -338,6 +339,7 @@ void AStoneAgeColonyCharacter::OnClick()
 {
 	if (PlayerStates == EPlayerStates::VE_Combat)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("EPlayerStates::VE_Combat"));
 		// Use item in BottomBar
 		int32 UsedItemID = BottomBar->BarItems[BottomBar->SelectedSlot]->ItemID;
 		if (Inventory->Contains(UsedItemID)) 
@@ -355,6 +357,7 @@ void AStoneAgeColonyCharacter::OnClick()
 	}
 	else if (PlayerStates == EPlayerStates::VE_Building)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("EPlayerStates::VE_Building"));
 		if (BuildingManager)
 		{
 			bool Success = BuildingManager->CompleteBuilding();
@@ -369,7 +372,16 @@ void AStoneAgeColonyCharacter::OnClick()
 	}
 	else if (PlayerStates == EPlayerStates::VE_Pickup)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("EPlayerStates::VE_Pickup"));
 		InteractPickup();
+	}
+	else if (PlayerStates == EPlayerStates::VE_Talking)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EPlayerStates:VE_Talking"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("EPlayerStates::wtf?????????"));
 	}
 }
 
@@ -410,8 +422,8 @@ void AStoneAgeColonyCharacter::InitializeWidgets()
 
 	// Inventory Menu
 	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
-	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
-	InventoryWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
+	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUIPlayerInventory>();
+	InventoryWidget = CreateWidget<UUIPlayerInventory>(PlayerController, MyWidgetClass);
 
 	// Character Menu 
 	FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
@@ -499,22 +511,13 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructur
 	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
 	auto MenuWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
 
-	//if(OpenedMenus.Contains(MenuWidget))
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("AStoneAgeColonyCharacter::OpenMenu OpenedMenus.Contains"));
-	//	MenuWidget->RemoveFromParent();
-	//}
-	//else
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("I've never seen this man in my life before"));
-	//}
-
 	if (MenuWidget)
 	{
 		if (OwnerStructure)
 		{
 			MenuWidget->OwnerStructure = OwnerStructure;
-			MenuWidget->OwnerSettlement = OwnerSettlement;
+			if (OwnerSettlement) MenuWidget->OwnerSettlement = OwnerSettlement;
+			
 		}
 	
 		MenuWidget->AddToViewport();
@@ -534,9 +537,6 @@ USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructur
 
 void AStoneAgeColonyCharacter::CloseAllMenus()
 {
-	
-	
-	//for (int i = OpenedMenus.Num() - 1; i > 0; i--)
 
 	for (int i = 0; i < OpenedMenus.Num(); i++)
 	{
@@ -571,35 +571,18 @@ void AStoneAgeColonyCharacter::OpenInventory()
 	if (!InventoryOn)
 	{
 		// Open Inventory
-		FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
-		UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
-		InventoryWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
-		InventoryWidget->AddToViewport();
-		if (PlayerController)
-		{
-			PlayerController->SetInputMode(FInputModeGameAndUI());
-			PlayerController->bShowMouseCursor = true;
-			PlayerController->bEnableClickEvents = true;
-			PlayerController->bEnableMouseOverEvents = true;
-		}
+		InventoryWidget = Cast<UUIPlayerInventory>(OpenMenu(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"), nullptr, nullptr));
 
-		OpenedMenus.Emplace(InventoryWidget);
-
+		//FStringClassReference MyWidgetClassRef();
+		//UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUIPlayerInventory>();
+		//InventoryWidget = CreateWidget<UUIPlayerInventory>(PlayerController, MyWidgetClass);
+		InventoryWidget->InitialSetup(this);
+		//OpenedMenus.Emplace(InventoryWidget);
 		InventoryOn = true;
 	}
 	else
 	{
-		// Close Inventory
 		InventoryWidget->CloseMenu();
-		//InventoryWidget->RemoveFromParent();
-		//if (PlayerController)
-		//{
-		//	PlayerController->SetInputMode(FInputModeGameOnly());
-		//	PlayerController->bShowMouseCursor = false;
-		//	PlayerController->bEnableClickEvents = false;
-		//	PlayerController->bEnableMouseOverEvents = false;
-		//}
-		
 		InventoryOn = false;
 	}
 }
@@ -797,6 +780,7 @@ void AStoneAgeColonyCharacter::InteractPickup()
 
 void AStoneAgeColonyCharacter::InteractPickup(AUsableActor* Actor)
 {
+	
 	// Don't do it while in building mode
 	if (PlayerStates != EPlayerStates::VE_Building)
 	{

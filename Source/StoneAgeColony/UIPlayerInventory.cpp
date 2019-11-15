@@ -6,7 +6,8 @@
 #include "UIInventoryItem.h"
 #include "Inventory.h"
 #include "StoneAgeColonyCharacter.h"
-//#include "Runtime/UMG/Public/Blueprint/WidgetTree.h"
+#include "HumanCharacter.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 UUIPlayerInventory::UUIPlayerInventory(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -14,35 +15,76 @@ UUIPlayerInventory::UUIPlayerInventory(const FObjectInitializer& ObjectInitializ
 	InvItemClass = BPClass.Class;
 }
 
-void UUIPlayerInventory::Test()
+void UUIPlayerInventory::InitialSetup(AHumanCharacter* Owner)
 {
-	//auto root_widget = WidgetTree->ConstructWidget<UWrapBox>(UWrapBox::StaticClass(), TEXT("RootWidget"));
+	SetOwner(Owner);
+	RegisterToPlayer();
+	AddItems();
+
+	auto PlayerController = (APlayerController*)Player->GetController();
+	if (PlayerController)
+	{
+		PlayerController->SetInputMode(FInputModeGameAndUI());
+		PlayerController->bShowMouseCursor = true;
+		PlayerController->bEnableClickEvents = true;
+		PlayerController->bEnableMouseOverEvents = true;
+	}
 }
 
-// Called in blueprint
-void UUIPlayerInventory::RegisterToPlayer(AStoneAgeColonyCharacter* Player)
+void UUIPlayerInventory::SetOwner(AHumanCharacter* Owner)
 {
-	this->Player = Player;
-	Player->UIPlayerInventory = this;
+	this->Owner = Owner;
 }
 
+void UUIPlayerInventory::RegisterToPlayer()
+{
+	Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (Owner == Player)
+	{
+		Player->UIPlayerInventory = this;
+	}
+	
+}
 
-// Called in blueprint
 void UUIPlayerInventory::AddItems()
 {
-	for (auto item : Player->GetInventory()->GetItems())
+	if (Player)
 	{
-		// If item amount is 0 or less(should never be less than 0) just skip to next item in player inventory
-		if (item.Value <= 0) continue;
+		if (Owner)
+		{
+			auto Inventory = Owner->GetInventory();
 
-		//item.key = ItemID, item.value = amount of that item
-		auto BarItem = CreateWidget<UUIInventoryItem>((APlayerController*)Player->GetController(), InvItemClass);
-		BarItem->ItemID = item.Key;
-		BarItem->SetupInventoryItemCell();
 
-		// WrapBox assigned from blueprint
-		WrapBox->AddChild(BarItem);
+			for (auto yarrak : Inventory->GetItems())
+			{
+				UE_LOG(LogTemp, Warning, TEXT("item: %d, AMOUNT %d"), yarrak.Key, yarrak.Value);
+			}
+
+
+			if (Inventory)
+			{
+				auto Items = Inventory->GetItems();
+				for (auto item : Items)
+				{
+					// If item amount is 0 or less(should never be less than 0) just skip to next item in player inventory
+					if (item.Value <= 0) continue;
+
+					//item.key = ItemID, item.value = amount of that item
+					auto BarItem = CreateWidget<UUIInventoryItem>((APlayerController*)Player->GetController(), InvItemClass);
+					BarItem->Owner = Owner;
+					BarItem->ItemID = item.Key;
+					BarItem->SetupInventoryItemCell();
+
+					// WrapBox assigned from blueprint
+					WrapBox->AddChild(BarItem);
+				}
+
+			}
+
+		}
+		
 	}
+
 }
 
 void UUIPlayerInventory::Refresh()

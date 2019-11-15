@@ -12,6 +12,7 @@
 #include "StoneAgeColonyCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "UISpecifyCrafting.h"
+#include "UIPlayerInventory.h"
 
 
 void UDialogueChoiceButton::InitialSetup()
@@ -96,6 +97,18 @@ FString UDialogueChoiceButton::ActAndReturnResponse()
 		}
 
 		return "";
+	}
+	else if (Type == EButtonTypes::VE_OpenInventory)
+	{
+		AStoneAgeColonyCharacter* Player = Cast<AStoneAgeColonyCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (Player)
+		{
+			auto InventoryMenu = (UUIPlayerInventory*)Player->OpenMenu(Payload, nullptr, nullptr);
+			OwnerDialogueMenu->Owner->UIPlayerInventory = InventoryMenu;
+			InventoryMenu->InitialSetup(OwnerDialogueMenu->Owner);
+		}
+
+		return "Here are my items.";
 	}
 	else
 	{

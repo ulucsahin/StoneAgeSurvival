@@ -7,6 +7,7 @@
 #include "ObjectFactory.h"
 #include "UsableActor.h"
 #include "Inventory.h"
+#include "HumanCharacter.h"
 
 UUIItemSlot::UUIItemSlot(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -15,22 +16,23 @@ UUIItemSlot::UUIItemSlot(const FObjectInitializer& ObjectInitializer) : Super(Ob
 
 void UUIItemSlot::SetupInventoryItemCell()
 {
-	PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	//PlayerCharacter = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	AObjectFactory* Factory = NewObject<AObjectFactory>();
+	auto SlotObject = Factory->CreateObjectBetter(ItemID);
+	InventoryTexture = SlotObject->InventoryTexture;
+	ItemName = Factory->GetObjectNameFromID(ItemID);
 
-	if (PlayerCharacter)
+
+	// No need to have an owner for some objects
+	if (Owner)
 	{
 		// Set texture and amount variables
-		//UE_LOG(LogTemp, Warning, TEXT("UUIItemSlot::SetupInventoryItemCell Item ID: %d"), ItemID);
+		UE_LOG(LogTemp, Warning, TEXT("UUIItemSlot::SetupInventoryItemCell Item ID: %d"), ItemID);
 		//InventoryTexture = Communicator::GetInstance().UsableItemIDMap[ItemID]->InventoryTexture;
 
-		AObjectFactory* Factory = NewObject<AObjectFactory>();
-		auto SlotObject =  Factory->CreateObjectBetter(ItemID);
-		InventoryTexture = SlotObject->InventoryTexture;
-		ItemName = Factory->GetObjectNameFromID(ItemID);	
-
-		if (PlayerCharacter->Inventory->Contains(ItemID))
+		if (Owner->Inventory->Contains(ItemID))
 		{
-			ItemAmount = PlayerCharacter->Inventory->Items[ItemID];
+			ItemAmount = Owner->Inventory->Items[ItemID];
 		}
 		else
 		{

@@ -7,6 +7,7 @@
 #include "ObjectFactory.h"
 #include "CraftListButton.h"
 #include "StoneAgeColonyCharacter.h"
+#include "HumanCharacter.h"
 #include "Structure.h"
 #include "CraftingStation.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
@@ -48,6 +49,8 @@ void UCraftingStationMenu::AddItems(int32 CraftStationID)
 	{
 		auto CraftListButton = CreateWidget<UCraftListButton>((APlayerController*)Player->GetController(), CraftMenuItem);
 		CraftListButton->ItemID = Item;
+		//CraftListButton->Owner = 
+		UE_LOG(LogTemp, Warning, TEXT("UCraftingStationMenu::AddItems"));
 		CraftListButton->SetupInventoryItemCell();
 		CraftListButton->SetStationMenu(this);
 
