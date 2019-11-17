@@ -66,6 +66,11 @@ USurvivalWidget* UInterfaceManager::OpenMenu(FString Reference, AStructure* Owne
 	return MenuWidget;
 }
 
+void UInterfaceManager::CloseMenu()
+{
+
+}
+
 void UInterfaceManager::CloseAllMenus()
 {
 	for (int i = 0; i < OpenedMenus.Num(); i++)
@@ -128,6 +133,18 @@ void UInterfaceManager::OpenCloseCharacterMenu()
 	}
 }
 
+void UInterfaceManager::SetInputModeAuto()
+{
+	if (GetNumberOfOpenMenus() > 0)
+	{
+		SetInputModeGameAndUI();
+	}
+	else
+	{
+		SetInputModeGameOnly();
+	}
+}
+
 void UInterfaceManager::SetInputModeGameOnly()
 {
 	//auto PlayerController = Cast<APlayerController>(Player->GetController());
@@ -150,4 +167,20 @@ void UInterfaceManager::SetInputModeGameAndUI()
 		PlayerController->bEnableClickEvents = true;
 		PlayerController->bEnableMouseOverEvents = true;
 	}
+}
+
+int32 UInterfaceManager::GetNumberOfOpenMenus()
+{
+	/*
+	OpenedMenus array contains nullptr for recently closed menus. 
+	This method counts amount of menus still open.
+	*/
+
+	int32 Result = 0;
+	for (int i = 0; i < OpenedMenus.Num(); i++)
+	{
+		if (OpenedMenus[i] != nullptr) Result++;
+	}
+
+	return Result;
 }

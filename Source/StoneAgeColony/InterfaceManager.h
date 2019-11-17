@@ -32,13 +32,17 @@ public:
 	void RegisterPlayer(AStoneAgeColonyCharacter* Player);
 
 	USurvivalWidget* OpenMenu(FString Reference, AStructure* OwnerStructure, ASettlement* OwnerSettlement);
+	void CloseMenu();
 	void CloseAllMenus();
 
 	void OpenCloseInventory();
 	void OpenCloseCharacterMenu();
 
+	void SetInputModeAuto();
 	void SetInputModeGameOnly();
 	void SetInputModeGameAndUI();
+
+	int32 GetNumberOfOpenMenus();
 
 	UPROPERTY()
 	TArray<USurvivalWidget*> OpenedMenus;

@@ -10,6 +10,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/UMG/Public/Components/VerticalBox.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "InterfaceManager.h"
 
 
 UUISpecifyCrafting::UUISpecifyCrafting(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -32,8 +33,8 @@ void UUISpecifyCrafting::CloseMenu()
 	RemoveFromParent();
 
 	auto Player = (AStoneAgeColonyCharacter*)UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	int32 Index = Player->OpenedMenus.IndexOfByKey(this);
-	Player->OpenedMenus[Index] = nullptr;
+	int32 Index = Player->InterfaceManager->OpenedMenus.IndexOfByKey(this);
+	Player->InterfaceManager->OpenedMenus[Index] = nullptr;
 	
 	OwnerDialogueMenu->SetVisibility(ESlateVisibility::Visible);
 	OwnerDialogueMenu->Owner->SpecifyCratingMenuOn = false;
