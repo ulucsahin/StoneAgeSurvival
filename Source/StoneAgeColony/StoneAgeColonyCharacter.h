@@ -21,6 +21,7 @@ class USurvivalWidget;
 class AStructure;
 class ASettlementMember;
 class UInventory;
+class UInterfaceManager;
 
 enum class EPlayerStates : uint8
 {
@@ -79,16 +80,6 @@ public:
 
 	class AUsableActor* FocusedUsableActor;
 	void RegisterSaveData();
-	void InitializeWidgets();
-	//void AddToInventory(int, int);
-
-	//UFUNCTION(BlueprintPure, Category = "Inventory")
-	//UInventory* GetInventory();
-	//TMap<int, int> GetInventory();
-
-	// Inventory, with starting items
-	//UInventory* Inventory = NewObject<UInventory>();
-	//TMap<int, int> Inventory = { {10000, 1}, {400,2}, {401,5}, {402, 5}, {506, 25}, {490,2}, {450, 3}, {700, 10} };
 
 	// States operations
 	EPlayerStates PlayerStates;
@@ -110,10 +101,6 @@ public:
 	// UI Bottom Bar
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UserInterface")
 	UUIBottomBar* BottomBar;
-
-	// UI Player Inventory
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UserInterface")
-	//UUIPlayerInventory* UIPlayerInventory;
 
 	/*Max distance to use/focus on actors. */
 	UPROPERTY(EditDefaultsOnly, Category = "ObjectInteraction")
@@ -148,18 +135,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Stats")
 	int GetLevel();
 
-
-
-	//void ConsumeItemFromInventory(int32 ItemID, int32 Amount);
-
-	//UFUNCTION(BlueprintPure, Category = "Inventory")
-	//AUsableActor* GetInventoryItem(int InventoryItemIndex);
-
 	// UI Variables
-	UUIPlayerInventory* InventoryWidget;
-	USurvivalWidget* CharacterMenuWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MainMenu")
-	UUserWidget* MainMenuWidget;
+	UUserWidget* MainMenuWidget; // used in blueprints
 
 	ASettlement* ActiveSettlement;
 
@@ -284,5 +262,8 @@ public:
 
 	UPROPERTY()
 	TArray<USurvivalWidget*> OpenedMenus;
+
+	UPROPERTY(EditAnywhere)
+	UInterfaceManager* InterfaceManager;
 
 };

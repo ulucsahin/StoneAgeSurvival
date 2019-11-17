@@ -23,6 +23,7 @@
 #include "BottomBarItem.h"
 #include "SurvivalWidget.h"
 #include "SettlementMember.h"
+#include "InterfaceManager.h"
 
 
 //DECLARE_DYNAMIC_MULTICAST_DELAGATE_OneParam(F)
@@ -138,8 +139,12 @@ AStoneAgeColonyCharacter::AStoneAgeColonyCharacter(const class FObjectInitialize
 	AnimationManager->SetupManager(this, GetWorld());
 	AnimationManager->AddToRoot(); // stupid gc
 
+	// Initialize Interface Manager
+	//InterfaceManager = NewObject<UInterfaceManager>();
+	//InterfaceManager->RegisterPlayer(this);
+	//InterfaceManager->AddToRoot();
+
 	InventoryOn = false;
-	InitializeWidgets();
 }
 
 void AStoneAgeColonyCharacter::BeginPlay()
@@ -179,6 +184,10 @@ void AStoneAgeColonyCharacter::BeginPlay()
 
 	// Will be visible when player loads or starts game. Currently we are in main menu.
 	HideFirstPersonHands(true);
+
+	InterfaceManager = NewObject<UInterfaceManager>();
+	InterfaceManager->RegisterPlayer(this);
+	InterfaceManager->AddToRoot();
 
 }
 
@@ -416,22 +425,6 @@ void AStoneAgeColonyCharacter::LookUpAtRate(float Rate)
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AStoneAgeColonyCharacter::InitializeWidgets()
-{
-	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	// Inventory Menu
-	FStringClassReference MyWidgetClassRef(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"));
-	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUIPlayerInventory>();
-	InventoryWidget = CreateWidget<UUIPlayerInventory>(PlayerController, MyWidgetClass);
-
-	// Character Menu 
-	FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
-	UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<USurvivalWidget>();
-	CharacterMenuWidget = CreateWidget<USurvivalWidget>(PlayerController, CharacterMenuWidgtClass);
-
-}
-
 template<typename T>
 T* AStoneAgeColonyCharacter::GetActorInView(float Range)
 {
@@ -502,117 +495,23 @@ void AStoneAgeColonyCharacter::Gather()
 USurvivalWidget* AStoneAgeColonyCharacter::OpenMenu(FString Reference, AStructure* OwnerStructure, ASettlement* OwnerSettlement)
 {
 	/* Adds menu to viewport by using String Reference */
-	//UE_LOG(LogTemp, Warning, TEXT("OpenMenu asdasda"));
-
-	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	
-	// Open CraftingStation Menu
-	FStringClassReference MyWidgetClassRef(Reference);
-	UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<USurvivalWidget>();
-	auto MenuWidget = CreateWidget<USurvivalWidget>(PlayerController, MyWidgetClass);
-
-	if (MenuWidget)
-	{
-		if (OwnerStructure)
-		{
-			MenuWidget->OwnerStructure = OwnerStructure;
-			if (OwnerSettlement) MenuWidget->OwnerSettlement = OwnerSettlement;
-			
-		}
-	
-		MenuWidget->AddToViewport();
-		MenuWidget->IsActive = true;
-
-		if (PlayerController)
-		{
-			PlayerController->SetInputMode(FInputModeGameAndUI());
-			PlayerController->bShowMouseCursor = true;
-			PlayerController->bEnableClickEvents = true;
-			PlayerController->bEnableMouseOverEvents = true;
-		}
-		OpenedMenus.Emplace(MenuWidget);
-	}
-	return MenuWidget;
+	return InterfaceManager->OpenMenu(Reference, OwnerStructure, OwnerSettlement);
 }
 
 void AStoneAgeColonyCharacter::CloseAllMenus()
 {
-
-	for (int i = 0; i < OpenedMenus.Num(); i++)
-	{
-		auto Menu = OpenedMenus[i];
-		if (Menu)
-		{
-			Menu->CloseMenu();
-		}
-	}
-
-	// Remove any nullptrs too.
-	OpenedMenus.Empty();
-
-	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (PlayerController)
-	{
-		PlayerController->SetInputMode(FInputModeGameOnly());
-		PlayerController->bShowMouseCursor = false;
-		PlayerController->bEnableClickEvents = false;
-		PlayerController->bEnableMouseOverEvents = false;
-	}
-	InventoryOn = false;
+	InterfaceManager->CloseAllMenus();
 }
 
 void AStoneAgeColonyCharacter::OpenInventory()
 {	
-	// BE CAREFUL:
-	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
-
-	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	if (!InventoryOn)
-	{
-		// Open Inventory
-		InventoryWidget = Cast<UUIPlayerInventory>(OpenMenu(TEXT("/Game/Uluc/HUD/Inventory/PlayerInventory.PlayerInventory_C"), nullptr, nullptr));
-
-		//FStringClassReference MyWidgetClassRef();
-		//UClass* MyWidgetClass = MyWidgetClassRef.TryLoadClass<UUIPlayerInventory>();
-		//InventoryWidget = CreateWidget<UUIPlayerInventory>(PlayerController, MyWidgetClass);
-		InventoryWidget->InitialSetup(this);
-		//OpenedMenus.Emplace(InventoryWidget);
-		InventoryOn = true;
-	}
-	else
-	{
-		InventoryWidget->CloseMenu();
-		InventoryOn = false;
-	}
+	InterfaceManager->OpenCloseInventory();
 }
 
 void AStoneAgeColonyCharacter::OpenCharacterMenu()
 {
-	// BE CAREFUL:
-	// Constantly creating new InventoryWidget and adding to viewport --> memory leak or automatically deleted?
-	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-
-	if (!CharacterMenuOn)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Character menu opened."));
-		FStringClassReference CharacterMenuWidgtClassRef(TEXT("/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C"));
-		UClass* CharacterMenuWidgtClass = CharacterMenuWidgtClassRef.TryLoadClass<USurvivalWidget>();
-		CharacterMenuWidget = CreateWidget<USurvivalWidget>(PlayerController, CharacterMenuWidgtClass);
-		CharacterMenuWidget->AddToViewport();
-		PlayerController->SetInputMode(FInputModeGameAndUI());
-		PlayerController->bShowMouseCursor = true;
-		CharacterMenuOn = true;
-	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Character menu closed."));
-		CharacterMenuWidget->RemoveFromParent();
-		PlayerController->SetInputMode(FInputModeGameOnly());
-		PlayerController->bShowMouseCursor = false;
-		CharacterMenuOn = false;
-	}
-	//'/Game/Uluc/HUD/CharacterMenu/CharacterMenu.CharacterMenu_C'
+	InterfaceManager->OpenCloseCharacterMenu();
 }
 
 void AStoneAgeColonyCharacter::RegisterSaveData() {
