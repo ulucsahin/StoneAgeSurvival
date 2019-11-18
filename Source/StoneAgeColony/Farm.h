@@ -70,6 +70,7 @@ public:
 	void RemovePlant(FString SocketName);
 	void RandomizePlantAppearance(APlant* Plant);
 	FName SelectSocketToPlant();
+	TArray<bool> GetPlantProgress();
 
 	int32 PlotCapacity; 
 

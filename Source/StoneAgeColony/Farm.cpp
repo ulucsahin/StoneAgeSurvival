@@ -68,7 +68,7 @@ void AFarm::OnUsed(APawn* InstigatorPawn)
 	//UE_LOG(LogTemp, Warning, TEXT("Farm : :Debug"));
 
 	int32 ItemToPlantID = Player->BottomBar->BarItems[Player->BottomBar->SelectedSlot]->ItemID;
-
+	CraftingCharacter = Player;
 	// ID range of plantable objects
 	if (ItemToPlantID >= 700 && ItemToPlantID <= 799)
 	{
@@ -217,6 +217,28 @@ FName AFarm::SelectSocketToPlant()
 	}
 
 	return ClosestSocketName;
+}
+
+TArray<bool> AFarm::GetPlantProgress()
+{
+	TArray<bool> PlantFullyGrown = {};
+	for (auto Item : PlantsInSockets)
+	{
+		auto Plant = Cast<APlant>(Item.Value);
+		if (Plant)
+		{
+			if (Plant->CurrentStage == Plant->NumberOfStages - 1)
+			{
+				PlantFullyGrown.Add(true);
+			}
+			else
+			{
+				PlantFullyGrown.Add(false);
+			}
+		}
+	}
+
+	return PlantFullyGrown;
 }
 
 //

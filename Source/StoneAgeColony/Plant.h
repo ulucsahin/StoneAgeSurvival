@@ -98,14 +98,13 @@ public:
 	virtual void SpawnLoadedActors();
 
 	int32 CurrentStage;
+	int32 NumberOfStages;
 	float ProgressToNextStage;
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
-	
 private:
 	FPlantData* Data;
 	FName PlantType;
-	int32 NumberOfStages;
 	FString MenuRef;
 	UPlantProgressBar* ProgressBarWidget;
 	TArray<int32> YieldedItems;

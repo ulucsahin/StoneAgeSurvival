@@ -94,14 +94,14 @@ void APlant::Gather(APawn* InstigatorPawn)
 {
 	if (CurrentStage == 0) return; // don't allow gathering at baby stage
 
-	auto Player = (AStoneAgeColonyCharacter*)InstigatorPawn;
+	auto Harvester = (AHumanCharacter*)InstigatorPawn;
 	for (int32 i = 0; i < YieldedItems.Num(); i++)
 	{
 		int32 Item = YieldedItems[i];
 		int32 ItemTypeCount = YieldedItems.Num();
 		int32 Index = ItemTypeCount * (CurrentStage) + i; // calculations needed since we represent a 2D array as 1D (unreal does not support 2D arrays)
 
-		Player->Inventory->AddItem(Item, YieldAmounts[Index]);
+		Harvester->Inventory->AddItem(Item, YieldAmounts[Index]);
 	}
 
 	OwnerFarm->RemovePlant(OwnerSocket);

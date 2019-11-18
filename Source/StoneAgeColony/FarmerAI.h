@@ -7,6 +7,9 @@
 #include "StationWorkerAI.h"
 #include "FarmerAI.generated.h"
 
+
+class APlant;
+
 UCLASS()
 class STONEAGECOLONY_API AFarmerAI : public AStationWorkerAI
 {
@@ -17,7 +20,8 @@ public:
 	virtual void Act() override;
 	virtual void Possess(APawn* InstigatorPawn) override;
 	virtual void CheckStatus() override;
-	void StartPlanting();
+	APlant* StartPlanting();
 	FName SelectSocketToPlant();
+	void HarvestGrownPlants();
 	
 };
