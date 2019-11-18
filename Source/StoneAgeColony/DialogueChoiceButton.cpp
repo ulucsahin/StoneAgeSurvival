@@ -122,7 +122,8 @@ EProfession UDialogueChoiceButton::GetJobFromQuery()
 	static TMap<FString, EProfession> Professions = { 
 		{"unoccupied", EProfession::VE_Unoccupied},
 		{"carpenter", EProfession::VE_Carpenter},
-		{"stoneworker", EProfession::VE_StoneWorker} 
+		{"stoneworker", EProfession::VE_StoneWorker},
+		{"farmer", EProfession::VE_Farmer}
 	};
 
 	if (Professions.Contains(Payload))

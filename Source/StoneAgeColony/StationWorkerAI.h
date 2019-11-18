@@ -20,11 +20,11 @@ public:
 	virtual void CheckStatus() override;
 	void MoveToStation();
 	int32 DecideItemToCraft();
-	void StartCrafting();
+	virtual void StartCrafting();
 	float GetDistanceToWorkstation();
-	
-
-private:
-	ACraftingStation* WorkStation;
 	FTimerHandle TimerHandle;
+
+protected:
+	ACraftingStation* WorkStation;
+
 };

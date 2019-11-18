@@ -14,6 +14,7 @@ enum class EProfession : uint8
 	VE_Unoccupied  UMETA(DisplayName = "Unoccupied"), 
 	VE_Carpenter   UMETA(DisplayName = "Carpenter"),
 	VE_StoneWorker   UMETA(DisplayName = "StoneWorker"),
+	VE_Farmer   UMETA(DisplayName = "Farmer"),
 
 };
 
@@ -69,6 +70,21 @@ public:
 		ProfessionName = "stone worker";
 		Type = EProfession::VE_StoneWorker;
 		WorkstationTypeID = 401;
+	}
+
+};
+
+USTRUCT(BlueprintType)
+struct FFarmer : public FProfession
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FFarmer()
+	{
+		ProfessionName = "farmer";
+		Type = EProfession::VE_Farmer;
+		WorkstationTypeID = 450;
 	}
 
 };

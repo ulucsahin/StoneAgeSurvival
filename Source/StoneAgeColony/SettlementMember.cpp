@@ -5,6 +5,7 @@
 //#include "SettlementMemberAI.h"
 #include "UnoccupiedAI.h"
 #include "StationWorkerAI.h"
+#include "FarmerAI.h"
 #include "MorningRegularAI.h"
 #include "NightRegularAI.h"
 #include "Communicator.h"
@@ -287,6 +288,12 @@ void ASettlementMember::SetupAIController()
 		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing StationWorker AI"));
 		AIControllerClass = AStationWorkerAI::StaticClass();
 		AIController = (AStationWorkerAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
+	}
+	else if (Profession.Type == EProfession::VE_Farmer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASettlementMember::SetupAIController Choosing Farmer AI"));
+		AIControllerClass = AFarmerAI::StaticClass();
+		AIController = (AFarmerAI*)GetWorld()->SpawnActor<AController>(AIControllerClass, GetActorLocation(), GetActorRotation(), SpawnInfo);
 	}
 	else
 	{

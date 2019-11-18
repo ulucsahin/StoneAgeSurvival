@@ -33,6 +33,10 @@ FProfession USettlementMemberProfession::GetProfession(EProfession Profession)
 	{
 		return FStoneWorker{};
 	}
+	else if (Profession == EProfession::VE_Farmer)
+	{
+		return FFarmer{};
+	}
 	else
 	{
 		return FUnoccupied{};

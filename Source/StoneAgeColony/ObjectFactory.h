@@ -54,6 +54,7 @@ private:
 	//static AObjectFactory* instance; // Singleton instance
 	//TMap<UClass*, UDataTable*> ClassToTable;
 
+	UPROPERTY()
 	class UDataTable* CommonPropertiesTable;
 	//class UDataTable* EdiblesTable;
 	//class UDataTable* EquipmentTable;

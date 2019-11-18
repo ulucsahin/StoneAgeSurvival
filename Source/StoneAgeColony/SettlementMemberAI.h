@@ -43,4 +43,6 @@ public:
 	bool ShouldUpdate;
 	//EActivity Activity;
 
+protected:
+	float MinDistanceToStation = 300.f;
 };

@@ -87,7 +87,7 @@ public:
 	virtual void EmptyCommunicatorDetailsArray() override;
 	virtual void SpawnLoadedActors() override;
 
-
+	int32 ID;
 	int32 CurrentItemID;
 	bool CurrentlyCrafting;
 	int32 CraftAmount;
@@ -99,7 +99,7 @@ protected:
 
 private:
 	//AStoneAgeColonyCharacter* Player;
-	int32 ID;
+	
 	FName CraftingStationType;
 	FStructureData* Data;
 	bool MenuOpen;

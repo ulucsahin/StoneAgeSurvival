@@ -6,11 +6,13 @@
 #include "Structure.h"
 #include "Runtime/Engine/Classes/Engine/DataTable.h"
 #include "Plant.h"
+#include "CraftingStation.h"
 #include "Farm.generated.h"
 
 class AObjectFactory;
 class AUsableActor;
 class AStoneAgeColonyCharacter;
+
 //class APlant;
 
 // Save details
@@ -57,7 +59,7 @@ public:
 
 
 UCLASS()
-class STONEAGECOLONY_API AFarm : public AStructure
+class STONEAGECOLONY_API AFarm : public ACraftingStation
 {
 	GENERATED_BODY()
 
@@ -69,7 +71,6 @@ public:
 	void RandomizePlantAppearance(APlant* Plant);
 	FName SelectSocketToPlant();
 
-	int32 ID;
 	int32 PlotCapacity; 
 
 	//
@@ -78,6 +79,9 @@ public:
 	virtual void EmptyCommunicatorDetailsArray() override;
 	virtual void SpawnLoadedActors() override;
 
+
+	TMap<FString, bool> SocketFull; // keeps track of farm plots (planted or empty), true = planted, false = empty, socket name - bool
+	TMap<FString, AUsableActor*> PlantsInSockets; // socket name - actor ptr
 protected:
 	virtual void OnUsed(APawn* InstigatorPawn) override;
 	virtual void OpenMenu(APawn* InstigatorPawn) override;
@@ -87,8 +91,6 @@ private:
 	AObjectFactory* Factory;
 	FName FarmType;
 	FFarmData* Data;
-	TMap<FString, bool> SocketFull; // keeps track of farm plots (planted or empty), true = planted, false = empty, socket name - bool
-	TMap<FString, AUsableActor*> PlantsInSockets; // socket name - actor ptr
 	AStoneAgeColonyCharacter* Player;
 
 	

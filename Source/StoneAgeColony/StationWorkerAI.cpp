@@ -17,7 +17,6 @@ AStationWorkerAI::AStationWorkerAI()
 void AStationWorkerAI::Possess(APawn* InstigatorPawn)
 {
 	Super::Possess(InstigatorPawn);
-	//RemainingCraftList = Possessed->CraftList;
 	Communicator::GetInstance().World->GetTimerManager().SetTimer(TimerHandle, this, &AStationWorkerAI::CheckStatus, 1.0f, true);
 }
 
@@ -36,8 +35,9 @@ void AStationWorkerAI::CheckStatus()
 
 	if (Possessed->Activity == EActivity::VE_GoingToStation || Possessed->Activity == EActivity::VE_Idle)
 	{
+
 		UE_LOG(LogTemp, Warning, TEXT("AStationWorkerAI::CheckStatus Distance to workstation: %f"), GetDistanceToWorkstation());
-		if (GetDistanceToWorkstation() < 200.f)
+		if (GetDistanceToWorkstation() < MinDistanceToStation)
 		{
 			StopMovement();
 			Possessed->Activity = EActivity::VE_Working;
@@ -64,6 +64,7 @@ void AStationWorkerAI::MoveToStation()
 			if (x->GetID() == Possessed->Profession.WorkstationTypeID)
 			{
 				// only select this structure if it belongs to current member or has no working member, aka if it is empty-available
+				// TODO: Save special ID of station so it is not lost on save-load
 				if (x->WorkingMember == nullptr || x->WorkingMember == (ASettlementMember*)GetPawn())
 				{
 					WorkStation = Cast<ACraftingStation>(x);
@@ -151,6 +152,8 @@ float AStationWorkerAI::GetDistanceToWorkstation()
 	if (WorkStation)
 	{
 		DistanceToWorkStation = FVector::Dist(Possessed->GetActorLocation(), WorkStation->GetActorLocation());
+		auto x = Possessed->GetActorLocation();
+		auto y = WorkStation->GetActorLocation();
 	}
 
 	return DistanceToWorkStation;

@@ -5,6 +5,7 @@
 #include "Runtime/Engine/Classes/Engine/AssetManager.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 #include "StoneAgeColonyCharacter.h"
+#include "HumanCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "ObjectFactory.h"
 #include "SurvivalWidget.h"
@@ -110,21 +111,21 @@ APlant* AFarm::Plant(int32 ItemIDToPlant, FName SocketName, bool FromSave)
 	*/
 
 	if (SocketName.ToString() == "") return nullptr;
-
+	
 	FString SocketName_ = SocketName.ToString();
-
+	
 	// Plant only if socket is empty
 	if (!SocketFull[SocketName_])
 	{
 		// If not spawning from save, check if player has required seed/item to plant.
 		if(!FromSave)
 		{
-			auto PlayerInventory = Player->GetInventory();
-			if (PlayerInventory->Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
+			auto Inventory = CraftingCharacter->GetInventory();
+			if (Inventory->Contains(ItemIDToPlant)) // sometimes this returns true if player has 0 of that item (we accept it as false so we check item amount)
 			{
-				if (PlayerInventory->Items[ItemIDToPlant] > 0)
+				if (Inventory->Items[ItemIDToPlant] > 0)
 				{
-					Player->Inventory->ConsumeItem(ItemIDToPlant, 1); // consume 1 from player inventory
+					CraftingCharacter->Inventory->ConsumeItem(ItemIDToPlant, 1); // consume 1 from player inventory
 				}
 				else
 				{
@@ -133,7 +134,6 @@ APlant* AFarm::Plant(int32 ItemIDToPlant, FName SocketName, bool FromSave)
 			}
 		}
 		
-
 		// Create object, attach to socket, setup
 		APlant* ObjectToPlant = (APlant*)Factory->CreateObjectBetter(ItemIDToPlant);
 		auto ObjectName = Factory->GetObjectNameFromID(ItemIDToPlant);
