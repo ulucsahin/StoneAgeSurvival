@@ -23,5 +23,7 @@ public:
 	APlant* StartPlanting();
 	FName SelectSocketToPlant();
 	void HarvestGrownPlants();
+
+	float ActivityTimer = 5.f;
 	
 };

@@ -23,7 +23,7 @@ void AFarmerAI::Possess(APawn* InstigatorPawn)
 void AFarmerAI::CheckStatus()
 {	
 	//Super::CheckStatus();
-	UE_LOG(LogTemp, Warning, TEXT("AFarmerAI::CheckStatus"));
+	UE_LOG(LogTemp, Warning, TEXT("AFarmerAI:  :CheckStatus"));
 
 	if (Possessed->Activity == EActivity::VE_GoingToStation || Possessed->Activity == EActivity::VE_Idle)
 	{
@@ -32,14 +32,27 @@ void AFarmerAI::CheckStatus()
 			StopMovement();
 			WorkStation->SetCraftingCharacter(Possessed);
 			Possessed->Activity = EActivity::VE_Working;
-			auto Plant = StartPlanting();
-			// CONTINUE HERE-- HARVESTING PLANTS
-			// CONTINUE HERE-- HARVESTING PLANTS
-			// CONTINUE HERE-- HARVESTING PLANTS
-
 		}
-
 	}
+	else if (Possessed->Activity == EActivity::VE_Working)
+	{
+		APlant*	Plant = StartPlanting();
+
+		for (auto Pair : ((AFarm*)WorkStation)->PlantsInSockets)
+		{
+			APlant* Plant = Cast<APlant>(Pair.Value);
+			if (Plant)
+			{
+				if (Plant->IsGrown())
+				{
+					Plant->Gather(Possessed);
+				}
+			}
+		}
+	}
+
+
+
 }
 
 APlant* AFarmerAI::StartPlanting()

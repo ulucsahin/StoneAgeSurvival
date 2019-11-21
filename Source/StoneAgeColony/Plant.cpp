@@ -179,6 +179,11 @@ void APlant::StopUpdatingProgressBar()
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandleProgressBar);
 }
 
+bool APlant::IsGrown()
+{
+	return CurrentStage == NumberOfStages - 1;
+}
+
 //
 // Save-Load Methods
 //

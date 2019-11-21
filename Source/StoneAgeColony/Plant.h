@@ -89,6 +89,8 @@ public:
 	void StartUpdatingProgressBar();
 	void StopUpdatingProgressBar();
 
+	bool IsGrown();
+
 	//
 	// Save-Load functions
 	FPlantDetails GetDetails();
@@ -96,6 +98,7 @@ public:
 	virtual void RegisterActorDetailsToSave();
 	virtual void EmptyCommunicatorDetailsArray();
 	virtual void SpawnLoadedActors();
+	
 
 	int32 CurrentStage;
 	int32 NumberOfStages;
