@@ -37,6 +37,10 @@ FProfession USettlementMemberProfession::GetProfession(EProfession Profession)
 	{
 		return FFarmer{};
 	}
+	else if (Profession == EProfession::VE_Woodcutter)
+	{
+		return FWoodCutter{};
+	}
 	else
 	{
 		return FUnoccupied{};

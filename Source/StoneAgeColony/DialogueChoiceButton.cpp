@@ -123,7 +123,8 @@ EProfession UDialogueChoiceButton::GetJobFromQuery()
 		{"unoccupied", EProfession::VE_Unoccupied},
 		{"carpenter", EProfession::VE_Carpenter},
 		{"stoneworker", EProfession::VE_StoneWorker},
-		{"farmer", EProfession::VE_Farmer}
+		{"farmer", EProfession::VE_Farmer},
+		{"woodcutter", EProfession::VE_Woodcutter},
 	};
 
 	if (Professions.Contains(Payload))

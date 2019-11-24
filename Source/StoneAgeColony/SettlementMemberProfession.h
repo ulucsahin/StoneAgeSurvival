@@ -15,6 +15,8 @@ enum class EProfession : uint8
 	VE_Carpenter   UMETA(DisplayName = "Carpenter"),
 	VE_StoneWorker   UMETA(DisplayName = "StoneWorker"),
 	VE_Farmer   UMETA(DisplayName = "Farmer"),
+	VE_Woodcutter UMETA(DisplayName = "WoodCutter"),
+	VE_Miner UMETA(DisplayName = "Miner"),
 
 };
 
@@ -26,8 +28,8 @@ struct FProfession
 public:
 	FString ProfessionName = "unoccupied";
 	EProfession Type = EProfession::VE_Unoccupied;
-	int32 WorkstationTypeID = -1;
-	//AStructure* Type = NewObject<AStructure>();
+	int32 WorkstationTypeID = -1; // if type of profession that works at crafting stations, npc uses station with this ID
+	int32 GatherTypeID = -1; // if type of profession that gathers raw materials, npc gathers from actors with this ID
 };
 
 USTRUCT(BlueprintType)
@@ -40,7 +42,7 @@ public:
 	{
 		ProfessionName = "unoccupied";
 		Type = EProfession::VE_Unoccupied;
-		WorkstationTypeID = -1;
+		WorkstationTypeID = -1; 
 	}
 };
 
@@ -87,6 +89,20 @@ public:
 		WorkstationTypeID = 450;
 	}
 
+};
+
+USTRUCT(BlueprintType)
+struct FWoodCutter : public FProfession
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FWoodCutter()
+	{
+		ProfessionName = "woodcutter";
+		Type = EProfession::VE_Woodcutter;
+		GatherTypeID = 100;
+	}
 };
 
 

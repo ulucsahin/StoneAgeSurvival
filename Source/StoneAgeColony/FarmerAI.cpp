@@ -23,7 +23,7 @@ void AFarmerAI::Possess(APawn* InstigatorPawn)
 void AFarmerAI::CheckStatus()
 {	
 	//Super::CheckStatus();
-	UE_LOG(LogTemp, Warning, TEXT("AFarmerAI:  :CheckStatus"));
+	UE_LOG(LogTemp, Warning, TEXT("AFarmerAI::CheckStatus"));
 
 	if (Possessed->Activity == EActivity::VE_GoingToStation || Possessed->Activity == EActivity::VE_Idle)
 	{
